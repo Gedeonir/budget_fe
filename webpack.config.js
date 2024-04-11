@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path=require('path');
 const webpack = require("webpack");
 const dotenv = require("dotenv");
-
+const NodePolyfillPlugin=require("node-polyfill-webpack-plugin")
 dotenv.config();
 
 module.exports = {
@@ -49,7 +49,8 @@ module.exports = {
         new HtmlWebPackPlugin({
         template: "./src/index.html",
         filename: "./index.html"
-      })
+      }),
+      new NodePolyfillPlugin(),
     ],
     devServer: {
       static: path.resolve(__dirname, "./dist"),

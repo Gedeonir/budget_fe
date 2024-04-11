@@ -29,7 +29,16 @@ const SignIn = () => {
             );
 
 	        await sessionStorage.setItem('userToken', JSON.stringify(response?.data?.token));
-            navigate("../");
+
+            const getProfile=await axios.get(`${process.env.BACKEND_URL}/users/one/about`,
+            {
+                headers:{
+                "Content-Type":"application/json",
+                "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            });
+            const {data}=getProfile;
+            data.getProfile?.role==="admin"?navigate("/admin/dashboard"):navigate("../");
 
         } catch (error) {
             setError(error?.response?.data?.message?error?.response?.data?.message:error?.message);
@@ -39,7 +48,7 @@ const SignIn = () => {
     }
   return (
     <div className='bg-primary min-h-screen max-h-screen overflow-hidden flex items-center justify-center px-8'>
-        <div className='w-2/5 bg-primary2 h-full rounded-lg drop-shadow-sm shadow-lg p-4'>
+        <div className='lg:w-2/5 w-full bg-primary2 h-full rounded-lg drop-shadow-sm shadow-lg p-4'>
             <div className="mb-2">
                 <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Log into your BPE account</h1>
             </div>
@@ -71,7 +80,7 @@ const SignIn = () => {
                 </div>
 
                 <div className="mb-4">
-                    <Link className='text-sm text-secondary cursor-pointer hover:underline' to="/forgotpassword">Can't remember my password</Link>
+                    <Link className='text-sm text-secondary cursor-pointer hover:underline' to="/forgot-password">Can't remember your password?</Link>
                 </div>
 
                 <button type='submit' size='sm' className={`my-4 bg-secondary text-sm text-center text-primary font-bold p-2 w-full ${loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={loading? true : false}>
