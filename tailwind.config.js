@@ -6,16 +6,17 @@ module.exports = {
     ],
     theme: {
       extend: {},
-      // fontFamily: {
-      //   'custom': ['Krona One', 'sans-serif'],
-      // },
+      fontFamily: {
+        'custom': ['Poppins', 'sans-serif'],
+      },
       colors:{
         primary:'#F1F5F9',
         secondary:'#26B2AB',
         primary2:"#ffffff",
         red:"#DC2626",
         success:'#12A347',
-        text_primary:"#65758B"
+        text_primary:"#65758B",
+        list_hover:"#0F172A"
       }
     },
     
