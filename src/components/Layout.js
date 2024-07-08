@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Footer from './Footer';
 
 const Layout = (props) => {
     const navigate=useNavigate();
@@ -34,8 +35,9 @@ const Layout = (props) => {
     },[])
     return (
         <div className='min-h-screen max-h-screen overflow-x-hidden bg-primary'>
-            <Navbar profile={userData?.getProfile}/>
-            <div className='pb-4 px-8 '>{props.children}</div>
+          <Navbar profile={userData?.getProfile}/>
+          <div className='pb-4 px-8 '>{props.children}</div>
+          <Footer/>
         </div>
     )
 }
