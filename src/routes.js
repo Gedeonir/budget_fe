@@ -5,10 +5,14 @@ import Homepage from "./pages/Homepage";
 import  NotFound from "./components/notFound";
 import {Protected} from "./utils/ProtectedRoutes";
 import SignIn from "./pages/SignIn";
-import Home from "./pages/Admin/Home";
+import Home from "./pages/Admin/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
+import Incomes_and_revenues from "./pages/Admin/Incomes_and_revenues";
+import Expenses from "./pages/Expenses";
+import AdminDashboard from "./components/AdminDashboard";
+import Dashboard from "./pages/Admin/Dashboard";
+import BudgetRequests from "./pages/Admin/budgetRequests";
 
 const AppRoutes = (prop) => {
 
@@ -19,6 +23,12 @@ const AppRoutes = (prop) => {
             <Homepage />
           </Protected>
         } />
+
+        <Route path="/expennditures" element={
+          <Protected route="/signin">
+            <Expenses/>
+          </Protected>
+        }/>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="*" element={<NotFound/>} />
         <Route path="/admin/dashboard" element={
@@ -26,6 +36,11 @@ const AppRoutes = (prop) => {
             <Home/>
           </Protected>
         }></Route>
+        
+        <Route path="dashboard" element={<Dashboard/>}/>
+        <Route path="dashboard/requests" element={<BudgetRequests/>}/>
+
+
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
     </Routes>

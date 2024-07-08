@@ -22,13 +22,13 @@ const Navbar = (props) => {
                         </Link>
                     </li>
 
-                    <li className={`${location.pathname==="/incomes"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
+                    {/* <li className={`${location.pathname==="/incomes-and-revenues"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
                         <Link to="/incomes-and-revenues">
                             Incomes
                         </Link>
-                    </li>   
+                    </li>    */}
 
-                    <li className={`${location.pathname==="/expenses"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
+                    <li className={`${location.pathname==="/expennditures"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
                         <Link to="/expennditures">
                             Expenses
                         </Link>

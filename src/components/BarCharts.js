@@ -81,7 +81,6 @@ const barData = [
     },
     {
         month:"Dec",
-        month:"Nov",
         income:"1000",
         expenses:"1450",
         expensespercentage:"47%",
