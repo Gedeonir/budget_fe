@@ -12,7 +12,7 @@ const AccountsModal = (props) => {
 
     
     return (
-        <div className='absolute top-12 right-4 bottom-0 w-1/5 h-64 p-4 bg-primary2 rounded-lg drop-shadow-sm shadow-lg'>
+        <div className='absolute top-12 right-4 bottom-0 w-full h-64 p-4 bg-primary2 rounded-lg drop-shadow-sm shadow-lg'>
             <div className='flex justify-start gap-2'>
                 <div className={`h-16 delay-100 duration-200 cursor-pointer px-2 rounded-full w-16 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
                 <div className='py-2 text-text_primary'>

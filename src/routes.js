@@ -12,7 +12,7 @@ import Incomes_and_revenues from "./pages/Admin/Incomes_and_revenues";
 import Expenses from "./pages/Expenses";
 import AdminDashboard from "./components/AdminDashboard";
 import Dashboard from "./pages/Admin/Dashboard";
-import BudgetRequests from "./pages/Admin/budgetRequests";
+import Requests from "./pages/Admin/Requests";
 
 const AppRoutes = (prop) => {
 
@@ -38,7 +38,7 @@ const AppRoutes = (prop) => {
         }></Route>
         
         <Route path="dashboard" element={<Dashboard/>}/>
-        <Route path="dashboard/requests" element={<BudgetRequests/>}/>
+        <Route path="dashboard/requests" element={<Requests/>}/>
 
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>

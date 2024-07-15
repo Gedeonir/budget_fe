@@ -99,7 +99,7 @@ function Dashboard() {
           <div className='flex justify-start gap-8 w-full mb-4'>
             <div className='py-8 px-4 w-full h-52 font-extrabold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
               <h1 className='text-5xl text-primary2'>Total</h1>
-              <p className='text-lg text-primary px-2'>Budget</p>
+              <p className='text-lg text-primary2 px-2'>Budget</p>
 
               <div className='flex relative justify-between mt-8 text-primary2'>
                 <p className='text-5xl'>5000000</p>
@@ -108,7 +108,7 @@ function Dashboard() {
 
               <MdEditNote size={25} className='text-primary2 cursor-pointer hover:text-primary delay-100 duration-200 absolute top-8 right-8 z-10'/>
 
-              <div className='absolute top-0 right-0 left-0 w-full h-52 bg-gradient-to-r from-secondary to-primary opacity-50 rounded-lg'/>
+              <div className='absolute top-0 right-0 left-0 w-full h-52 bg-gradient-to-r from-secondary to-primary opacity-30 rounded-lg'/>
             </div>
             <div className='pl-8 grid grid-cols-1 gap-2 w-full h-52 border-l border-text_primary border-opacity-10'>
               <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
