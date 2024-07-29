@@ -94,23 +94,22 @@ function Dashboard() {
       <div className='py-4 font-extrabold text-text_primary'>
         <p>{salutation()} <span className='text-secondary'>{userData?.getProfile?.fullNames}</span>. Welcome to <span className='text-secondary'>{userData?.getProfile?.institution?.institutionName} BPE</span>  Dashboard</p>
       </div>
-      <div className="w-full grid grid-cols-3 gap-4 h-full items-start py-4 mb-8">
+      <div className="w-full lg:grid grid-cols-3 gap-4 h-full items-start lg:py-4 mb-8">
         <div className='col-span-2 w-full'>
-          <div className='flex justify-start gap-8 w-full mb-4'>
-            <div className='py-8 px-4 w-full h-52 font-extrabold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
-              <h1 className='text-5xl text-primary2'>Total</h1>
-              <p className='text-lg text-primary2 px-2'>Budget</p>
+          <div className='lg:flex justify-start gap-8 w-full mb-4'>
+            <div className='lg:py-8 py-2 px-4 my-4 w-full h-28 lg:h-52 font-extrabold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
+              <h1 className='lg:text-2xl text-2xl text-primary2'>Total Budget</h1>
 
-              <div className='flex relative justify-between mt-8 text-primary2'>
-                <p className='text-5xl'>5000000</p>
+              <div className='flex relative justify-between lg:mt-8 mt-4 text-primary2'>
+                <p className='lg:text-5xl text-2xl'>5000000</p>
                 <label className='absolute left-0 -top-4'>USD</label>
               </div>
 
               <MdEditNote size={25} className='text-primary2 cursor-pointer hover:text-primary delay-100 duration-200 absolute top-8 right-8 z-10'/>
 
-              <div className='absolute top-0 right-0 left-0 w-full h-52 bg-gradient-to-r from-secondary to-primary opacity-30 rounded-lg'/>
+              <div className='absolute top-0 right-0 left-0 w-full h-28 lg:h-52 bg-gradient-to-r from-secondary to-primary opacity-30 rounded-lg'/>
             </div>
-            <div className='pl-8 grid grid-cols-1 gap-2 w-full h-52 border-l border-text_primary border-opacity-10'>
+            <div className='lg:pl-8 my-4 grid grid-cols-1 gap-2 w-full h-52 lg:border-l border-text_primary border-opacity-10'>
               <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
                 <h1 className='text-md font-extrabold text-secondary'>Income & Revenues</h1>
                 <div className='flex justify-between font-extrabold text-text_primary'>
@@ -134,7 +133,7 @@ function Dashboard() {
               </div>
             </div>
           </div>
-          <div className='w-full p-4 rounded-lg  bg-primary2 shadow-lg drop-shadow-lg'>
+          <div className='w-full p-4 my-4 rounded-lg  bg-primary2 shadow-lg drop-shadow-lg'>
             <BarCharts/>
           </div>
 
@@ -157,34 +156,34 @@ function Dashboard() {
         </div>
 
       </div>
-      <div className='w-full h-full text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
-        <div className='text-lg font-extrabold text-text_primary mb-4'>
+      <div className='w-full h-full overflow-x-auto text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
+        <div className='lg:text-lg text-sm font-extrabold text-text_primary mb-4'>
           Budget allocated to various instutitions
         </div>        
         <table className='w-full'>
           <thead>
-            <tr className="text-md font-semibold tracking-wide text-left text-text_primary  capitalize">
-              <th className="px-4 py-2 border w-2/5" colSpan={2}>institution</th>
-              <th className="px-4 py-2 border w-1/5">Budget amount allocated</th>
-              <th className="px-4 py-2 border w-1/5">Budget percentage allocated</th>
+            <tr className="lg:text-lg text-xs font-semibold tracking-wide text-left text-text_primary  capitalize">
+              <th className="lg:px-4 py-2 border w-2/5 " colSpan={2}>institution</th>
+              <th className="lg:px-4 py-2 border w-1/5">Budget amount allocated</th>
+              <th className="lg:px-4 py-2 border w-1/5">Budget percentage allocated</th>
             </tr>
           </thead>
           <tbody className="">
             <tr className="text-text_primary">
-              <td className="px-4 py-3 border" colSpan={2}>
-                <div className="flex items-center text-sm">
-                  <div className="relative w-8 h-8 mr-3 rounded-full md:block">
+              <td className="lg:px-4 py-3 border " colSpan={2}>
+                <div className="lg:flex items-center text-sm">
+                  <div className="relative w-8 h-8 mr-3 rounded-full hidden lg:block">
                     <img className="object-cover w-full h-full rounded-full" src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" loading="lazy" />
                     <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                   <div>
-                    <p className="font-semibold text-black">RWANDA BIMEDICAL CENTER</p>
-                    <p className="text-xs text-gray-600">RBC</p>
+                    <p className="font-semibold text-black text-xs lg:text-lg">RWANDA BIMEDICAL CENTER</p>
+                    <p className="text-xs lg:text-lg text-gray-600">RBC</p>
                   </div>
                 </div>
               </td>
-              <td className="px-4 py-3 text-ms font-semibold border">22000000000000</td>
-              <td className="px-4 py-3 text-xs border">
+              <td className="px-4 py-3 text-xs lg:text-lg font-semibold border">22000000000000</td>
+              <td className="px-4 py-3 text-xs lg:text-lg border">
                 <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
               </td>
             </tr>
@@ -194,8 +193,8 @@ function Dashboard() {
         
       </div>
 
-      <div className='h-92 w-full grid grid-cols-3 gap-4'>
-        <div className='col-span-2 h-92 bg-primary2 text-text_primary py-4 rounded-lg shadow-lg drop-shadow-lg'>
+      <div className='h-92 w-full lg:grid grid-cols-3 gap-4'>
+        <div className='col-span-2 h-92 my-4 bg-primary2 text-text_primary py-4 rounded-lg shadow-lg drop-shadow-lg'>
           <div className='text-lg px-4 font-extrabold  mb-4'>
             Recent transactions
           </div>

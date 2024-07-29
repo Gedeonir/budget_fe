@@ -101,7 +101,7 @@ const AdminDashboard = (props) => {
 
   return (
     <div className='min-h-screen max-h-screen flex justify-start w-full overflow-hidden'>
-        <aside className='py-4 min-h-screen max-h-screen group w-1/5 shadow-lg drop-shadow-sm'>
+        <aside className='py-4 hidden lg:block min-h-screen max-h-screen group w-1/5 shadow-lg drop-shadow-sm'>
             <div className="flex items-center w-full justify-start px-6">
                 <div className='w-12'>
                     <img src={GovernmentLogo} className='w-full h-full object-cover'/>
@@ -138,12 +138,12 @@ const AdminDashboard = (props) => {
         </aside>
 
         <div className={`w-full min-h-screen max-h-screen bg-primary ${props.openModal?'overflow-y-hidden':'overflow-y-auto'}`}>
-            <header className='bg-primary w-full py-2 px-8 flex justify-between items-center sticky z-20 top-0'>
-                <div className="flex items-center w-40">
+            <header className='bg-primary w-full py-2 lg:px-8 px-2 flex justify-between items-center sticky z-20 top-0'>
+                <div className="flex items-center lg:w-40 w-24">
                     <img src={Logo} className='w-full h-full object-cover'/>
                 </div>
-                <div className='flex relative items-center justify-center gap-2 py-2 px-2 drop-shadow-lg shadow-sm bg-primary2 rounded-lg'>
-                    <form className='flex justify-start gap-1'>
+                <div className='flex relative items-center justify-center gap-2 py-2 px-2 rounded-lg'>
+                    <form className='justify-start gap-1 hidden lg:flex'>
                         <label className='text-text_primary text-sm'>FYI</label>
                         <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                             {academicYear.map((item)=>{
@@ -160,10 +160,10 @@ const AdminDashboard = (props) => {
                     <div 
                     onClick={()=>setOpenAccountModal(!openAccountModal)}
                     className={`h-6 delay-100 duration-200 cursor-pointer px-2 rounded-full w-6 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
-                    {openAccountModal && <AccountsModal profile={props?.profile}/>}                    
                 </div>
+                {openAccountModal && <AccountsModal profile={props?.profile}/>}                    
             </header>
-            <section className='py-2 px-8 relative'>
+            <section className='py-2 lg:px-8 px-2 relative'>
                 {props.children}
             </section>
         </div>

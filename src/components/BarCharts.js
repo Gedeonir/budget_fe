@@ -92,14 +92,14 @@ function BarCharts() {
 
   return (
     <div className='flex justify-end h-80'>
-        <div className='h-72 border-r border-text_primary border-opacity-10 w-8 flex items-end relative'>
+        <div className='h-72 border-r border-text_primary border-opacity-10 w-2 lg:w-8 flex items-end relative'>
             <div className='h-1/4 border-t border-text_primary border-opacity-30 w-2 absolute right-0'/>
             <div className='h-1/2 border-t border-text_primary border-opacity-30 w-2 absolute right-0'/>
             <div className='h-3/4 border-t border-text_primary border-opacity-30 w-2 absolute right-0'/>
             <div className='h-full border-t border-text_primary border-opacity-30 w-2 absolute right-0'/>
 
         </div>
-        <div className="flex h-72 items-end justify-start flex-grow w-11/12 space-x-2 sm:space-x-1 relative text-text_primary">
+        <div className="flex h-72 items-end justify-start flex-grow w-full lg:w-11/12 lg:space-x-2 space-x-1 relative text-text_primary">
             {barData.map((value,index)=>(
                 <div key={index} className="relative flex flex-col items-center flex-grow group cursor-pointer">
                     <div className="absolute top-8 right-2 z-20 hidden text-xs font-bold group-hover:block rounded-lg p-2 w-24 bg-primary shadow-lg drop-shadow-lg">
