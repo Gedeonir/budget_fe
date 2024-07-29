@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../../components/Layout'
+import Layout from '../components/Layout'
 
 const Incomes_and_revenues = () => {
     const [userData,setUserData]=useState([]);

@@ -27,7 +27,7 @@ const sideBarMenu1=[
     {
         "menuItem":"Budget Requests",
         "menuIcon":<AiOutlinePullRequest size={25}/>,
-        "menuLeadTo":"/dashboard/requests/#all"
+        "menuLeadTo":"/dashboard/requests/"
     },
     {
         "menuItem":"Incomes/Revenues",
@@ -108,16 +108,16 @@ const AdminDashboard = (props) => {
                 </div>
                 <label className='mx-2 text-text_primary uppercase font-extrabold'>Minecofin</label>
             </div>
-            <ul className='my-4 w-full list-none items-start border-b pb-2 border-primary'>
+            <ul className='my-4 w-full list-none items-start border-b pb-2 border-text_primary border-opacity-40'>
                 {sideBarMenu1.map((item,index)=>(
-                    <li key={index} className={`w-full py-1 my-2 px-4 rounded-l-full text-text_primary ${location.pathname===`${item.menuLeadTo}` && 'bg-primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
+                    <li key={index} className={`w-full py-1 my-2 px-4 rounded-l-full ${location.pathname===`${item.menuLeadTo}`?'bg-primary text-secondary':'text-text_primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
                         {item.menuIcon}
                         <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-md'>{item.menuItem}</Link>
                     </li>  
                 ))}               
             </ul>
 
-            <ul className='my-4 w-full list-none items-start border-primary'>
+            <ul className='my-4 w-full list-none items-start border-text_primary border-opacity-40'>
                 {sideBarMenu2.map((item,index)=>(
                     <li key={index} className={`w-full py-1 my-2 px-4 rounded-l-full text-text_primary ${location.pathname===`${item.menuLeadTo}` && 'bg-primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
                         {item.menuIcon}
@@ -137,7 +137,7 @@ const AdminDashboard = (props) => {
 
         </aside>
 
-        <div className='w-full min-h-screen max-h-screen bg-primary overflow-y-auto'>
+        <div className={`w-full min-h-screen max-h-screen bg-primary ${props.openModal?'overflow-y-hidden':'overflow-y-auto'}`}>
             <header className='bg-primary w-full py-2 px-8 flex justify-between items-center sticky z-20 top-0'>
                 <div className="flex items-center w-40">
                     <img src={Logo} className='w-full h-full object-cover'/>
@@ -145,7 +145,7 @@ const AdminDashboard = (props) => {
                 <div className='flex relative items-center justify-center gap-2 py-2 px-2 drop-shadow-lg shadow-sm bg-primary2 rounded-lg'>
                     <form className='flex justify-start gap-1'>
                         <label className='text-text_primary text-sm'>FYI</label>
-                        <select className='border w-24 text-text_primary rounded-lg border-primary'>
+                        <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                             {academicYear.map((item)=>{
                                 return(
                                     <option value={item} key={item}>{item}</option>
@@ -163,7 +163,7 @@ const AdminDashboard = (props) => {
                     {openAccountModal && <AccountsModal profile={props?.profile}/>}                    
                 </div>
             </header>
-            <section className='py-2 px-8'>
+            <section className='py-2 px-8 relative'>
                 {props.children}
             </section>
         </div>

@@ -8,11 +8,12 @@ import SignIn from "./pages/SignIn";
 import Home from "./pages/Admin/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Incomes_and_revenues from "./pages/Admin/Incomes_and_revenues";
+import Incomes_and_revenues from "./pages/Incomes_and_revenues";
 import Expenses from "./pages/Expenses";
 import AdminDashboard from "./components/AdminDashboard";
 import Dashboard from "./pages/Admin/Dashboard";
 import Requests from "./pages/Admin/Requests";
+import IncomeStatements from "./pages/Admin/IncomeStatements";
 
 const AppRoutes = (prop) => {
 
@@ -39,6 +40,7 @@ const AppRoutes = (prop) => {
         
         <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="dashboard/requests" element={<Requests/>}/>
+        <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
 
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>

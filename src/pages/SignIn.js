@@ -58,7 +58,7 @@ const SignIn = () => {
                 <p className={`text-sm text-red text-center py-1 ${error && 'bg-red'} bg-opacity-20 px-2`}>{error}</p>
                 <div className="mb-4">
                     <label className="text-text_primary font-bold text-md mb-2">Email <span className="text-red">*</span></label>
-                    <input type="email" name='email' value={formData.email} className="text-text_secondary text-sm outline-primary block w-full px-2 py-2 border-2 border-primary placeholder-text_primary" placeholder="Email" required
+                    <input type="email" name='email' value={formData.email} className="text-text_secondary text-sm outline-primary block w-full px-2 py-2 border-2 border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Email" required
                     onChange={(e)=>{
                         setFormData({
                             ...formData,
@@ -70,7 +70,7 @@ const SignIn = () => {
 
                 <div className="mb-4">
                     <label className="text-text_primary font-bold text-md mb-2">Password <span className="text-red">*</span></label>
-                    <input type={!showPassword?"password":"text"} name="password" value={formData.password} className="text-text_secondary text-sm outline-primary block w-full px-2 py-2 border-2 border-primary placeholder-text_primary" placeholder="Password" required
+                    <input type={!showPassword?"password":"text"} name="password" value={formData.password} className="text-text_secondary text-sm outline-primary block w-full px-2 py-2 border-2 border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Password" required
                     onChange={(e)=>{
                         setFormData({
                             ...formData,

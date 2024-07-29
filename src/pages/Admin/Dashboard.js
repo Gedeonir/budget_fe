@@ -145,7 +145,7 @@ function Dashboard() {
           </div>
           <div className='h-full overflow-y-auto px-4 '>
             {incomes.map((value,index)=>(
-              <div className='flex justify-between gap-2 text-text_primary mb-4'>
+              <div key={index} className='flex justify-between gap-2 text-text_primary mb-4'>
                 <div className={`h-8 py-1 flex items center justify-center delay-100 duration-200 cursor-pointer px-2 rounded-lg w-12 border`}>
                   {index +1}
                 </div>
@@ -163,29 +163,29 @@ function Dashboard() {
         </div>        
         <table className='w-full'>
           <thead>
-            <tr class="text-md font-semibold tracking-wide text-left text-text_primary  capitalize">
-              <th class="px-4 py-2 border w-2/5" colSpan={2}>institution</th>
-              <th class="px-4 py-2 border w-1/5">Budget amount allocated</th>
-              <th class="px-4 py-2 border w-1/5">Budget percentage allocated</th>
+            <tr className="text-md font-semibold tracking-wide text-left text-text_primary  capitalize">
+              <th className="px-4 py-2 border w-2/5" colSpan={2}>institution</th>
+              <th className="px-4 py-2 border w-1/5">Budget amount allocated</th>
+              <th className="px-4 py-2 border w-1/5">Budget percentage allocated</th>
             </tr>
           </thead>
-          <tbody class="">
-            <tr class="text-text_primary">
-              <td class="px-4 py-3 border" colSpan={2}>
-                <div class="flex items-center text-sm">
-                  <div class="relative w-8 h-8 mr-3 rounded-full md:block">
-                    <img class="object-cover w-full h-full rounded-full" src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" loading="lazy" />
-                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+          <tbody className="">
+            <tr className="text-text_primary">
+              <td className="px-4 py-3 border" colSpan={2}>
+                <div className="flex items-center text-sm">
+                  <div className="relative w-8 h-8 mr-3 rounded-full md:block">
+                    <img className="object-cover w-full h-full rounded-full" src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" loading="lazy" />
+                    <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                   <div>
-                    <p class="font-semibold text-black">RWANDA BIMEDICAL CENTER</p>
-                    <p class="text-xs text-gray-600">RBC</p>
+                    <p className="font-semibold text-black">RWANDA BIMEDICAL CENTER</p>
+                    <p className="text-xs text-gray-600">RBC</p>
                   </div>
                 </div>
               </td>
-              <td class="px-4 py-3 text-ms font-semibold border">22000000000000</td>
-              <td class="px-4 py-3 text-xs border">
-                <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
+              <td className="px-4 py-3 text-ms font-semibold border">22000000000000</td>
+              <td className="px-4 py-3 text-xs border">
+                <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
               </td>
             </tr>
             </tbody>
@@ -249,10 +249,10 @@ function Dashboard() {
           <div className='text-lg font-extrabold px-4  mb-4'>
             Expenses overview
           </div>
-          {expenses.map((item)=>{
+          {expenses.map((item,index)=>{
             let percentage=item.current * 100 /item.target;
           return (
-            <div className={`hover:bg-primary bg-opacity-50 rounded-sm px-4 cursor-pointer`}>
+            <div key={index} className={`hover:bg-primary bg-opacity-50 rounded-sm px-4 cursor-pointer`}>
               <div className='flex justify-between flex-shrink'>
                 <label className='mb-2 font-medium truncate capitalize'>{item.expenses}</label>
                 <label><span className='font-bold'>{item.current}</span> / {item.target}</label>

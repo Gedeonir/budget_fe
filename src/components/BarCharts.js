@@ -99,18 +99,18 @@ function BarCharts() {
             <div className='h-full border-t border-text_primary border-opacity-30 w-2 absolute right-0'/>
 
         </div>
-        <div class="flex h-72 items-end justify-start flex-grow w-11/12 space-x-2 sm:space-x-1 relative text-text_primary">
+        <div className="flex h-72 items-end justify-start flex-grow w-11/12 space-x-2 sm:space-x-1 relative text-text_primary">
             {barData.map((value,index)=>(
-                <div class="relative flex flex-col items-center flex-grow group cursor-pointer">
-                    <div class="absolute top-8 right-2 z-20 hidden text-xs font-bold group-hover:block rounded-lg p-2 w-24 bg-primary shadow-lg drop-shadow-lg">
+                <div key={index} className="relative flex flex-col items-center flex-grow group cursor-pointer">
+                    <div className="absolute top-8 right-2 z-20 hidden text-xs font-bold group-hover:block rounded-lg p-2 w-24 bg-primary shadow-lg drop-shadow-lg">
                         <p><span className='text-success'>I:</span>{value.income}({value.incomepercentage})</p>
                         <p><span className='text-red'>E:</span>{value.expenses}({value.expensespercentage})</p>
                     </div>
-                    <div class="flex items-end w-4 h-72 hover:opacity-25 z-10">
-                        <div class={`relative flex justify-center flex-grow bg-success`} style={{ height: value.incomepercentage }}></div>
-                        <div class="relative flex justify-center flex-grow bg-red"  style={{ height: value.expensespercentage}}></div>	
+                    <div className="flex items-end w-4 h-72 hover:opacity-25 z-10">
+                        <div className={`relative flex justify-center flex-grow bg-success`} style={{ height: value.incomepercentage }}></div>
+                        <div className="relative flex justify-center flex-grow bg-red"  style={{ height: value.expensespercentage}}></div>	
                     </div>
-                    <span class="absolute -bottom-5 text-xs font-bold ">{value.month}</span>
+                    <span className="absolute -bottom-5 text-xs font-bold ">{value.month}</span>
                 </div>
             ))}
         </div>
