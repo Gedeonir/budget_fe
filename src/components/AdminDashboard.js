@@ -12,7 +12,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { PiCopyrightThin } from "react-icons/pi";
-import Logo from "../assets/Logo.png"
+import Logo from "../assets/Logo.PNG"
 import {IoIosNotificationsOutline} from "react-icons/io"
 import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'

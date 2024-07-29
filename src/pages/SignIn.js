@@ -3,7 +3,6 @@ import { Link,useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom';
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import axios from 'axios';
-import Logo from "../assets/logo.png"
 
 const SignIn = () => {
     const [showPassword,setShowPassword]=React.useState(false);
