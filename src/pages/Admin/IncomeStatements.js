@@ -137,7 +137,7 @@ const IncomeStatements = () => {
             <p>Incomes and Revenues statement</p>
         </div>
         <div className='w-full lg:flex justify-start gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4'>
-          <button className='lg:w-2/5 w-full my-4 px-2 group' onClick={()=>openModal(!open)}>
+          <button className='lg:w-1/5 w-full my-4 px-2 group' onClick={()=>openModal(!open)}>
             <div className='w-full lg:h-3/4 h-32 group-hover:text-secondary delay-100 duration-200 cursor-pointer text-text_primary opacity-50 flex justify-center items-center text-center border border-dashed rounded-lg group-hover:border-secondary border-text_primary'>
               <MdOutlineLibraryBooks size={80}/>
             </div>
@@ -145,8 +145,8 @@ const IncomeStatements = () => {
               Record new income
             </p>              
           </button>
-          <div className='lg:w-3/5 w-full'>
-            <p className='text-lg text-secondary font-bold'>Recent Incomes</p>
+          <div className='lg:w-4/5 w-full'>
+            <p className='lg:text-lg text-sm text-secondary font-bold px-2'>Recent Incomes</p>
             <OwlCarousel className="w-full relative" {...options} >
             {recentIncomes.map((src,index)=>{
             return(
