@@ -162,7 +162,7 @@ function Dashboard() {
         </div>        
         <table className='w-full'>
           <thead>
-            <tr className="lg:text-lg text-xs font-semibold tracking-wide text-left text-text_primary  capitalize">
+            <tr className="lg:text-sm text-xs font-semibold tracking-wide text-left text-text_primary  capitalize">
               <th className="lg:px-4 py-2 border w-2/5 " colSpan={2}>institution</th>
               <th className="lg:px-4 py-2 border w-1/5">Budget amount allocated</th>
               <th className="lg:px-4 py-2 border w-1/5">Budget percentage allocated</th>
@@ -172,19 +172,19 @@ function Dashboard() {
             <tr className="text-text_primary">
               <td className="lg:px-4 py-3 border " colSpan={2}>
                 <div className="lg:flex items-center text-sm">
-                  <div className="relative w-8 h-8 mr-3 rounded-full hidden lg:block">
+                  <div className="relative w-4 h-4 mr-3 rounded-full hidden lg:block">
                     <img className="object-cover w-full h-full rounded-full" src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" loading="lazy" />
                     <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                   <div>
-                    <p className="font-semibold text-black text-xs lg:text-lg">RWANDA BIMEDICAL CENTER</p>
-                    <p className="text-xs lg:text-lg text-gray-600">RBC</p>
+                    <p className="font-regular text-black text-xs lg:text-sm">RWANDA BIMEDICAL CENTER</p>
+                    <p className="text-xs text-gray-600">RBC</p>
                   </div>
                 </div>
               </td>
-              <td className="px-4 py-3 text-xs lg:text-lg font-semibold border">22000000000000</td>
-              <td className="px-4 py-3 text-xs lg:text-lg border">
-                <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
+              <td className="px-4 py-3 text-xs lg:text-sm border">22000000000000</td>
+              <td className="px-4 py-3 text-xs lg:text-sm border">
+                <span className="px-2 py-1 leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
               </td>
             </tr>
             </tbody>

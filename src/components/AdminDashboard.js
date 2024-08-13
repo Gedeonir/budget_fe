@@ -110,18 +110,18 @@ const AdminDashboard = (props) => {
             </div>
             <ul className='my-4 w-full list-none items-start border-b pb-2 border-text_primary border-opacity-40'>
                 {sideBarMenu1.map((item,index)=>(
-                    <li key={index} className={`w-full py-1 my-2 px-4 rounded-l-full ${location.pathname===`${item.menuLeadTo}`?'bg-primary text-secondary':'text-text_primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
+                    <li key={index} className={`w-full py-1 my-2 px-2 rounded-l-full ${location.pathname===`${item.menuLeadTo}`?'bg-primary text-secondary':'text-text_primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
                         {item.menuIcon}
-                        <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-md'>{item.menuItem}</Link>
+                        <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-sm'>{item.menuItem}</Link>
                     </li>  
                 ))}               
             </ul>
 
             <ul className='my-4 w-full list-none items-start border-text_primary border-opacity-40'>
                 {sideBarMenu2.map((item,index)=>(
-                    <li key={index} className={`w-full py-1 my-2 px-4 rounded-l-full text-text_primary ${location.pathname===`${item.menuLeadTo}` && 'bg-primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
+                    <li key={index} className={`w-full py-1 my-2 px-2 rounded-l-full text-text_primary ${location.pathname===`${item.menuLeadTo}` && 'bg-primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
                         {item.menuIcon}
-                        <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-md'>{item.menuItem}</Link>
+                        <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-sm'>{item.menuItem}</Link>
                     </li>  
                 ))}    
 
@@ -138,7 +138,7 @@ const AdminDashboard = (props) => {
         </aside>
 
         <div className={`w-full min-h-screen max-h-screen bg-primary ${props.openModal?'overflow-y-hidden':'overflow-y-auto'}`}>
-            <header className='bg-primary w-full py-2 lg:px-8 px-2 flex justify-between items-center sticky z-20 top-0'>
+            <header className='bg-primary w-full py-2 lg:px-2 px-2 flex justify-between items-center sticky z-20 top-0'>
                 <div className="flex items-center lg:w-40 w-24">
                     <img src={Logo} className='w-full h-full object-cover'/>
                 </div>
@@ -163,7 +163,7 @@ const AdminDashboard = (props) => {
                 </div>
                 {openAccountModal && <AccountsModal profile={props?.profile}/>}                    
             </header>
-            <section className='py-2 lg:px-8 px-2 relative'>
+            <section className='py-2 lg:px-2 px-2 relative'>
                 {props.children}
             </section>
         </div>
