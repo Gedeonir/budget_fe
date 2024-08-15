@@ -15,6 +15,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import Requests from "./pages/Admin/Requests";
 import IncomeStatements from "./pages/Admin/IncomeStatements";
 import Forecast from "./pages/Admin/Forecast";
+import Institutions from "./pages/Admin/Institutions";
 
 const AppRoutes = (prop) => {
 
@@ -43,7 +44,7 @@ const AppRoutes = (prop) => {
         <Route path="dashboard/requests" element={<Requests/>}/>
         <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
         <Route path="dashboard/forecast-and-analysis" element={<Forecast/>}></Route>
-
+        <Route path="/dashboard/government-institutions" element={<Institutions/>}/>
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>

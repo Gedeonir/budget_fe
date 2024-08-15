@@ -4,7 +4,7 @@ import {AiOutlineLoading3Quarters} from "react-icons/ai"
 const AddIncomeStatement = (props) => {
     const [loading,setLoading]=React.useState(false);
   return (
-    <div className='px-8 py-4 flex items-center overflow-hidden absolute bottom-0 top-0 left-0 w-full z-20 min-h-screen max-h-screen'>
+    <div className='px-8 flex items-center overflow-hidden absolute bottom-0 -top-10 left-0 w-full z-10 min-h-screen max-h-screen'>
         <div className='px-4 py-2 bg-primary2 shadow-lg drop-shadow-lg rounded-lg w-full'>
             <div className="mb-2">
                 <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new income statement</h1>

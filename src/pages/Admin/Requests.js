@@ -8,8 +8,7 @@ import { SlLike } from "react-icons/sl";
 import { SlDislike } from "react-icons/sl";
 import { MdCurrencyExchange } from "react-icons/md";
 import Pagination from '../../components/Pagination';
-import { MdNavigateNext } from "react-icons/md";
-import { MdNavigateBefore } from "react-icons/md";
+
 
 const Requests = () => {
     const [userData,setUserData]=useState([]);
@@ -89,22 +88,13 @@ const Requests = () => {
                     </tbody>
                 </table>
             </div>
-            <div className='lg:flex justify-between gap-2'>
-                <div className='flex lg:justify-start my-4 justify-between items-center text-text_primary'>
-                    <MdNavigateBefore size={25}/>
-                    <Pagination
-                        length={100}
-                        postsPerPage={20}
-                        handlePagination={handlePagination}
-                    />
-                    <MdNavigateNext size={25}/>
-                </div>
-                <div className='flex justify-start items-center gap-2 my-4'>
-                    <label className='text-text_primary text-lg font-medium outline-none placeholder:text-primary'>Jump to page</label>
-                    <input type='number' className='w-24 border-2 border-primary rounded-lg px-2' placeholder='Page'/>
-                </div>
-                
-            </div>
+
+            <Pagination
+                length={100}
+                postsPerPage={20}
+                handlePagination={handlePagination}
+            />
+
             
 
         </div>

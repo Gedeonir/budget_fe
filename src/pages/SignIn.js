@@ -38,7 +38,10 @@ const SignIn = () => {
                 }
             });
             const {data}=getProfile;
-            data.getProfile?.role==="admin"?navigate("/admin/dashboard"):navigate("../");
+            if(data.getProfile?.role==="admin")
+                navigate("/admin/dashboard");
+            
+            navigate("../");
 
         } catch (error) {
             setError(error?.response?.data?.message?error?.response?.data?.message:error?.message);
