@@ -22,9 +22,9 @@ const AppRoutes = (prop) => {
   return (
     <Routes>
         <Route path="/" index element={
-          <Protected  route="/signin">              
+          // <Protected  route="/signin">              
             <Homepage />
-          </Protected>
+          // </Protected>
         } />
 
         <Route path="/expennditures" element={

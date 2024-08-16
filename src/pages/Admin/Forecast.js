@@ -5,6 +5,58 @@ import { Link } from 'react-router-dom';
 import LineChart from '../../components/LineChart';
 
 const Forecast = () => {
+    const data = {
+        labels: [0,"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov"],
+        datasets: [
+          {
+            label: 'Actual',
+            data: [100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
+            borderColor: '#26B2AB',
+            backgroundColor: '#26B2AB',
+            fill: false,
+            tension: 0.1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            pointBackgroundColor: '#26B2AB',
+            pointBorderColor: '#26B2AB',
+          },
+          {
+            label: 'Expected',
+            data: [100000, 75000, 75000, 75000, 50000, 25000, 25000, 25000, 50000, 100000, 50000, 50000],
+            borderColor: '#65758B',
+            backgroundColor: '#65758B',
+            fill: false,
+            tension: 0.1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            pointBackgroundColor: '#65758B',
+            pointBorderColor: '#65758B',
+          },
+        ],
+    };
+    
+    const options = {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Month',
+            },
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Amount',
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+        },
+    };
   return (
     <AdminDashboard>
         <div className='grid grid-cols-3 gap-3 w-full p-2'>
@@ -98,7 +150,7 @@ const Forecast = () => {
                 </form>
             </div>
 
-            <LineChart/>
+            <LineChart options={options} data={data}/>
 
         </section>
     </AdminDashboard>

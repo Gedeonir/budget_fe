@@ -1,76 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { FaArrowTrendDown } from "react-icons/fa6";
 import Layout from '../components/Layout';
-import { MdEditNote } from "react-icons/md";
+import { IoWallet } from "react-icons/io5";
 import BarCharts from '../components/BarCharts';
 import { IoCashSharp } from "react-icons/io5";
+import GovernmentLogo from '../assets/Govt.png';
+import { RiAddCircleFill } from "react-icons/ri";
+import { MdPrivacyTip } from "react-icons/md";
+import { FaQuestionCircle } from "react-icons/fa";
+import { IoIosPeople } from "react-icons/io";
+import LineChart from '../components/LineChart';
+import { FaArrowDownLong } from "react-icons/fa6";
+import { PieChart,pieArcLabelClasses } from '@mui/x-charts/PieChart';
+import Pagination from '../components/Pagination';
+import { IoSearchOutline } from "react-icons/io5";
+import { RiFilter3Line } from "react-icons/ri";
 
-
-const incomes=[
+const QuickLinks=[
   {
-    incomeName:"Savings",
-    percentage:"10%",
+    "Icon":<RiAddCircleFill size={20}/>,
+    "label":"New budget",
   },
   {
-    incomeName:"Government Allowance",
-    percentage:"10%",
+    "Icon":<MdPrivacyTip size={20}/>,
+    "label":"Privacy & Policy",
   },
   {
-    incomeName:"Penalty fees",
-    percentage:"10%",
+    "Icon":<FaQuestionCircle size={20}/>,
+    "label":"FAQ",
   },
   {
-    incomeName:"External loans and aids",
-    percentage:"10%",
+    "Icon":<IoIosPeople size={20}/>,
+    "label":"HR team",
   },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  },
-  {
-    incomeName:"Social health insurance contributions",
-    percentage:"10%",
-  }
 ]
 
-const expenses=[
-  {
-    "icon":"",
-    "target":300000,
-    "current":300500,
-    "expenses":"Transport"
-  },
-  {
-    "icon":"",
-    "target":300000,
-    "current":10000,
-    "expenses":"Computer maintanence"
-  },
-  {
-    "icon":"",
-    "target":300000,
-    "current":10000000,
-    "expenses":"rent"
-  }
-]
+const cards=[{
+  "label":"Total Budget",
+  "amount":300000,
+  "icon":<IoCashSharp size={30}/>,
+},
+{
+  "label":"Total Spent",
+  "amount":300000,
+  "icon":<FaArrowTrendDown size={30}/>,
+},
+{
+  "label":"Total Left",
+  "amount":300000,
+  "icon":<IoWallet size={30}/>,
+}];
 
 function Homepage() {
   const [userData,setUserData]=useState([]);
@@ -89,204 +70,278 @@ function Homepage() {
     return salutation
   }
 
+  const handlePagination = (pageNumber) => {
+    setCurrentPage (pageNumber);
+  };
+
+  const data = {
+    labels: [0,"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov"],
+    datasets: [
+      {
+        label: 'Actual',
+        data: [100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
+        borderColor: '#26B2AB',
+        backgroundColor: '#26B2AB',
+        fill: false,
+        tension: 0.1,
+        pointStyle: 'circle',
+        pointRadius: 5,
+        pointBackgroundColor: '#26B2AB',
+        pointBorderColor: '#26B2AB',
+        borderSize: 0o1
+      },
+      {
+        label: 'Last Year',
+        data: [100000, 75000, 75000, 75000, 50000, 25000, 25000, 25000, 50000, 100000, 50000, 50000],
+        borderColor: '#65758B',
+        backgroundColor: '#65758B',
+        fill: false,
+        tension: 0.1,
+        pointStyle: 'circle',
+        pointRadius: 5,
+        pointBackgroundColor: '#65758B',
+        pointBorderColor: '#65758B',
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Month',
+        },
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Amount',
+        },
+      },
+    },
+  };
+
+  const latest=[1,2,3,4,];
+
+  const sampleData = [ 
+    ['Books', 30], 
+    ['Cars', 40], 
+    ['Table', 30], 
+  ]; 
+
+  const pieData= [
+    { id: 0, value: 10, color: "#f44336", label: "Food" },
+    { id: 1, value: 15, color: "#2196f3", label: "Transport" },
+    { id: 2, value: 20, color: "#ff9800", label: "Household" },
+    { id: 3, value: 59, color: "#f44337", label: "Rent" },
+    { id: 4, value: 70, color: "#2196f9", label: "Salaries" },
+    { id: 5, value: 50, color: "#ff9806", label: "Medical" },
+  ]
+
   return (
     <Layout setUserData={setUserData}>
-      <div className='py-4 font-extrabold text-text_primary'>
-        <p>{salutation()} <span className='text-secondary'>{userData?.getProfile?.fullNames}</span>. Welcome to <span className='text-secondary'>{userData?.getProfile?.institution?.institutionName} BPE</span>  Dashboard</p>
-      </div>
-      <div className="w-full grid grid-cols-3 gap-4 h-full items-start py-4 mb-8">
-        <div className='col-span-2 w-full'>
-          <div className='flex justify-start gap-8 w-full mb-4'>
-            <div className='py-8 px-4 w-full h-52 font-extrabold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
-              <h1 className='text-5xl text-primary2'>Total</h1>
-              <p className='text-lg text-primary px-2'>Budget</p>
-
-              <div className='flex relative justify-between mt-8 text-primary2'>
-                <p className='text-5xl'>5000000</p>
-                <label className='absolute left-0 -top-4'>USD</label>
-              </div>
-
-              <MdEditNote size={25} className='text-primary2 cursor-pointer hover:text-primary delay-100 duration-200 absolute top-8 right-8 z-10'/>
-
-              <div className='absolute top-0 right-0 left-0 w-full h-52 bg-gradient-to-r from-secondary to-primary opacity-50 rounded-lg'/>
-            </div>
-            <div className='pl-8 grid grid-cols-1 gap-2 w-full h-52 border-l border-text_primary border-opacity-10'>
-              <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-                <h1 className='text-md font-extrabold text-secondary'>Income & Revenues</h1>
-                <div className='flex justify-between font-extrabold text-text_primary'>
-                  <p className='text-md'>3000000</p>
-                  <label className='text-xs p-1'>USD</label>
-                </div>
-
-                <hr  className='text-primary'/>
-                <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span>Last year: 500000</p>
-              </div>
-
-              <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-                <h1 className='text-md font-extrabold text-secondary'>Expenses</h1>
-                <div className='flex justify-between font-extrabold text-text_primary'>
-                  <p className='text-md'>5000000</p>
-                  <label className='text-xs p-1'>USD</label>
-                </div>
-
-                <hr  className='text-primary'/>
-                <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-success flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span>Last year: 300000</p>
-              </div>
-            </div>
-          </div>
-          <div className='w-full p-4 rounded-lg  bg-primary2 shadow-lg drop-shadow-lg'>
-            <BarCharts/>
-          </div>
-
+      <div className='py-4 font-extrabold text-text_primary flex justify-start items-center gap-4 mb-4'>
+        <div className='w-40'>
+          <img src={GovernmentLogo} className='w-full h-full object-cover'/>
         </div>
-        <div className='w-full overflow-hidden h-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-          <div className='p-4 text-lg font-extrabold text-text_primary mb-2'>
-            Income & Revenues categories
+        <div className='w-full'>
+          <div className='py-4 font-extrabold text-secondary w-full overflow-x-hidden'>
+            <p>Ministry of Health</p>
           </div>
-          <div className='h-full overflow-y-auto px-4 '>
-            {incomes.map((value,index)=>(
-              <div className='flex justify-between gap-2 text-text_primary mb-4'>
-                <div className={`h-8 py-1 flex items center justify-center delay-100 duration-200 cursor-pointer px-2 rounded-lg w-12 border`}>
-                  {index +1}
+          <div className='mb-3'>
+            <p className='text-lg font-normal text-wrap text-justify'>Budget planning and execution system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
+          </div>
+          <div className='flex justify-start items-center gap-4'>
+          {QuickLinks.map((item,index)=>{
+            return(
+              <div key={index} className='flex justify-center items-center gap-2'>
+                <div className='mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
+                  {item.Icon}
                 </div>
-                <div className='w-full'>{value.incomeName}</div>
-                <label className='font-extrabold'>{value.percentage}</label>
+                <label className='text-xs text-secondary'>{item.label}</label>  
               </div>
-            ))}
+            )
+          })}
           </div>
         </div>
-
       </div>
-      <div className='w-full h-full text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
-        <div className='text-lg font-extrabold text-text_primary mb-4'>
-          Budget allocated to various instutitions
-        </div>        
-        <table className='w-full'>
-          <thead>
-            <tr class="text-md font-semibold tracking-wide text-left text-text_primary  capitalize">
-              <th class="px-4 py-2 border w-2/5" colSpan={2}>institution</th>
-              <th class="px-4 py-2 border w-1/5">Budget amount allocated</th>
-              <th class="px-4 py-2 border w-1/5">Budget percentage allocated</th>
-            </tr>
-          </thead>
-          <tbody class="">
-            <tr class="text-text_primary">
-              <td class="px-4 py-3 border" colSpan={2}>
-                <div class="flex items-center text-sm">
-                  <div class="relative w-8 h-8 mr-3 rounded-full md:block">
-                    <img class="object-cover w-full h-full rounded-full" src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" alt="" loading="lazy" />
-                    <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
-                  </div>
+      
+      <section className='w-full grid grid-cols-1 lg:grid-cols-4 gap-4'>
+        <div className='col-span-3'>
+          <div className='grid grid-cols-3 gap-8'>
+            {cards.map((item,index)=>{
+              return(
+                <div key={index} className='flex justify-between items-center bg-primary2 p-4 rounded-lg shadow-lg text-text_primary'>
                   <div>
-                    <p class="font-semibold text-black">RWANDA BIMEDICAL CENTER</p>
-                    <p class="text-xs text-gray-600">RBC</p>
+                    <h1 className='font-bold text-xl'>{item.label}</h1>
+                    <p className='text-lg'>{item.amount}</p>
+                  </div>
+                  <div className='p-2 w-24 h-24 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
+                    {item.icon}
                   </div>
                 </div>
-              </td>
-              <td class="px-4 py-3 text-ms font-semibold border">22000000000000</td>
-              <td class="px-4 py-3 text-xs border">
-                <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> 10%</span>
-              </td>
-            </tr>
-            </tbody>
+              )
+            })}
+          </div>
 
-        </table>
+          <div>
+            <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+              <p>Spending Analysis</p>
+            </div>
+            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4'>
+              <div className='px-8 py-8 text-text_primary'>
+                <h2 className='font-bold text-2xl'>6800$</h2>
+                <p className='flex gap-2'>Your spending is <span className='text-red flex justify-start items-end'>9%<FaArrowDownLong size={10}/></span> compared to last year</p>
+              </div>
+              <LineChart data={data} options={options}/>
+            </div>
+          </div>
+        </div>
         
-      </div>
+        <div className='col-span-1 flex flex-col'>
+          <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 h-1/2 overflow-hidden'>
+            <div className='font-extrabold text-text_primary w-full overflow-x-hidden'>
+              <p>Latest Transactions</p>
+            </div>
+            {latest.map((item,index)=>{
+              return(
+                <div className='w-full flex justify-between mt-4'>
+                  <div className='flex justify-start gap-3 items-center'>
+                    <div className='w-8 h-8'>
+                      <img src={GovernmentLogo} className='w-full h-full object-cover'/>
+                    </div>
 
-      <div className='h-92 w-full grid grid-cols-3 gap-4'>
-        <div className='col-span-2 h-92 bg-primary2 text-text_primary py-4 rounded-lg shadow-lg drop-shadow-lg'>
-          <div className='text-lg px-4 font-extrabold  mb-4'>
-            Recent transactions
-          </div>
-          <div className=''>
-            <label className='my-4 font-semibold px-4'>March 01</label>
-            <div className='flex items-center justify-start py-2 cursor-pointer hover:bg-primary bg-opacity-50 gap-2 border-l-2 px-4 border-success'>
-            <div className='w-4'>
-              <IoCashSharp size={15} className='cursor-pointer text-success hover:text-list_hover delay-100 duration-500'/>
-            </div>
-            <div className='w-full text-sm'>
-              <p>Social health insurance contributions</p>
-            </div>
-            <div className='bg-primary text-sm opacity-50 w-24 text-success p-1 rounded-lg font-extrabold'>
-              <p>Income</p>
-            </div>
-            <div className='w-full text-sm'>
-              <p>100000</p>
-            </div>
-            <div className='w-40 text-sm text-center'>
-              <p>8:00 PM</p>
-            </div>
+                    <div className='text-text_primary'>
+                      <h2 className='font-semibold text-md'>Salaries</h2>
+                      <p className='text-sm'>23 oct 2028</p>
+                    </div>
+                  </div>
+                  <div className='text-xs text-red font-normal'>
+                    <label>
+                      -6800$
+                    </label>
+                  </div>
 
+                </div> 
+              )
+            })}
 
+            <div className=' absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
+              <Link className='text-text_primary text-sm font-bold border-2 border-primary rounded-lg  w-full p-2 text-center pointer-cursor flex items-center justify-center'>View all</Link>
             </div>
-            <div className='flex items-center py-2 cursor-pointer hover:bg-primary bg-opacity-50 justify-start gap-2 border-l-2 px-4 border-red'>
-              <div className='w-4'>
-                <IoCashSharp size={15} className='text-red  delay-100 duration-500'/>
-              </div>
-              <div className='w-full text-sm'>
-                <p>Computer maintenance</p>
-              </div>
-              <div className='bg-primary text-sm opacity-50 w-24 text-red p-1 rounded-lg font-extrabold'>
-                <p>Expense</p>
-              </div>
-              <div className='w-full text-sm'>
-                <p>100000</p>
-              </div>
-              <div className='w-40 text-sm text-center'>
-                <p>8:00 PM</p>
-              </div>
-
-
-            </div>
-          </div>
-          <div className=''>
-            <label className='my-4 font-semibold px-4'>Yesterday</label>
             
           </div>
-        </div>
-        <div className='h-92 bg-primary2 text-text_primary  py-4 rounded-lg shadow-lg drop-shadow-lg'>
-          <div className='text-lg font-extrabold px-4  mb-4'>
-            Expenses overview
+
+          <div className='relative flex items-end h-1/2 pt-8'>
+            <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
+              <div className='font-extrabold text-text_primary w-full'>
+                <p>Spending Category</p>
+              </div>
+
+              <div className='py-2 text-text_primary flex justify-between items-center'>
+                <div>
+                  <h2 className='font-bold text-2xl'>6800.289$</h2>
+                  <p className='flex gap-2 text-xs'>From 24 Oct to 24 Dec 2024</p>
+                </div>
+                <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>
+              </div>
+              
+              <div className='w-full'>
+                <PieChart
+                  series={[
+                    {
+                      data:pieData,
+                      arcLabel: (item) => `${item.label}`,
+                      arcLabelMinAngle: 45,
+                      innerRadius: 20,
+                      outerRadius: 100,
+                      paddingAngle: 5,
+                      cornerRadius: 5,
+                      startAngle: -90,
+                      endAngle: 180,
+                      cx: 150,
+                      cy: 100,
+                      highlightScope: { faded: 'global', highlighted: 'item' },
+                      faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                    }
+                  ]}
+                  sx={{
+                    [`& .${pieArcLabelClasses.root}`]: {
+                      fill: 'white',
+                      fontWeight: 'regular',
+                      fontSize: 8,
+                    },
+                  }}
+                  width={600}
+                  height={200}
+                  className='w-full'
+                />
+              </div>
+            </div>
+          
           </div>
-          {expenses.map((item)=>{
-            let percentage=item.current * 100 /item.target;
-          return (
-            <div className={`hover:bg-primary bg-opacity-50 rounded-sm px-4 ${percentage > 110 && 'bg-red animate-pulse duration-200 delay-300'} bg-opacity-10 cursor-pointer`}>
-              <div className='flex justify-between flex-shrink'>
-                <label className='mb-2 font-medium truncate capitalize'>{item.expenses}</label>
-                <label><span className='font-bold'>{item.current}</span> / {item.target}</label>
-              </div>
-
-              <div className='h-2 w-full  bg-text_primary bg-opacity-30 rounded-full'>
-                  <div className={`h-full ${percentage > 100?percentage > 110?'bg-red':'bg-[#FBA801]':'bg-success'} rounded-full`} style={{ width:percentage > 100?'100%':`${percentage}%`}}>
-                  </div>
-              </div>
-
-              <label className='mb-2 font-medium truncate capitalize'>
-              {
-                percentage < 100?(
-                  <span className='text-success'>Good</span>
-                )
-                :
-                (
-                  percentage > 100 && percentage < 110?(
-                  <span className='text-[#FBA801]'>Tolerable</span>
-                  )
-                  :
-                  (
-                    <span className='text-red animate-pulse'>UnTolerable</span>
-                  )
- 
-                )
-              }                
-              </label>
-                      
-            </div> 
-          )})}
         </div>
 
-      </div>
+      </section>
+
+      <section className='w-full'>
+        <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+          <p>Transaction History</p>
+        </div>
+        
+        <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
+          <div className='flex justify-between items-center'>
+            <div className='relative lg:w-2/5 w-full'>
+              <input type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
+              <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>
+            </div>
+
+            <div className='w-28 relative group flex justify-end gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
+              <label>Latest</label>
+              <p><RiFilter3Line size={25}/></p>
+              <div className='bg-primary2 shadow-lg absolute top-7 w-full right-0 hidden group-hover:block py-2'>
+                <ul className='list-none text-text_primary -ml-6 text-xs'>
+                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
+                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
+                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Oldest</li>
+                </ul>  
+              </div>
+              
+            </div>
+          </div>
+          <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-lg text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>
+            <thead className='bg-primary'>
+                <tr>
+                    <th className='font-normal'>Transaction name</th>
+                    <th className='font-normal'>Budget</th>
+                    <th className='font-normal'>Date</th>
+                    <th className='font-normal'>Payement Method</th>
+                    <th className='font-normal'>Amount Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className='font-bold'>Salaries</td>
+                <td>FYI 2024-2025 Budget</td>
+                <td>2024-01-05 12:00:51 PM</td>
+                <td>Cash</td>
+                <td className='text-red'>-7000 $</td>                
+              </tr>
+            </tbody>
+          </table>
+
+          <Pagination
+            length={100}
+            postsPerPage={20}
+            handlePagination={handlePagination}
+          />
+        </div>
+
+        
+      </section>
+      
     </Layout>
   )
 }

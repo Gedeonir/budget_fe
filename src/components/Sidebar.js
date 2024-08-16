@@ -9,7 +9,7 @@ import { IoAnalytics } from "react-icons/io5";
 import { GoHome } from "react-icons/go";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
-import GovernmentLogo from '../assets/Govt.jpeg';
+import GovernmentLogo from '../assets/Govt.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 

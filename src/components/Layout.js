@@ -31,12 +31,12 @@ const Layout = (props) => {
       }
     }
     useEffect(() => {
-      verifyUser();
+      // verifyUser();
     },[])
     return (
         <div className='min-h-screen max-h-screen overflow-x-hidden bg-primary'>
           <Navbar profile={userData?.getProfile}/>
-          <div className='pb-4 px-8 '>{props.children}</div>
+          <div className='pb-4 px-4 '>{props.children}</div>
           <Footer/>
         </div>
     )

@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
-import GovernmentLogo from '../../assets/Govt.jpeg';
+import GovernmentLogo from '../../assets/Govt.png';
 import Pagination from '../../components/Pagination';
 import { AiFillDelete } from "react-icons/ai";
 import { TbEditCircle } from "react-icons/tb";

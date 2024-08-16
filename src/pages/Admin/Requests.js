@@ -2,7 +2,7 @@ import React, { useEffect,useState } from 'react'
 import AdminDashboard from '../../components/AdminDashboard';
 import { Link, useLocation } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
-import GovernmentLogo from '../../assets/Govt.jpeg';
+import GovernmentLogo from '../../assets/Govt.png';
 import {IoIosNotificationsOutline} from "react-icons/io"
 import { SlLike } from "react-icons/sl";
 import { SlDislike } from "react-icons/sl";
