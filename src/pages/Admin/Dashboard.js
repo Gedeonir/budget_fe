@@ -91,13 +91,13 @@ function Dashboard() {
 
   return (
     <AdminDashboard setUserData={setUserData}>
-      <div className='py-4 font-extrabold text-text_primary'>
+      <div className='py-4 font-bold text-text_primary'>
         <p>{salutation()} <span className='text-secondary'>{userData?.getProfile?.fullNames}</span>. Welcome to <span className='text-secondary'>{userData?.getProfile?.institution?.institutionName} BPE</span>  Dashboard</p>
       </div>
       <div className="w-full lg:grid grid-cols-3 gap-4 h-full items-start lg:py-4 mb-8">
         <div className='col-span-2 w-full'>
           <div className='lg:flex justify-start gap-8 w-full mb-4'>
-            <div className='lg:py-8 py-2 px-4 my-4 w-full h-28 lg:h-52 font-extrabold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
+            <div className='lg:py-8 py-2 px-4 my-4 w-full h-28 lg:h-52 font-bold bg-secondary rounded-lg shadow-lg drop-shadow-lg'>
               <h1 className='lg:text-2xl text-2xl text-primary2'>Total Budget</h1>
 
               <div className='flex relative justify-between lg:mt-8 mt-4 text-primary2'>
@@ -111,8 +111,8 @@ function Dashboard() {
             </div>
             <div className='lg:pl-8 my-4 grid grid-cols-1 gap-2 w-full h-52 lg:border-l border-text_primary border-opacity-10'>
               <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-                <h1 className='text-md font-extrabold text-secondary'>Income & Revenues</h1>
-                <div className='flex justify-between font-extrabold text-text_primary'>
+                <h1 className='text-md font-bold text-secondary'>Income & Revenues</h1>
+                <div className='flex justify-between font-bold text-text_primary'>
                   <p className='text-md'>3000000</p>
                   <label className='text-xs p-1'>USD</label>
                 </div>
@@ -122,8 +122,8 @@ function Dashboard() {
               </div>
 
               <div className='h-24 p-4 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-                <h1 className='text-md font-extrabold text-secondary'>Expenses</h1>
-                <div className='flex justify-between font-extrabold text-text_primary'>
+                <h1 className='text-md font-bold text-secondary'>Expenses</h1>
+                <div className='flex justify-between font-bold text-text_primary'>
                   <p className='text-md'>5000000</p>
                   <label className='text-xs p-1'>USD</label>
                 </div>
@@ -139,7 +139,7 @@ function Dashboard() {
 
         </div>
         <div className='w-full overflow-hidden h-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
-          <div className='p-4 text-lg font-extrabold text-text_primary mb-2'>
+          <div className='p-4 text-lg font-bold text-text_primary mb-2'>
             Income & Revenues categories
           </div>
           <div className='h-full overflow-y-auto px-4 '>
@@ -149,7 +149,7 @@ function Dashboard() {
                   {index +1}
                 </div>
                 <div className='w-full'>{value.incomeName}</div>
-                <label className='font-extrabold'>{value.percentage}</label>
+                <label className='font-bold'>{value.percentage}</label>
               </div>
             ))}
           </div>
@@ -157,7 +157,7 @@ function Dashboard() {
 
       </div>
       <div className='w-full h-full overflow-x-auto text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
-        <div className='lg:text-lg text-sm font-extrabold text-text_primary mb-4'>
+        <div className='lg:text-lg text-sm font-bold text-text_primary mb-4'>
           Budget allocated to various instutitions
         </div>        
         <table className='w-full'>
@@ -195,7 +195,7 @@ function Dashboard() {
 
       <div className='h-92 w-full lg:grid grid-cols-3 gap-4'>
         <div className='col-span-2 h-92 my-4 bg-primary2 text-text_primary py-4 rounded-lg shadow-lg drop-shadow-lg'>
-          <div className='text-lg px-4 font-extrabold  mb-4'>
+          <div className='text-lg px-4 font-bold  mb-4'>
             Recent transactions
           </div>
           <div className=''>
@@ -207,7 +207,7 @@ function Dashboard() {
             <div className='w-full text-sm'>
               <p>Social health insurance contributions</p>
             </div>
-            <div className='bg-primary text-sm opacity-50 w-24 text-success p-1 rounded-lg font-extrabold'>
+            <div className='bg-primary text-sm opacity-50 w-24 text-success p-1 rounded-lg font-bold'>
               <p>Income</p>
             </div>
             <div className='w-full text-sm'>
@@ -226,7 +226,7 @@ function Dashboard() {
               <div className='w-full text-sm'>
                 <p>Computer maintenance</p>
               </div>
-              <div className='bg-primary text-sm opacity-50 w-24 text-red p-1 rounded-lg font-extrabold'>
+              <div className='bg-primary text-sm opacity-50 w-24 text-red p-1 rounded-lg font-bold'>
                 <p>Expense</p>
               </div>
               <div className='w-full text-sm'>
@@ -245,7 +245,7 @@ function Dashboard() {
           </div>
         </div>
         <div className='h-92 bg-primary2 text-text_primary  py-4 rounded-lg shadow-lg drop-shadow-lg'>
-          <div className='text-lg font-extrabold px-4  mb-4'>
+          <div className='text-lg font-bold px-4  mb-4'>
             Expenses overview
           </div>
           {expenses.map((item,index)=>{

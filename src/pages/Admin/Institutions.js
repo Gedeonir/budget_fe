@@ -62,7 +62,7 @@ const Institutions = () => {
 
   return (
     <AdminDashboard>
-         <div className='py-4 font-extrabold text-text_primary'>
+         <div className='py-4 font-bold text-text_primary'>
             <p>Government institutions</p>
         </div>
 

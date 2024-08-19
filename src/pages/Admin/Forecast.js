@@ -61,7 +61,7 @@ const Forecast = () => {
     <AdminDashboard>
         <div className='grid grid-cols-3 gap-3 w-full p-2'>
             <div className=''>
-                <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+                <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Budget projection</p>
                 </div>
 
@@ -88,7 +88,7 @@ const Forecast = () => {
                 </div>
             </div>
             <div className='px-4'>
-                <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+                <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Budget Insights</p>
                 </div>
                 
@@ -107,7 +107,7 @@ const Forecast = () => {
                 
             </div>
             <div className=''>
-                <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+                <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Account watchlist</p>
                 </div>
 
@@ -138,7 +138,7 @@ const Forecast = () => {
 
         <section className='w-full px-2'>
             <div className='flex justify-between items-center'>
-                <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+                <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Budget Flow Chart</p>
                 </div>
 

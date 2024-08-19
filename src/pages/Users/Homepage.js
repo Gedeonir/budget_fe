@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 import { FaArrowTrendDown } from "react-icons/fa6";
-import Layout from '../components/Layout';
+import Layout from '../../components/Layout';
 import { IoWallet } from "react-icons/io5";
-import BarCharts from '../components/BarCharts';
+import BarCharts from '../../components/BarCharts';
 import { IoCashSharp } from "react-icons/io5";
-import GovernmentLogo from '../assets/Govt.png';
+import GovernmentLogo from '../../assets/Govt.png';
 import { RiAddCircleFill } from "react-icons/ri";
 import { MdPrivacyTip } from "react-icons/md";
 import { FaQuestionCircle } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";
-import LineChart from '../components/LineChart';
+import LineChart from '../../components/LineChart';
 import { FaArrowDownLong } from "react-icons/fa6";
 import { PieChart,pieArcLabelClasses } from '@mui/x-charts/PieChart';
-import Pagination from '../components/Pagination';
+import Pagination from '../../components/Pagination';
 import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
 
@@ -34,6 +34,10 @@ const QuickLinks=[
   {
     "Icon":<IoIosPeople size={20}/>,
     "label":"HR team",
+  },
+  {
+    "Icon":<IoWallet size={20}/>,
+    "label":"My budgets",
   },
 ]
 
@@ -142,12 +146,12 @@ function Homepage() {
 
   return (
     <Layout setUserData={setUserData}>
-      <div className='py-4 font-extrabold text-text_primary flex justify-start items-center gap-4 mb-4'>
+      <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
         <div className='w-40'>
           <img src={GovernmentLogo} className='w-full h-full object-cover'/>
         </div>
         <div className='w-full'>
-          <div className='py-4 font-extrabold text-secondary w-full overflow-x-hidden'>
+          <div className='py-4 font-bold text-secondary w-full overflow-x-hidden'>
             <p>Ministry of Health</p>
           </div>
           <div className='mb-3'>
@@ -156,11 +160,11 @@ function Homepage() {
           <div className='flex justify-start items-center gap-4'>
           {QuickLinks.map((item,index)=>{
             return(
-              <div key={index} className='flex justify-center items-center gap-2'>
-                <div className='mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
+              <div key={index} className='group flex justify-center items-center gap-2'>
+                <div className='group-hover:bg-list_hover mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
                   {item.Icon}
                 </div>
-                <label className='text-xs text-secondary'>{item.label}</label>  
+                <label className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</label>  
               </div>
             )
           })}
@@ -187,7 +191,7 @@ function Homepage() {
           </div>
 
           <div>
-            <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+            <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Spending Analysis</p>
             </div>
             <div className='w-full bg-primary2 rounded-lg shadow-lg px-4'>
@@ -202,12 +206,12 @@ function Homepage() {
         
         <div className='col-span-1 flex flex-col'>
           <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 h-1/2 overflow-hidden'>
-            <div className='font-extrabold text-text_primary w-full overflow-x-hidden'>
+            <div className='font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Latest Transactions</p>
             </div>
             {latest.map((item,index)=>{
               return(
-                <div className='w-full flex justify-between mt-4'>
+                <div key={index} className='w-full flex justify-between mt-4'>
                   <div className='flex justify-start gap-3 items-center'>
                     <div className='w-8 h-8'>
                       <img src={GovernmentLogo} className='w-full h-full object-cover'/>
@@ -236,7 +240,7 @@ function Homepage() {
 
           <div className='relative flex items-end h-1/2 pt-8'>
             <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
-              <div className='font-extrabold text-text_primary w-full'>
+              <div className='font-bold text-text_primary w-full'>
                 <p>Spending Category</p>
               </div>
 
@@ -287,7 +291,7 @@ function Homepage() {
       </section>
 
       <section className='w-full'>
-        <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
           <p>Transaction History</p>
         </div>
         

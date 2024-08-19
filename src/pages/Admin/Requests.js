@@ -25,7 +25,7 @@ const Requests = () => {
 
   return (
     <AdminDashboard setUserData={setUserData}>
-        <div className='py-4 font-extrabold text-text_primary w-full overflow-x-hidden'>
+        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
             <p>Budget Requests</p>
         </div>
         <div className='w-full bg-primary2 rounded-lg py-4 px-2'>

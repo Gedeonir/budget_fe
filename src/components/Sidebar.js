@@ -75,7 +75,7 @@ const Sidebar = (props) => {
             <div className='w-12'>
                 <img src={GovernmentLogo} className='w-full h-full object-cover'/>
             </div>
-            <label className='mx-2 text-text_primary uppercase font-extrabold'>Minecofin</label>
+            <label className='mx-2 text-text_primary uppercase font-bold'>Minecofin</label>
         </div>
         <ul className='my-4 w-full list-none items-start border-b pb-2 border-text_primary border-opacity-40'>
             {sideBarMenu1.map((item,index)=>(

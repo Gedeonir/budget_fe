@@ -16,7 +16,7 @@ const AddInstitution = (props) => {
             <div className="mb-2">
                 <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new institution</h1>
             </div>
-            <form className=''>
+            <form className='text-text_primary'>
                 <div className='w-full mb-2'>
                     <label>Institution Name</label>
                     <input type="text" name='institution' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Name" required/>
@@ -61,7 +61,7 @@ const AddInstitution = (props) => {
                 <div className='flex justify-between gap-4'>
                     <button type='reset' size="sm" className=' my-4 text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>props.setAddInstitutionModal(false)}>Cancel</button>
                     <button type='submit' size='sm' className={`my-4 bg-secondary text-center text-primary font-bold p-2 w-full ${loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={loading? true : false}>
-                        {loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/><span> Saving income</span></p>:'Save income'}
+                        {loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/><span> Saving institution</span></p>:'Save income'}
                     </button>
                 </div>
             </form>

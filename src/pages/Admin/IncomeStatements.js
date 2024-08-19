@@ -133,7 +133,7 @@ const IncomeStatements = () => {
     },[])
   return (
     <AdminDashboard openModal={open}>
-        <div className='py-4 font-extrabold text-text_primary'>
+        <div className='py-4 font-bold text-text_primary'>
             <p>Incomes and Revenues statement</p>
         </div>
         <div className='w-full lg:flex justify-start gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4'>
@@ -167,7 +167,7 @@ const IncomeStatements = () => {
 
           <div className='lg:flex justify-start gap-2 w-full'>
             <div className='lg:w-1/5 my-4 bg-primary2 rounded-lg drop-shadow shadow-lg text-center py-4 px-2'>
-              <h1 className='text-secondary font-extrabold text-sm '>Income Collected</h1>
+              <h1 className='text-secondary font-bold text-sm '>Income Collected</h1>
               <div className='w-32 h-32 my-2 mx-auto'>
                 <ProgressBar percentage={10}/>
               </div>
@@ -197,7 +197,7 @@ const IncomeStatements = () => {
           </div>
           <div className='mt-4 lg:flex justify-start gap-4'>
             <div className='bg-primary2 lg:w-3/5 w-full rounded-lg py-4 px-4 shadow-lg'>
-                <div className='font-extrabold text-text_primary'>
+                <div className='font-bold text-text_primary'>
                     <p className='font-semibold'>Income average</p>
                     <label className='text-xl font-normal'>$200.15/Month</label>
                 </div>

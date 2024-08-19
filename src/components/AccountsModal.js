@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const AccountsModal = (props) => {
 
@@ -9,6 +9,17 @@ const AccountsModal = (props) => {
         sessionStorage.removeItem('userToken');
         navigate("/signin");
     }
+
+    const location=useLocation();
+
+    const handleNavigate=()=>{
+        if (location?.pathname?.includes("dashboard")) {
+            console.log(location?.pathname?.includes("dashboard"));
+        } else {
+            navigate("/plan-budget")
+        }
+    }
+    
 
     
     return (
@@ -47,7 +58,9 @@ const AccountsModal = (props) => {
                 </li>
             </ul>
 
-            <button type='submit' size='sm' className={`my-4 delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-sm text-center text-primary font-bold p-2 w-full`}>
+            <button type='submit' size='sm' className={`my-4 delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-sm text-center text-primary font-bold p-2 w-full`}
+            onClick={()=>handleNavigate()}
+            >
                 Plan new budget
             </button>        
         </div>

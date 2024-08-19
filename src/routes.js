@@ -1,15 +1,14 @@
 
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/Users/Homepage";
 import  NotFound from "./components/notFound";
 import {Protected} from "./utils/ProtectedRoutes";
 import SignIn from "./pages/SignIn";
-import Home from "./pages/Admin/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Incomes_and_revenues from "./pages/Incomes_and_revenues";
-import Expenses from "./pages/Expenses";
+import Plan_new_budget from "./pages/Users/Plan_new_budget";
+import Expenses from "./pages/Users/Expenses";
 import AdminDashboard from "./components/AdminDashboard";
 import Dashboard from "./pages/Admin/Dashboard";
 import Requests from "./pages/Admin/Requests";
@@ -28,16 +27,16 @@ const AppRoutes = (prop) => {
         } />
 
         <Route path="/expennditures" element={
-          <Protected route="/signin">
+          // <Protected route="/signin">
             <Expenses/>
-          </Protected>
+          // </Protected>
         }/>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="*" element={<NotFound/>} />
-        <Route path="/admin/dashboard" element={
-          <Protected route="/signin">
-            <Home/>
-          </Protected>
+        <Route path="/plan-budget" element={
+          // <Protected route="/signin">
+            <Plan_new_budget/>
+          // </Protected>
         }></Route>
         
         <Route path="dashboard" element={<Dashboard/>}/>
