@@ -9,39 +9,45 @@ import Sidebar from './Sidebar';
 import { CiMenuFries } from "react-icons/ci";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
+import getAcademicYears from '../utils/AcademicYears';
 
 
 
 const AdminDashboard = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false);
-    const [academicYear,setAcademiYears]=useState([]);
+    const [academicYear,setAcademiYears]=useState(getAcademicYears());
     const [showMenu,setShowMenu]=useState(false);
 
     const navigate=useNavigate();
     const [userData,setUserData]=useState([]);
   
-    
 
-    const getAcademicYears=()=>{
-        let year = new Date().getFullYear();
-        let lastyear = new Date().getFullYear()-1;
-        let range = [];
-        let lastrange = [];
-        let academicYear=[];
-        lastrange.push(lastyear);
-        range.push(year);
-        for (let i = 1; i < 100; i++) 
-        {
-            lastrange.push(lastyear + i);    
-            range.push(year + i);
-            academicYear.push(lastrange[i-1]+"-"+(lastrange[i]).toString().slice(-2));
-            let fullyear = lastrange.concat(range);
+    const verifyUser=async()=>{
+        try{
+          const getProfile=await axios.get(`${process.env.BACKEND_URL}/users/one/about`,
+          {
+              headers:{
+              "Content-Type":"application/json",
+              "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+              }
+          });
+          const {data}=getProfile;
+          props?.setUserData(data); //passing data to Homepage
+          setUserData(data);
+          if(data?.getProfile?.role !=="admin"){
+            navigate("/signin");
+          }
+        }catch(error){
+          if (error?.response?.data?.message ==="Not Authorized or token expired, Please Login again") {
+            navigate("/signin",{state:{data:error.response.data}});
+            sessionStorage.removeItem('userToken'); 
+          }
         }
-        setAcademiYears(academicYear);
     }
 
+
     useEffect(()=>{
-        getAcademicYears();
+        verifyUser();
     },[])
 
 
@@ -81,11 +87,11 @@ const AdminDashboard = (props) => {
                     }
                     
                 </div>
-                {openAccountModal && <AccountsModal profile={props?.profile}/>}
+                {openAccountModal && <AccountsModal profile={userData?.getProfile}/>}
 
                     
             </header>
-            <section className='py-2 lg:px-2 px-2 relative'>
+            <section className='py-2 lg:px-4 px-2 relative'>
                 {props.children}
             </section>
 

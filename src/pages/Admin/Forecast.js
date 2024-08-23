@@ -57,8 +57,11 @@ const Forecast = () => {
           },
         },
     };
+
+    const [userData,setUserData]=useState([]);
+
   return (
-    <AdminDashboard>
+    <AdminDashboard setUserData={setUserData}>
         <div className='grid grid-cols-3 gap-3 w-full p-2'>
             <div className=''>
                 <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>

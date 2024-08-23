@@ -19,9 +19,6 @@ const Requests = () => {
         setCurrentPage (pageNumber);
     };
 
-    useEffect(()=>{
-
-    },[])
 
   return (
     <AdminDashboard setUserData={setUserData}>

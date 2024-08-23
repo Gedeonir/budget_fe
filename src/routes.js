@@ -15,35 +15,49 @@ import Requests from "./pages/Admin/Requests";
 import IncomeStatements from "./pages/Admin/IncomeStatements";
 import Forecast from "./pages/Admin/Forecast";
 import Institutions from "./pages/Admin/Institutions";
+import MyBudgets from "./pages/Users/MyBudgets";
+import BudgetPlanning from "./pages/Admin/BudgetPlanning";
+import Officials from "./pages/Admin/Officials";
+import UpdateInstitution from "./pages/Admin/UpdateInstitution";
+
 
 const AppRoutes = (prop) => {
 
   return (
     <Routes>
         <Route path="/" index element={
-          // <Protected  route="/signin">              
+          <Protected  route="/signin">              
             <Homepage />
-          // </Protected>
+          </Protected>
         } />
 
         <Route path="/expennditures" element={
-          // <Protected route="/signin">
+          <Protected route="/signin">
             <Expenses/>
-          // </Protected>
+          </Protected>
         }/>
         <Route path="/signin" element={<SignIn/>}/>
         <Route path="*" element={<NotFound/>} />
         <Route path="/plan-budget" element={
-          // <Protected route="/signin">
+          <Protected route="/signin">
             <Plan_new_budget/>
-          // </Protected>
+          </Protected>
+        }></Route>
+
+        <Route path="/my_budgets" element={
+          <Protected route="/signin">
+            <MyBudgets/>
+          </Protected>
         }></Route>
         
         <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="dashboard/requests" element={<Requests/>}/>
         <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
         <Route path="dashboard/forecast-and-analysis" element={<Forecast/>}></Route>
-        <Route path="/dashboard/government-institutions" element={<Institutions/>}/>
+        <Route path="dashboard/institutions" element={<Institutions/>}/>
+        <Route path="dashboard/plan-budget" element={<BudgetPlanning/>}></Route>
+        <Route path="dashboard/officials" element={<Officials/>}/>
+        <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>

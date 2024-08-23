@@ -12,6 +12,9 @@ import { IoIosHelpCircleOutline } from "react-icons/io";
 import GovernmentLogo from '../assets/Govt.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
+import { TiUser } from "react-icons/ti";
+import { handleLogout } from '../utils/handleLogout';
+
 
 const sideBarMenu1=[
     {
@@ -46,8 +49,13 @@ const sideBarMenu1=[
     },
     {
         "menuItem":"Gov't institutions",
-        "menuIcon":<HiOutlineBuildingOffice2  size={20}/>        ,
-        "menuLeadTo":"/dashboard/government-institutions"
+        "menuIcon":<HiOutlineBuildingOffice2  size={20}/>,
+        "menuLeadTo":"/dashboard/institutions"
+    },
+    {
+        "menuItem":"Gov't Officials",
+        "menuIcon":<TiUser  size={20}/>,
+        "menuLeadTo":"/dashboard/officials"
     }
 
 ]
@@ -67,7 +75,6 @@ const sideBarMenu2=[
 
 
 const Sidebar = (props) => {
-    console.log("from sidebar showMenu",props.showMenu);
     
   return (
     <aside className={`py-4 lg:block ${props.showMenu?"absolute top-0 block z-40 bg-primary":"hidden"} min-h-screen max-h-screen group lg:w-1/5 w-3/5 shadow-lg drop-shadow-sm`}>
@@ -94,7 +101,7 @@ const Sidebar = (props) => {
                 </li>  
             ))}    
 
-                <li className={`w-full cursor-pointer py-1 my-2 px-2 rounded-l-full text-red flex justify-start hover:opacity-70 duration-200 delay-100`}>
+                <li className={`w-full cursor-pointer py-1 my-2 px-2 rounded-l-full text-red flex justify-start hover:opacity-70 duration-200 delay-100`} onClick={()=>handleLogout()}>
                     <RiLogoutCircleLine size={20}/>
                     <p className='py-0.5 mx-2 text-sm'>Logout</p>
                 </li>           

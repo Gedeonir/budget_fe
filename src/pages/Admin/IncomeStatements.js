@@ -127,12 +127,10 @@ const IncomeStatements = () => {
       let income=groupIncomes(recentIncomes);
 
       const [open,openModal]=useState(false);
-    useEffect(()=>{
-      
-      
-    },[])
+      const [userData,setUserData]=useState([]);
+
   return (
-    <AdminDashboard openModal={open}>
+    <AdminDashboard setUserData={setUserData} openModal={open}>
         <div className='py-4 font-bold text-text_primary'>
             <p>Incomes and Revenues statement</p>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect,useSta} from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
 import GovernmentLogo from '../../assets/Govt.png';
 import Pagination from '../../components/Pagination';
@@ -9,117 +9,130 @@ import { RiFilter3Line } from "react-icons/ri";
 import { MdDomainAdd } from "react-icons/md";
 import AddInstitution from '../../components/AddInstitution';
 import { useState } from 'react';
+import Card from '../../components/Card';
+import { deleteInstution, fetchInst } from '../../redux/Actions/InstitutionActions';
+import { connect } from 'react-redux';
+import Loading from '../../components/Loading';
+import NoDataFound from '../../components/NoDataFound';
+import Error from '../../components/Error';
+import { pagination } from '../../utils/paginationHandler';
+import DeleteConfirm from '../../components/DeleteConfirm';
+import { useNavigate } from 'react-router-dom';
 
-const inst=[
-    {
-        "institution":"Ministry of Health",
-        "Ministry":"Dr xxx",
-    },
-    {
-        "institution":"Ministry of Youth",
-        "Ministry":"Dr xxx",
-    },
-    {
-        "institution":"Ministry of Trade",
-        "Ministry":"Mr xxx",
-    },
-    {
-        "institution":"Ministry of Justice",
-        "Ministry":"Prof xxxxxxx",
-    },
-    {
-        "institution":"Ministry of Defence",
-        "Ministry":"Gen xy",
-    },
-    {
-        "institution":"Ministry of Health",
-        "Ministry":"Dr xxx",
-    },
-    {
-        "institution":"Ministry of Youth",
-        "Ministry":"Dr xxx",
-    },
-    {
-        "institution":"Ministry of Education",
-        "Ministry":"Mr xxx",
-    },
-    {
-        "institution":"Ministry of Labour",
-        "Ministry":"Prof xxxxxxx",
-    },
-    {
-        "institution":"Rwanda National Police",
-        "Ministry":"Gen xy",
-    },
-]
+const Institutions = (props) => {
+    const [currentPage,setCurrentPage]=useState(0);
+    const [reload,setReload]=useState(false);
+    const [Delete,setDelete]=useState({
+        id:"",
+        open:false
+    })
 
-const Institutions = () => {
+    const navigate=useNavigate();
+
     const handlePagination = (pageNumber) => {
         setCurrentPage (pageNumber);
     };
 
     const [AddInstitutionModal, setAddInstitutionModal] = useState(false);
+    const [userData,setUserData]=useState([]);
+
+    useEffect(()=>{
+        props.fetchInst()
+    },[reload])
+
+    const institution=props?.data?.inst;    
+    
+    
+    const handleOpenDelete=(id)=>{  
+        setDelete({id:id,open:true});      
+    }
+
+    const handleOpenEdit=(id)=>{
+        navigate(`/dashboard/institutions/${id}`)
+    }
+
+    const [searchWord,setSearchWord]=useState("");
+
+    const filteredInst=()=>{
+        return institution?.resp?.data?.getInstitutions?.filter((item)=>item.institutionName.includes(searchWord));
+    }
+
+    const handleDelete=(id)=>{
+        if (props.deleteInstution(id)) {
+            setDelete({id:"",open:false})
+            setReload(!reload);            
+        }
+    }
+    
+
 
   return (
-    <AdminDashboard>
-         <div className='py-4 font-bold text-text_primary'>
-            <p>Government institutions</p>
+    <AdminDashboard setUserData={setUserData}>
+        <div className='py-4 text-text_primary'>
+            <p className='font-bold'>Government institutions</p>
+            <label className='text-success text-sm' >{props?.data?.deleteInst?.success && 'Institution deleted'}</label>
         </div>
+        {institution?.loading?(
+            <Loading/>
+        )
+        :
+        (institution?.success?(
+            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full lg:overflow-hidden overflow-y-auto'>
+                <div className='lg:flex justify-between mb-2 items-center '>
+                    <div className='text-sm text-text_primary w-full flex justify-between'>
+                        <label>{filteredInst().length} total institution</label>
 
-        <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 min-h-screen h-full'>
-            <div className='lg:flex justify-between mb-2 items-center '>
-                <div className='text-sm text-text_primary w-full flex justify-between'>
-                    <label>200 total institution</label>
+                        <div className='flex items-center justify-end'>
+                            <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddInstitutionModal(!AddInstitutionModal)}>
+                                <p><MdDomainAdd size={20}/></p>
+                            </div>
 
-                    <div className='flex items-center justify-end'>
-                        <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddInstitutionModal(!AddInstitutionModal)}>
-                            <p><MdDomainAdd size={20}/></p>
-                        </div>
-
-                        <div className='p-2  rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
-                            <p><RiFilter3Line size={20}/></p>
-                        </div>
-                    </div>  
-                </div>
-
-                <div className='relative lg:w-2/5 w-full'>
-                    <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
-                    <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>
-                </div>
-                
-                
-            </div>
-            <div className='grid lg:grid-cols-5 grid-cols-1 gap-4'>
-                {inst.map((item,index)=>(
-                <div key={index} className='mb-2 cursor-pointer relative shadow-lg drop-shadow w-full h-56 shadow-text_primary rounded-lg group' style={{backgroundImage:`url(${GovernmentLogo})`,backgroundSize:"cover", backgroundPosition:"center"}}>
-                    <div className='px-2 py-4 flex flex-wrap items-end h-full w-full bg-gradient-to-t from-list_hover via-transparent to-transparent rounded-lg'>
-                        <div className='w-full'>
-                            <label className='font-bold text-secondary text-md'>{item.institution}</label>
-                            <p className='text-xs text-primary2'>{item.Ministry}</p>
-                        </div>
+                        </div>  
                     </div>
 
-                    <div className='absolute top-0 right-0 z-10 w-2/5 hidden items-center justify-end group-hover:flex duration-200 delay-100'>
-                        <div className='px-2 py-2 w-8 rounded-l-lg bg-primary text-text_primary'>
-                            <TbEditCircle size={15} className='mb-2 hover:text-list_hover duration-200 delay-100'/>
-                            <AiFillDelete size={15} className='hover:text-list_hover duration-200 delay-100'/>
-                        </div>
+                    <div className='relative lg:w-2/5 w-full'>
+                        <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
+                        <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>
                     </div>
+                    
+                    
                 </div>
-                ))}
+                {filteredInst().length <=0?(
+                    <NoDataFound/>
+                )
+                :
+                (
+                    <>
+                        <div className='grid lg:grid-cols-5 grid-cols-1 gap-4'>
+                            {pagination(filteredInst,10).length && pagination(filteredInst,10)[currentPage].map((item,index)=>(
+                                <Card key={index} email={item.email} name={item.institutionName} id={item._id} editHandler={handleOpenEdit} deleteHandler={handleOpenDelete}/>
+                            ))}
+                        </div>
+
+                        <Pagination
+                            length={institution?.resp?.data?.getInstitutions?.length}
+                            postsPerPage={10}
+                            handlePagination={handlePagination}
+                            currentPage={currentPage}
+                        />
+                    </>
+                )}
+
+                {Delete.open && <DeleteConfirm handleDelete={handleDelete} Delete={Delete} item={"institution"} setDelete={setDelete}/>}                
+                {AddInstitutionModal && <AddInstitution setReload={setReload} setAddInstitutionModal={setAddInstitutionModal}/>}
             </div>
-
-            <Pagination
-                length={100}
-                postsPerPage={20}
-                handlePagination={handlePagination}
-            />
-
-           {AddInstitutionModal && <AddInstitution setAddInstitutionModal={setAddInstitutionModal}/>}
-        </div>
-
+        )
+        :
+        (
+            <Error code={institution?.error?.code} message={institution?.error?.message}/>
+        )
+    )}
     </AdminDashboard>
   )
 }
 
-export default Institutions
+const mapState=(data)=>({
+    data:data
+})
+
+export default connect(mapState,{fetchInst,deleteInstution}) (Institutions)

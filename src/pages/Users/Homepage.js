@@ -38,6 +38,7 @@ const QuickLinks=[
   {
     "Icon":<IoWallet size={20}/>,
     "label":"My budgets",
+    "to":"/my-budgets"
   },
 ]
 
