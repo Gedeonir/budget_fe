@@ -14,7 +14,7 @@ const SignIn = () => {
         password:"",
     })
 
-    const [error,setError] = React.useState("")
+    const [error,setError] = React.useState(location?.state?.data)
     const [loading,setLoading]=React.useState(false);
 
 
@@ -51,6 +51,9 @@ const SignIn = () => {
         setLoading(false);
         
     }
+
+    console.log(location);
+    
   return (
     <div className='bg-primary min-h-screen max-h-screen overflow-hidden flex items-center justify-center px-8'>
         <div className='lg:w-2/5 w-full bg-primary2 h-full rounded-lg drop-shadow-sm shadow-lg p-4'>

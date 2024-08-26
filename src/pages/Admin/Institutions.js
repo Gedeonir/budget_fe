@@ -50,7 +50,9 @@ const Institutions = (props) => {
     const [searchWord,setSearchWord]=useState("");
 
     const filteredInst=()=>{
-        return institution?.resp?.data?.getInstitutions?.filter((item)=>item.institutionName.includes(searchWord));
+        return institution?.resp?.data?.getInstitutions?.filter((item)=>(
+            item.institutionName.toLowerCase().includes(searchWord.toLowerCase()) || item.acronym.toLowerCase().includes(searchWord.toLowerCase())
+        ));
     }
 
     const handleDelete=(id)=>{
@@ -73,10 +75,10 @@ const Institutions = (props) => {
         )
         :
         (institution?.success?(
-            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full lg:overflow-hidden overflow-y-auto'>
+            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full'>
                 <div className='lg:flex justify-between mb-2 items-center '>
-                    <div className='text-sm text-text_primary w-full flex justify-between'>
-                        <label>{filteredInst().length} total institution</label>
+                    <div className='text-sm text-text_primary w-full flex justify-between mx-4'>
+                        <label>{filteredInst().length} institution</label>
 
                         <div className='flex items-center justify-end'>
                             <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddInstitutionModal(!AddInstitutionModal)}>
@@ -88,7 +90,7 @@ const Institutions = (props) => {
 
                     <div className='relative lg:w-2/5 w-full'>
                         <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
-                        <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>
+                        {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
                     </div>
                     
                     

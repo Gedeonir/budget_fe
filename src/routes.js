@@ -16,7 +16,6 @@ import IncomeStatements from "./pages/Admin/IncomeStatements";
 import Forecast from "./pages/Admin/Forecast";
 import Institutions from "./pages/Admin/Institutions";
 import MyBudgets from "./pages/Users/MyBudgets";
-import BudgetPlanning from "./pages/Admin/BudgetPlanning";
 import Officials from "./pages/Admin/Officials";
 import UpdateInstitution from "./pages/Admin/UpdateInstitution";
 
@@ -55,7 +54,6 @@ const AppRoutes = (prop) => {
         <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
         <Route path="dashboard/forecast-and-analysis" element={<Forecast/>}></Route>
         <Route path="dashboard/institutions" element={<Institutions/>}/>
-        <Route path="dashboard/plan-budget" element={<BudgetPlanning/>}></Route>
         <Route path="dashboard/officials" element={<Officials/>}/>
         <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
 

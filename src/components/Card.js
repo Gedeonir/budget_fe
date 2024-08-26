@@ -5,14 +5,15 @@ import { TbEditCircle } from "react-icons/tb";
 
 
 
-const Card = ({name,email,id,deleteHandler,editHandler}) => {
+const Card = ({img,name,email,id,deleteHandler,editHandler,inst,pos}) => {
  
     return (
-        <div className='mb-2 cursor-pointer relative shadow-lg drop-shadow w-full h-56 shadow-text_primary rounded-lg group' style={{backgroundImage:`url(${GovernmentLogo})`,backgroundSize:"cover", backgroundPosition:"center"}}>
+        <div className='mb-2 cursor-pointer relative shadow-lg drop-shadow w-full h-56 shadow-text_primary rounded-lg group' style={{backgroundImage:`url(${img?img:GovernmentLogo})`,backgroundSize:"cover", backgroundPosition:"center"}}>
             <div className='px-2 py-4 flex flex-wrap items-end h-full w-full bg-gradient-to-t from-list_hover via-transparent to-transparent rounded-lg'>
                 <div className='w-full'>
                     <label className='font-bold text-sm text-primary2'>{name}</label>
-                    <p className='text-xs  text-secondary '>{email}</p>
+                    <p className='text-xs  text-secondary mb-2'>{email}</p>
+                    {inst && <p className='text-xs  text-[#FBA801] '><span className='font-bold'>{pos}</span>-{inst}</p>}
                 </div>
             </div>
 

@@ -38,10 +38,8 @@ const AdminDashboard = (props) => {
             navigate("/signin");
           }
         }catch(error){
-          if (error?.response?.data?.message ==="Not Authorized or token expired, Please Login again") {
-            navigate("/signin",{state:{data:error.response.data}});
+            navigate("/signin",{state:{data:"Not Authorized or token expired, Please Login again"}});
             sessionStorage.removeItem('userToken'); 
-          }
         }
     }
 
