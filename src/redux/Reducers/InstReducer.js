@@ -33,6 +33,58 @@ export const addInstitution=(state=initialState,action)=>{
     }
 }
 
+export const updateInstitution=(state=initialState,action)=>{
+    switch(action.type){
+        case types.UPDATE_INST_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.UPDATE_INST_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.UPDATE_INST_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state;
+    }
+}
+
+export const fetchOne=(state=initialState,action)=>{
+    switch(action.type){
+        case types.GET_ONE_INST_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.GET_ONE_INST_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.GET_ONE_INST_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}
+
 export const deleteInstitution=(state=initialState,action)=>{
     switch(action.type){
         case types.DELETE_INST_LOADING:

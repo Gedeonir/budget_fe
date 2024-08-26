@@ -1,11 +1,7 @@
-import React,{useEffect,useSta} from 'react'
+import React,{useEffect} from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
-import GovernmentLogo from '../../assets/Govt.png';
 import Pagination from '../../components/Pagination';
-import { AiFillDelete } from "react-icons/ai";
-import { TbEditCircle } from "react-icons/tb";
 import { IoSearchOutline } from 'react-icons/io5';
-import { RiFilter3Line } from "react-icons/ri";
 import { MdDomainAdd } from "react-icons/md";
 import AddInstitution from '../../components/AddInstitution';
 import { useState } from 'react';
@@ -104,7 +100,7 @@ const Institutions = (props) => {
                 (
                     <>
                         <div className='grid lg:grid-cols-5 grid-cols-1 gap-4'>
-                            {pagination(filteredInst,10).length && pagination(filteredInst,10)[currentPage].map((item,index)=>(
+                            {pagination(filteredInst,10).length>0 && pagination(filteredInst,10)[currentPage].map((item,index)=>(
                                 <Card key={index} email={item.email} name={item.institutionName} id={item._id} editHandler={handleOpenEdit} deleteHandler={handleOpenDelete}/>
                             ))}
                         </div>
