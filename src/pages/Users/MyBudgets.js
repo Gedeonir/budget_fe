@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import Layout from '../../components/Layout'
 import GovernmentLogo from '../../assets/Govt.png';
 import Pagination from '../../components/Pagination';
@@ -54,6 +54,8 @@ const inst=[
     },
 ]
 const MyBudgets = (props) => {
+    const [userData,setUserData]=useState([]);
+
     const handlePagination = (pageNumber) => {
         setCurrentPage (pageNumber);
     };
@@ -68,7 +70,7 @@ const MyBudgets = (props) => {
     
 
     return (
-        <Layout>
+        <Layout setUserData={setUserData}>
             <div className='py-4 font-bold text-text_primary'>
                 <p>My budgets</p>
             </div>

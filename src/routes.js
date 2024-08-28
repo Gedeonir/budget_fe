@@ -43,7 +43,7 @@ const AppRoutes = (prop) => {
           </Protected>
         }></Route>
 
-        <Route path="/my_budgets" element={
+        <Route path="/my-budgets" element={
           <Protected route="/signin">
             <MyBudgets/>
           </Protected>

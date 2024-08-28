@@ -35,3 +35,32 @@ export const fetchMyBudgets=(state=initialState,action)=>{
             return state
     }
 }
+
+export const addBudgets=(state=initialState,action)=>{
+    switch(action.type){
+        case types.ADD_NEW_BUDGET_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+
+        case types.ADD_NEW_BUDGET_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        
+        case types.ADD_NEW_BUDGET_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        
+        default:
+            return state
+    }
+}

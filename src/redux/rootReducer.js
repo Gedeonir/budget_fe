@@ -1,13 +1,14 @@
 
 import { combineReducers } from 'redux';
 import reducer from './Reducers/counterReducer';
-import { fetchMyBudgets } from './Reducers/BudgetReducer';
+import { addBudgets, fetchMyBudgets } from './Reducers/BudgetReducer';
 import { addInstitution, deleteInstitution, fetchInstitution, fetchOne, updateInstitution } from './Reducers/InstReducer';
 import { deleteUser, fetchUsers, newUsers } from './Reducers/usersReducer';
 
 const rootReducer = combineReducers({
     counter: reducer,
-    MyBudgets:fetchMyBudgets,
+    addBudget:addBudgets,
+    budgets:fetchMyBudgets,
     inst:fetchInstitution,
     deleteInst:deleteInstitution,
     addInst:addInstitution,

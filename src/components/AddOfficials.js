@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import AllInstitutionsModal from './AllInstitutionsModal';
 import { connect } from 'react-redux';
-import { registerUser } from '../redux/Actions/usersAction';
+import { getAllUsers, registerUser } from '../redux/Actions/usersAction';
 
 const AddOfficials = (props) => {
     const [loading,setLoading]=React.useState(false);
@@ -27,11 +27,17 @@ const AddOfficials = (props) => {
         }));
     }
     
+    
+    const [phoneError,setPhoneError]=useState(false);
     const handleRegister=(e)=>{
         e.preventDefault();
+        const reg = new RegExp("^((072|078|073))[0-9]{7}$", "i");
+
         if(props.registerUser(formData)){
-            props.setReload(true)
+            props.setReload(true);
+            props.getAllUsers()
         }
+
     }
     
   return (
@@ -76,7 +82,8 @@ const AddOfficials = (props) => {
 
                 <div className='w-full mb-2'>
                     <label>Mobile</label>
-                    <input onChange={handleChange} value={formData.mobile} type="number" name='mobile' className="py-1 text-text_secondary rounded-lg outline-primary block w-full px-4 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Mobile" required/>
+                    <input onChange={handleChange} value={formData.mobile} type="number" name='mobile' 
+                    className={`py-1 text-text_secondary rounded-lg outline-primary block w-full px-4 border border-text_primary border-opacity-40 placeholder-text_primary`} placeholder="Mobile" required/>
                 </div>
 
                 <div className='w-full mb-2'>
@@ -104,4 +111,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{registerUser}) (AddOfficials)
+export default connect(mapState,{registerUser,getAllUsers}) (AddOfficials)

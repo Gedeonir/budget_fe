@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import { connect } from 'react-redux';
-import { addInstitution } from '../redux/Actions/InstitutionActions';
+import { addInstitution, fetchInst } from '../redux/Actions/InstitutionActions';
 
 const AddInstitution = (props) => {
 
@@ -26,6 +26,7 @@ const AddInstitution = (props) => {
 
         if(props.addInstitution(formData)){
             props.setReload(true);
+            props.fetchInst();
             props.setAddInstitutionModal(false)
         }
     }
@@ -80,4 +81,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{addInstitution}) (AddInstitution)
+export default connect(mapState,{addInstitution,fetchInst}) (AddInstitution)

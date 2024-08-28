@@ -17,11 +17,14 @@ import { PieChart,pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import Pagination from '../../components/Pagination';
 import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
+import { connect } from 'react-redux';
+import { getMyBudgets } from '../../redux/Actions/BudgetActions';
 
 const QuickLinks=[
   {
     "Icon":<RiAddCircleFill size={20}/>,
     "label":"New budget",
+    "to":"/plan-budget"
   },
   {
     "Icon":<MdPrivacyTip size={20}/>,
@@ -58,22 +61,9 @@ const cards=[{
   "icon":<IoWallet size={30}/>,
 }];
 
-function Homepage() {
+function Homepage(props) {
   const [userData,setUserData]=useState([]);
-  const hour=new Date().getHours()
-
-  const salutation=()=>{
-    let salutation;
-    if (hour >= 5 && hour < 12) {
-      salutation = 'Good morning';
-    } else if (hour >= 12 && hour < 18) {
-      salutation = 'Good afternoon';
-    } else {
-      salutation = 'Good evening';
-    }
-
-    return salutation
-  }
+  const navigate=useNavigate();
 
   const handlePagination = (pageNumber) => {
     setCurrentPage (pageNumber);
@@ -145,6 +135,12 @@ function Homepage() {
     { id: 5, value: 50, color: "#ff9806", label: "Medical" },
   ]
 
+  useEffect(()=>{
+    props.getMyBudgets()
+  },[])
+
+  
+
   return (
     <Layout setUserData={setUserData}>
       <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
@@ -161,7 +157,7 @@ function Homepage() {
           <div className='flex justify-start items-center gap-4'>
           {QuickLinks.map((item,index)=>{
             return(
-              <div key={index} className='group flex justify-center items-center gap-2'>
+              <div key={index} className='group flex justify-center items-center gap-2' onClick={()=>navigate(item.to)}>
                 <div className='group-hover:bg-list_hover mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
                   {item.Icon}
                 </div>
@@ -351,4 +347,8 @@ function Homepage() {
   )
 }
 
-export default Homepage
+const mapState=(data)=>({
+  data:data
+})
+
+export default connect(mapState,{getMyBudgets}) (Homepage)

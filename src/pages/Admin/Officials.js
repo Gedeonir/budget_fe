@@ -35,14 +35,14 @@ const Officials = (props) => {
 
     useEffect(()=>{
         props.getAllUsers()
-    },[reload])
+    },[reload,userData])
 
     const users=props?.data?.users;
 
     const [searchWord,setSearchWord]=useState("");
 
     const filteredInst=()=>{
-        return users?.resp?.data?.getUsers?.filter((item)=>item.fullNames.toLowerCase().includes(searchWord.toLowerCase()));
+        return users?.resp?.data?.getUsers?.filter((item)=>item.fullNames.toLowerCase().includes(searchWord.toLowerCase()) && item.email.toLowerCase() !== userData?.getProfile?.email.toLowerCase());
     }
         
     const handleOpenDelete=(id)=>{  
@@ -56,12 +56,11 @@ const Officials = (props) => {
     const handleDelete=(id)=>{
         if (props.deleteUser(id)) {
             setDelete({id:"",open:false})
-            setReload(!reload);            
+            setReload(!reload); 
+            props.getAllUsers()           
         }
     }
     
-
-
 
   return (
     <AdminDashboard setUserData={setUserData}>

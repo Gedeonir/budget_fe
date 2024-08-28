@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom'
 import {IoIosNotificationsOutline} from "react-icons/io"
 import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'
+import getAcademicYears from '../utils/AcademicYears';
 
 const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
+    const [academicYear,setAcademiYears]=useState(getAcademicYears());
 
     return (
         <div className='bg-primary drop-shadow-sm w-full py-4 px-8 flex justify-start items-center sticky z-20 top-0'>
@@ -43,6 +45,16 @@ const Navbar = (props) => {
                 </ul>
 
                 <div className='flex items-center justify-center gap-2'>
+                    <form className='justify-start gap-1 hidden lg:flex'>
+                        <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                            {academicYear.map((item)=>{
+                                return(
+                                    <option value={item} key={item}>{item}</option>
+                                )
+                            })}
+                        </select>
+                    </form>
+                    
                     <IoSearchOutline size={20} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
 
                     <IoIosNotificationsOutline size={25} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
