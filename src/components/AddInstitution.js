@@ -39,7 +39,7 @@ const AddInstitution = (props) => {
                 <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new institution</h1>
             </div>
 
-            <form className='text-text_primary' onSubmit={(e)=>handleAdd(e)}>
+            <form method='POST' className='text-text_primary' onSubmit={(e)=>handleAdd(e)}>
                 <div className='w-full mb-2'>
                     <label>Institution Name</label>
                     <input onChange={handleChange} type="text" name='institutionName' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Name" required/>

@@ -111,7 +111,8 @@ const BudgetPlanningForm = (props) => {
                         amount:total,
                         fyi:item,
                         institution:props.userData?.getProfile?.institution?._id,
-                        description:formData.description
+                        description:formData.description,
+                        user:props.userData?.getProfile?._id
                     }
                     props.addBudget(data);
                     localStorage.setItem('expenses',[]);
@@ -145,6 +146,13 @@ const BudgetPlanningForm = (props) => {
                         <label className='font-bold'>Total Budget:</label>
                         <p>{total}$</p>
                     </div>
+
+                    <Link to={"/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
+                        <div className='group-hover:bg-list_hover p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100'>
+                            <IoWallet size={30}/>
+                        </div>
+                        <label className='group-hover:text-list_hover text-secondary cursor-pointer'>My budgets</label>  
+                    </Link>
                     
                 </div>
             </div>
@@ -306,13 +314,6 @@ const BudgetPlanningForm = (props) => {
                         </div>
                         
                     </div>
-                </div>
-
-                <div className='group flex justify-start items-center gap-2 bg-primary2 shadow-lg rounded-lg py-4 px-4 cursor-pointer'>
-                    <div className='group-hover:bg-list_hover p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100'>
-                        <IoWallet size={30}/>
-                    </div>
-                    <label className='text-xs group-hover:text-list_hover text-secondary cursor-pointer'>My budgets</label>  
                 </div>
             </section> */}
         </div>

@@ -18,6 +18,9 @@ import Institutions from "./pages/Admin/Institutions";
 import MyBudgets from "./pages/Users/MyBudgets";
 import Officials from "./pages/Admin/Officials";
 import UpdateInstitution from "./pages/Admin/UpdateInstitution";
+import BudgetRequest from "./pages/Users/BudgetRequest";
+import NewRequest from "./pages/Users/NewRequest";
+import ViewRequest from "./pages/Users/ViewRequest";
 
 
 const AppRoutes = (prop) => {
@@ -46,6 +49,24 @@ const AppRoutes = (prop) => {
         <Route path="/my-budgets" element={
           <Protected route="/signin">
             <MyBudgets/>
+          </Protected>
+        }></Route>
+
+        <Route path="/budget/requests" element={
+          <Protected route="/signin">
+            <BudgetRequest/>
+          </Protected>
+        }></Route>
+
+        <Route path="/budget/requests/:id" element={
+          <Protected route="/signin">
+            <ViewRequest/>
+          </Protected>
+        }></Route>
+
+        <Route path="/budget/requests/new" element={
+          <Protected route="/signin">
+            <NewRequest/>
           </Protected>
         }></Route>
         

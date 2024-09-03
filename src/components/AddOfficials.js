@@ -49,7 +49,7 @@ const AddOfficials = (props) => {
             <label className='text-success text-sm' >{props?.data?.newUser?.success && 'New user added'}</label>
             <label className='text-red text-sm' >{props?.data?.newUser?.error && 'Adding user Failed'}</label>
 
-            <form className='text-text_primary' onSubmit={(e)=>handleRegister(e)}>
+            <form method='POST' className='text-text_primary' onSubmit={(e)=>handleRegister(e)}>
                 <div className='w-full mb-2'>
                     <label>Member Title</label>
                     <select name='title' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={handleChange} required>
