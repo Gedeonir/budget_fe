@@ -108,7 +108,7 @@ const MyBudgets = (props) => {
                                         <td>{item.amount} $</td>
                                         <td>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>
                                         <td>
-                                            <div className={`${item.status ==='approved'?'text-success':item.status === 'rejected'?'text-red':item.status === 'pending'?'text-[#FBA801]':'text-text_primary'} font-bold px-1 text-xs py-1 rounded-lg mx-auto`}>
+                                            <div className={`${item.status ==='approved'?'text-success':item.status === 'rejected'?'text-red':'text-text_primary'} font-bold px-1 text-xs py-1 rounded-lg mx-auto`}>
                                                 <label className={``}>
                                                     {item.status}
                                                 </label> 

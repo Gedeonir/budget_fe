@@ -41,7 +41,7 @@ const Officials = (props) => {
 
     const [searchWord,setSearchWord]=useState("");
 
-    const filteredInst=()=>{
+    const filteredUsers=()=>{
         return users?.resp?.data?.getUsers?.filter((item)=>item.fullNames.toLowerCase().includes(searchWord.toLowerCase()) && item.email.toLowerCase() !== userData?.getProfile?.email.toLowerCase());
     }
         
@@ -76,7 +76,7 @@ const Officials = (props) => {
             <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full'>
                 <div className='lg:flex justify-between mb-2 items-center '>
                     <div className='text-sm text-text_primary w-full flex justify-between mb-2'>
-                        <label>{filteredInst().length} Officials</label>
+                        <label>{filteredUsers().length} Officials</label>
 
                         <div className='flex items-center justify-end'>
                             <div className='mx-4 p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddOfficialsModal(!AddOfficialsModal)}>
@@ -93,14 +93,14 @@ const Officials = (props) => {
                     
                 </div>
 
-                {filteredInst().length <=0?(
+                {filteredUsers().length <=0?(
                     <NoDataFound/>
                 )
                 :
                 (
                     <>
                         <div className='grid lg:grid-cols-5 grid-cols-1 gap-4'>
-                            {pagination(filteredInst,10).length>0 && pagination(filteredInst,10)[currentPage].map((item,index)=>(
+                            {pagination(filteredUsers,10).length>0 && pagination(filteredUsers,10)[currentPage].map((item,index)=>(
                                 <Card 
                                     key={index} 
                                     img={"https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png"} 

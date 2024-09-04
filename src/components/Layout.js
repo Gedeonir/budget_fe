@@ -31,7 +31,7 @@ const Layout = (props) => {
 
     return (
         <div className='min-h-screen max-h-screen overflow-x-hidden bg-primary'>
-          <Navbar profile={userData?.getProfile}/>
+          <Navbar profile={userData?.getProfile} setFinancialYear={props.setFinancialYear}/>
           <div className='pb-4 px-4 '>{props.children}</div>
           <Footer/>
         </div>

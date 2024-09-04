@@ -1,6 +1,58 @@
 import axios from "axios";
 import * as types from './actionTypes';
 
+export const removeReviewer=(id,formData)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.REMOVE_REVIEWER_LOADING
+        })
+
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/removeReviewers/${id}`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        )
+        
+
+        dispatch({
+            type:types.REMOVE_REVIEWER_SUCCESS,payload:res
+        })
+        
+    } catch (error) {
+        dispatch({
+            type:types.REMOVE_REVIEWER_FAIL,payload:error
+        })
+
+        console.log(error)
+    }
+}
+
+export const addReviewer=(id,formData)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.ADD_REVIEWER_LOADING
+        })
+
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/addReviewers/${id}`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        )
+
+        dispatch({
+            type:types.ADD_REVIEWER_SUCCESS,payload:res
+        })
+    } catch (error) {
+        dispatch({
+            type:types.ADD_REVIEWER_FAIL,payload:error
+        })
+        
+    }
+}
 export const getRequest=(id)=>async(dispatch)=>{
     try {
         dispatch({
@@ -118,7 +170,6 @@ export const addBudget=(formData)=>async(dispatch)=>{
             type:types.ADD_NEW_BUDGET_FAIL,payload:error
         });
 
-        console.log(error);
 
     }
 }

@@ -45,25 +45,16 @@ const QuickLinks=[
   },
 ]
 
-const cards=[{
-  "label":"Total Budget",
-  "amount":300000,
-  "icon":<IoCashSharp size={30}/>,
-},
-{
-  "label":"Total Spent",
-  "amount":300000,
-  "icon":<FaArrowTrendDown size={30}/>,
-},
-{
-  "label":"Total Left",
-  "amount":300000,
-  "icon":<IoWallet size={30}/>,
-}];
+
 
 function Homepage(props) {
   const [userData,setUserData]=useState([]);
   const navigate=useNavigate();
+
+  const myBudgetData=props?.data?.budgets;
+
+
+ 
 
   const handlePagination = (pageNumber) => {
     setCurrentPage (pageNumber);
@@ -135,51 +126,103 @@ function Homepage(props) {
     { id: 5, value: 50, color: "#ff9806", label: "Medical" },
   ]
 
+  
+  const [cards,setCards]=useState([])
+
+
+
+  const [financialYear,setFinancialYear]=useState(() => {
+    const year = localStorage.getItem('financialYear');
+    return year ? year : " ";
+  })
+
   useEffect(()=>{
     props.getMyBudgets()
-  },[])
+    localStorage.setItem('financialYear', financialYear);
+
+    if (myBudgetData.success) {
+      setCards([]);
+
+      const data=[
+        {
+          "label":"Total Budget",
+          "amount":3000,
+          "icon":<IoCashSharp size={30}/>,
+        },
+        {
+          "label":"Total Spent",
+          "amount":300000,
+          "icon":<FaArrowTrendDown size={30}/>,
+        },
+        {
+          "label":"Total Left",
+          "amount":300000,
+          "icon":<IoWallet size={30}/>,
+        }
+      ]
+
+      data?.map((item,index)=>{
+        const card={
+          "label":item.label,
+          "amount":item.label ==="Total Budget"?filterBudget()?.length ===0?0:filterBudget()[0]?.amount:0,
+          "icon":item.icon
+        }
+
+        setCards((prev)=>[...prev,card]);
+      })
+    }
+  },[financialYear,myBudgetData.success])
+
+
+  const filterBudget=()=>{
+    return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
+  }
+
+
+  console.log(cards);
+  
 
   
 
   return (
-    <Layout setUserData={setUserData}>
+    <Layout setUserData={setUserData} setFinancialYear={setFinancialYear}>
       <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
-        <div className='w-40'>
+        <div className='w-40 hidden lg:block'>
           <img src={GovernmentLogo} className='w-full h-full object-cover'/>
         </div>
         <div className='w-full'>
           <div className='py-4 font-bold text-secondary w-full overflow-x-hidden'>
-            <p>Ministry of Health</p>
+            <p>{userData?.getProfile?.institution?.institutionName}</p>
           </div>
           <div className='mb-3'>
             <p className='text-lg font-normal text-wrap text-justify'>Budget planning and execution system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
           </div>
-          <div className='flex justify-start items-center gap-4'>
-          {QuickLinks.map((item,index)=>{
-            return(
-              <div key={index} className='group flex justify-center items-center gap-2' onClick={()=>navigate(item.to)}>
-                <div className='group-hover:bg-list_hover mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
-                  {item.Icon}
+          <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
+            {QuickLinks.map((item,index)=>{
+              return(
+                <div key={index} className='group flex justify-start items-center gap-2 text-sm' onClick={()=>navigate(item.to)}>
+                  <div className='my-2 group-hover:bg-list_hover mb-2 lg:mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
+                    {item.Icon}
+                  </div>
+                  <div className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</div>  
                 </div>
-                <label className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</label>  
-              </div>
-            )
-          })}
+              )
+            })}
           </div>
         </div>
       </div>
       
       <section className='w-full grid grid-cols-1 lg:grid-cols-4 gap-4'>
-        <div className='col-span-3'>
-          <div className='grid grid-cols-3 gap-8'>
+        <div className='lg:col-span-3'>
+          <div className='grid lg:grid-cols-3 gap-8'>
             {cards.map((item,index)=>{
               return(
                 <div key={index} className='flex justify-between items-center bg-primary2 p-4 rounded-lg shadow-lg text-text_primary'>
                   <div>
-                    <h1 className='font-bold text-xl'>{item.label}</h1>
-                    <p className='text-lg'>{item.amount}</p>
+                    <h1 className='font-bold lg:text-xl text-md'>{item.label}</h1>
+                    <p className='lg:text-lg text-sm'>{item.amount}</p>
                   </div>
-                  <div className='p-2 w-24 h-24 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
+                  <div className='p-2 lg:w-24 lg:h-24 w-12 h-12 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
                     {item.icon}
                   </div>
                 </div>
@@ -187,14 +230,14 @@ function Homepage(props) {
             })}
           </div>
 
-          <div>
+          <div >
             <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Spending Analysis</p>
             </div>
-            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4'>
-              <div className='px-8 py-8 text-text_primary'>
-                <h2 className='font-bold text-2xl'>6800$</h2>
-                <p className='flex gap-2'>Your spending is <span className='text-red flex justify-start items-end'>9%<FaArrowDownLong size={10}/></span> compared to last year</p>
+            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 '>
+              <div className='lg:px-8 lg:py-8 py-4 text-text_primary'>
+                <h2 className='font-bold lg:text-2xl text-lg'>6800$</h2>
+                <p className='flex gap-2 text-sm'>Your spending is <span className='text-red flex justify-start items-end'>9%<FaArrowDownLong size={10}/></span> compared to last year</p>
               </div>
               <LineChart data={data} options={options}/>
             </div>
@@ -202,7 +245,7 @@ function Homepage(props) {
         </div>
         
         <div className='col-span-1 flex flex-col'>
-          <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 h-1/2 overflow-hidden'>
+          <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 lg:h-1/2 h-full overflow-hidden'>
             <div className='font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Latest Transactions</p>
             </div>
@@ -229,13 +272,13 @@ function Homepage(props) {
               )
             })}
 
-            <div className=' absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
+            <div className='lg:absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
               <Link className='text-text_primary text-sm font-bold border-2 border-primary rounded-lg  w-full p-2 text-center pointer-cursor flex items-center justify-center'>View all</Link>
             </div>
             
           </div>
 
-          <div className='relative flex items-end h-1/2 pt-8'>
+          <div className='relative flex items-end lg:h-1/2 h-full pt-8'>
             <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
               <div className='font-bold text-text_primary w-full'>
                 <p>Spending Category</p>
@@ -243,7 +286,7 @@ function Homepage(props) {
 
               <div className='py-2 text-text_primary flex justify-between items-center'>
                 <div>
-                  <h2 className='font-bold text-2xl'>6800.289$</h2>
+                  <h2 className='font-bold lg:text-2xl text-lg'>6800.289$</h2>
                   <p className='flex gap-2 text-xs'>From 24 Oct to 24 Dec 2024</p>
                 </div>
                 <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>

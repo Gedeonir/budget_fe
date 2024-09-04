@@ -56,7 +56,7 @@ const AdminDashboard = (props) => {
         <Sidebar showMenu={showMenu}/>
 
         <div className={`relative w-full min-h-screen max-h-screen bg-primary ${props.openModal?'overflow-y-hidden':'overflow-y-auto'}`}>
-            <header className='drop-shadow-sm bg-primary w-full py-2 lg:px-2 px-2 flex justify-between items-center sticky z-20 top-0'>
+            <header className='drop-shadow-sm bg-primary w-full py-2 px-4 flex justify-between items-center sticky z-20 top-0'>
                 <div className="flex items-center lg:w-40 w-24">
                     <img src={Logo} className='w-full h-full object-cover'/>
                 </div>
@@ -89,7 +89,7 @@ const AdminDashboard = (props) => {
 
                     
             </header>
-            <section className='py-2 lg:px-4 px-2 relative'>
+            <section className='py-2 px-4  relative'>
                 {props.children}
             </section>
 

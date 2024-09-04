@@ -55,7 +55,7 @@ const BudgetRequest = (props) => {
         <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-2 max-h-screen h-full'>
             <div className='lg:flex justify-between mb-2 items-center gap-4'>
                 <ul className='list-none flex justify-start gap-4 -mx-4 w-full font-semibold text-sm'>
-                    <li onClick={()=>setSection("all")} className={`${section.toLowerCase()==""?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>All</li>
+                    <li onClick={()=>setSection("")} className={`${section.toLowerCase()==""?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>All</li>
                     <li onClick={()=>setSection("pending")} className={`${section.toLowerCase()=="pending"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Pending</li>
                     <li onClick={()=>setSection("approved")} className={`${section.toLowerCase()=="approved"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Approved</li>
                     <li onClick={()=>setSection("declined")} className={`${section.toLowerCase()=="declined"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Declined</li>

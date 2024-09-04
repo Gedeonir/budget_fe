@@ -9,7 +9,7 @@ const LineChart = ({ data, options }) => {
  
 
   return (
-    <div className='w-full text-text_primary'>
+    <div className='w-full h-full text-text_primary'>
       <Line data={data} options={options} />
     </div>
   );

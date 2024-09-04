@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from "../assets/Logo.PNG"
 import { Link } from 'react-router-dom'
 import {IoIosNotificationsOutline} from "react-icons/io"
@@ -10,13 +10,19 @@ const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
     const [academicYear,setAcademiYears]=useState(getAcademicYears());
 
+    useEffect(()=>{
+        localStorage.setItem('financialYear', academicYear[0]);
+    },[])
+
+    const selectedYear=localStorage.getItem('financialYear');
+
     return (
-        <div className='bg-primary drop-shadow-sm w-full py-4 px-8 flex justify-start items-center sticky z-20 top-0'>
+        <div className='bg-primary drop-shadow-sm w-full py-4 px-4 flex justify-start items-center sticky z-20 top-0'>
             <div className="flex items-center w-32">
                 <img src={Logo} className='w-full h-full object-cover'/>
             </div>
 
-            <div className='flex items-center justify-between w-full'>
+            <div className='flex items-center lg:justify-between justify-end w-full'>
                 <ul className="lg:flex justify-start w-full hidden p-0 list-none mx-4">
                     <li className={`${location.pathname==="/"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
                         <Link to="/">
@@ -45,11 +51,11 @@ const Navbar = (props) => {
                 </ul>
 
                 <div className='flex items-center justify-center gap-2'>
-                    <form className='justify-start gap-1 hidden lg:flex'>
-                        <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                    <form className='justify-start gap-1 flex'>
+                        <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                             {academicYear.map((item)=>{
                                 return(
-                                    <option value={item} key={item}>{item}</option>
+                                    <option value={item} key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
                                 )
                             })}
                         </select>

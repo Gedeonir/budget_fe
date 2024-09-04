@@ -7,6 +7,55 @@ const initialState={
     loading:false
 };
 
+export const addReviewer=(state=initialState,action)=>{
+    switch(action.type){
+        case types.ADD_REVIEWER_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.ADD_REVIEWER_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:false
+            }
+        case types.ADD_REVIEWER_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
+export const removeReviewer=(state=initialState,action)=>{
+    switch(action.type){
+        case types.REMOVE_REVIEWER_LOADING:
+            return{
+                loading:true
+            }
+        case types.REMOVE_REVIEWER_SUCCESS:
+            return{
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.REMOVE_REVIEWER_FAIL:
+            return{
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
 export const fetchMyBudgets=(state=initialState,action)=>{
     switch(action.type){
         case types.GET_ALL_BUDGETS_LOADING:
