@@ -261,61 +261,6 @@ const BudgetPlanningForm = (props) => {
                 {openModal && <AddExpenses recalculatePercentages={recalculatePercentages} expenses={expenses} total={total} setOpenModal={setOpenModal} setExpenses={setExpenses}/>}
                 
             </section>
-
-            {/* <section>
-                <div className='relative bg-primary2 rounded-lg shadow-lg overflow-hidden mb-4'>
-                    <div className='font-bold text-text_primary py-2 px-4 flex justify-between items-center'>
-                        <h1>Contributors</h1>
-                        <div className=' text-secondary  duration-200 delay-100 cursor-pointer'>
-                            <RiAddCircleFill size={20}/>
-                        </div>
-                    </div>
-
-                    <div className='py-2 px-4 h-32 overflow-y-auto'>
-                        <div className='justify-between items-center flex'>
-                            <div className='flex justify-start gap-2 items-center'>
-                                <div className='w-8 h-8 bg-primary rounded-full'>
-
-                                </div>
-                                <div className='text-xs text-text_primary'>
-                                    <p>Contributor 1</p>
-                                </div>
-                            </div>
-
-                            <div className='text-xs text-red'>
-                                <button type="submit" className='delay-100 duration-500 hover:text-list_hover'>Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='relative bg-primary2 rounded-lg shadow-lg overflow-hidden mb-4'>
-                    <div className='font-bold text-text_primary py-2 px-4 flex justify-between items-center'>
-                        <h1>Reviewers</h1>
-                        <div className='p-2 text-secondary  duration-200 delay-100 cursor-pointer'>
-                            <RiAddCircleFill size={20}/>
-                        </div>
-                    </div>
-
-                    <div className='py-2 px-4 h-32 overflow-y-auto'>
-                        <div className='justify-between items-center flex'>
-                            <div className='flex justify-start gap-2 items-center'>
-                                <div className='w-8 h-8 bg-primary rounded-full'>
-
-                                </div>
-                                <div className='text-xs text-text_primary'>
-                                    <p>Reviewer 1</p>
-                                </div>
-                            </div>
-
-                            <div className='text-xs text-red'>
-                                <button type="submit" className='delay-100 duration-500 hover:text-list_hover'>Remove</button>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </section> */}
         </div>
        
         <div className='flex justify-start gap-4 lg:w-1/5 w-full'>

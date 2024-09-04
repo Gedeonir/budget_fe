@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Logo from "../assets/Logo.PNG"
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {IoIosNotificationsOutline} from "react-icons/io"
 import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'
@@ -15,6 +15,7 @@ const Navbar = (props) => {
     },[])
 
     const selectedYear=localStorage.getItem('financialYear');
+    const location=useLocation()
 
     return (
         <div className='bg-primary drop-shadow-sm w-full py-4 px-4 flex justify-start items-center sticky z-20 top-0'>
@@ -51,15 +52,17 @@ const Navbar = (props) => {
                 </ul>
 
                 <div className='flex items-center justify-center gap-2'>
-                    <form className='justify-start gap-1 flex'>
-                        <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                            {academicYear.map((item)=>{
-                                return(
-                                    <option value={item} key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
-                                )
-                            })}
-                        </select>
-                    </form>
+                    {location.pathname =='/' &&
+                        <form className='justify-start gap-1 flex'>
+                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                                {academicYear.map((item)=>{
+                                    return(
+                                        <option value={item} key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
+                                    )
+                                })}
+                            </select>
+                        </form>
+                    }
                     
                     <IoSearchOutline size={20} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
 

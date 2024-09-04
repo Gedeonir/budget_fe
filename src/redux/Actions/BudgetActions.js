@@ -174,3 +174,28 @@ export const addBudget=(formData)=>async(dispatch)=>{
     }
 }
 
+export const addComment=(id,comment)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.ADD_COMMENT_LOADING
+        })
+
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/request/comment/${id}`,comment,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+
+        dispatch({
+            type:types.ADD_COMMENT_SUCCESS,payload:res
+        });
+        
+    } catch (error) {
+        dispatch({
+            type:types.ADD_COMMENT_FAIL,payload:error
+        });
+    }
+}
+

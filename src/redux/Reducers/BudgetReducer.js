@@ -56,6 +56,29 @@ export const removeReviewer=(state=initialState,action)=>{
     }
 }
 
+export const addComment=(state=initialState,action)=>{
+    switch(action.type){
+        case types.ADD_COMMENT_LOADING:
+            return{
+                loading:true
+            }
+        case types.ADD_COMMENT_SUCCESS:
+            return{
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.ADD_COMMENT_FAIL:
+            return{
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
 export const fetchMyBudgets=(state=initialState,action)=>{
     switch(action.type){
         case types.GET_ALL_BUDGETS_LOADING:

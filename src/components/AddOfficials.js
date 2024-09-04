@@ -39,6 +39,16 @@ const AddOfficials = (props) => {
         }
 
     }
+
+    console.log(formData.password);
+
+    const positions=[
+        "Minister","State Minister","Chief Technical Advisor","Permanent Secretary",
+        "Head of Department of Planning, Monitoring & Evaluation, and Health Financing",
+        "Single Project Implementation Unit (SPIU) Coordinator",
+        "Director General of Corporate Services",
+        "the Legal Affairs  Specialist"
+    ]
     
   return (
     <div className='lg:w-11/12 w-full absolute left-0 inset-y-0 max-h-screen flex lg:items-start lg:justify-center items-center'>
@@ -69,9 +79,9 @@ const AddOfficials = (props) => {
                     <label>Position</label>
                     <select name='position' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={handleChange} required>
                         <option value={""}>--Select Position--</option>
-                        <option value={"Minister"}>Minister</option>
-                        <option value={"State Minister"}>State Minister</option>
-                        <option value={"Finance Director"}>Finance Director</option>
+                        {positions.map((item,index)=>(
+                            <option key={index} value={item}>{item}</option>
+                        ))}
                     </select>
                 </div>
 

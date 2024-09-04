@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { handleLogout } from '../utils/handleLogout';
 
 const AccountsModal = (props) => {
 
@@ -20,7 +21,7 @@ const AccountsModal = (props) => {
             <div className='flex justify-start gap-2 items-center h-16'>
                 <div className={`h-12 delay-100 duration-200 cursor-pointer px-2 rounded-full w-16 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
                 <div className='py-2 text-text_primary'>
-                    <h1 className='font-bold text-sm'>{props?.profile?.fullNames}</h1>
+                    <h1 className='font-bold text-xs text-ellipsis'>{props?.profile?.fullNames}</h1>
                     <p className='text-xs'>{props?.profile?.email}</p>
                     <Link to={`/profile/${props?.profile?.fullNames}`} className="text-success text-xs">View profile</Link>
 

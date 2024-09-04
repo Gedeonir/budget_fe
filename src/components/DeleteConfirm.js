@@ -12,7 +12,7 @@ const DeleteConfirm = (props) => {
         <p className='text-text_primary text-sm'>Are you sure you want to delete this {props.item}</p>
         <div className='flex justify-start gap-4 w-full'>
             <button type='reset' size="sm" className=' my-4 text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>props.setDelete({id:"",open:false})}>No</button>
-            <button onClick={()=>props.handleDelete(props?.Delete?.id)}type='submit' size='sm' className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={loading? true : false}>
+            <button onClick={()=>props.handleDelete(props?.Delete?.id)} type='submit' size='sm' className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={loading? true : false}>
                 {props?.data?.deleteInst?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/><span> Deleting</span></p>:'Yes'}
             </button>
         </div>

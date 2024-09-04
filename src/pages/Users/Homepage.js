@@ -177,9 +177,6 @@ function Homepage(props) {
   const filterBudget=()=>{
     return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
   }
-
-
-  console.log(cards);
   
 
   
