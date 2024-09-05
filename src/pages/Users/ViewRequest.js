@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom'
-import { addComment, addReviewer, getRequest, removeReviewer } from '../../redux/Actions/BudgetActions';
+import { addComment, addReviewer, getRequest, removeReviewer, sendReview } from '../../redux/Actions/BudgetActions';
 import Layout from '../../components/Layout';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
@@ -9,11 +9,13 @@ import { RiAddCircleFill } from "react-icons/ri";
 import {IoSearchOutline } from 'react-icons/io5';
 import { getAllUsers } from '../../redux/Actions/usersAction';
 import NoDataFound from '../../components/NoDataFound';
-import { IoMdArrowDropdown, IoMdChatboxes } from "react-icons/io";
+import { IoMdArrowDropdown, IoMdChatboxes, } from "react-icons/io";
 import { FaEye } from 'react-icons/fa6';
 import { FaEyeSlash } from "react-icons/fa";
-
-
+import { MdOutlinePublishedWithChanges } from "react-icons/md";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { MdOutlineBlock } from "react-icons/md";
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const ViewRequest = (props) => {
     const params=useParams();
@@ -25,7 +27,7 @@ const ViewRequest = (props) => {
     useEffect(()=>{
         props.getRequest(params.id);
         props.getAllUsers();
-    },[reload])
+    },[])
 
     const [userData,setUserData]=useState([]);
     const [section,setSection]=useState("");
@@ -40,6 +42,7 @@ const ViewRequest = (props) => {
     );
     } 
 
+    const [addReviewerModal,setAddReviewerModal]=useState(false);
 
     const handleAddReviewer=(reviewers)=>{
         try{
@@ -50,8 +53,8 @@ const ViewRequest = (props) => {
                 category:"reviewer",
                 requested:reviewers
             }})
-            setReload(true);
-            props.getRequest(params.id);
+
+            setAddReviewerModal(false);
             
         }catch(error){
             console.log(error);
@@ -96,12 +99,39 @@ const ViewRequest = (props) => {
         setAction(e.target.value);
     }
 
-    console.log(action);
+    
     
 
-    const handleSubmitReview=()=>{
+    const handleSubmitReview=(e)=>{
+        e.preventDefault();
 
+        try {
+
+            if (action !=="comment") {
+                props.sendReview(params.id,
+                    {
+                        "reviewerStatus": action.toLowerCase() ==="reject"?"rejected":action ==="approve"?"approved":"request for change"
+                    }
+                )
+            }
+
+            props.addComment(params.id,{
+                comment:{
+                    user:userData?.getProfile?._id,
+                    message:reviewMsg,
+                    category:action==="comment"?"comment":action.toLowerCase() ==="reject"?"rejected":action ==="approve"?"approved":"request for change",
+                }
+            })
+            openReview(!review)
+        } catch (error) {
+            console.log(error)
+        }
+
+       
     }
+
+    console.log(Request);
+    
     
         
 
@@ -115,7 +145,7 @@ const ViewRequest = (props) => {
                     <div className='text-text_primary w-full mb-4'>
                         <h1 className='font-bold py-2'>FYI {Request?.resp?.data?.budget.fyi} Budget</h1>
                         <div className='flex items-center justify-start gap-2'>
-                            <label className={`${Request?.resp?.data?.status ==='approved'?'bg-success':Request?.resp?.data?.status === 'rejected'?'bg-red':'bg-[#FBA801]'} text-primary2 font-bold px-1 text-xs py-2 rounded-lg`}>{Request?.resp?.data?.status}</label>
+                            <label className={`${Request?.resp?.data?.status ==='approved'?'bg-success':Request?.resp?.data?.status === 'rejected'?'bg-red':'bg-secondary'} text-primary2 font-bold px-2 text-xs py-2 rounded-md`}>{Request?.resp?.data?.status}</label>
                             <p className='text-xs text-text_primary font-light'>{Request?.resp?.data?.budget.institution.institutionName} requested to approve budget</p>
                         </div>
                     </div>
@@ -129,7 +159,7 @@ const ViewRequest = (props) => {
 
                     <section className={`grid ${section.toLowerCase()=="" &&'lg:grid-cols-5'} gap-2 w-full items-start`}>
 
-                        <div className='lg:col-span-4 w-full gap-2 bg-primary2 shadow-lg rounded-lg px-2 py-2 max-h-screen h-full'>
+                        <div className='lg:col-span-4 w-full gap-2 bg-primary2 shadow-lg rounded-lg px-2 py-2 h-full'>
                             {section.toLowerCase()==""?(
                                 <>
                                     <div className='justify-start items-start gap-4 text-text_primary flex mb-4'>
@@ -149,7 +179,23 @@ const ViewRequest = (props) => {
                                                 
                                                 <div key={index} className='flex items-center justify-start gap-2 py-2'>
                                                     <div className='p-2 w-8 h-8 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
-                                                        {item.category === "comment"? <IoMdChatboxes size={15}/>:item.category === "reviewer"? <FaEye size={15}/>:<FaEyeSlash size={15}/>}
+                                                        {item.category === "comment"? 
+                                                            <IoMdChatboxes size={15}/>
+                                                        :
+                                                        item.category === "reviewer"? 
+                                                            <FaEye size={15}/>
+                                                        :
+                                                        item.category.toLowerCase() === "request for change"?
+                                                            <MdOutlinePublishedWithChanges size={15}/>
+                                                        :
+                                                        item.category ==="approved"?
+                                                            <IoMdCheckmarkCircleOutline size={15}/>
+                                                        :
+                                                        item.category ==="rejected"?
+                                                            <MdOutlineBlock size={15}/>
+                                                        :
+                                                        <FaEyeSlash size={15}/>}
+
                                                     </div>
 
                                                     <div>
@@ -160,7 +206,11 @@ const ViewRequest = (props) => {
                                                             item.category === "reviewer"?<span>requested review from <span className='font-bold'>{item?.requested?.fullNames === userData?.getProfile?.fullNames?'You':item?.requested?.fullNames}</span></span>
                                                             :
                                                             item.category === "noreviewer"?<span>removed <span className='font-bold'>{item?.requested?.fullNames === userData?.getProfile?.fullNames?'You':item?.requested?.fullNames}</span> from reviewers </span>
-                                                            :""} on {new Date(item?.createdAt).toLocaleDateString()}
+                                                            :
+                                                            item.category.toLowerCase() === "request for change"?<span>requested for changes on this budget</span>
+                                                            :item.category ==="approved"?<span>approved this budget</span>
+                                                            :
+                                                            <span>rejected this budget</span>} on {new Date(item?.createdAt).toLocaleDateString()}
                                                         </label>
                                                         <p className='text-xs'>{item?.message}</p>
                                                     </div>
@@ -178,12 +228,15 @@ const ViewRequest = (props) => {
                                             </div>
 
                                             <div className='w-full flex justify-start items-center gap-2'>
-                                                <button type="submit" className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 ${props?.data?.newRequest?.loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.newRequest?.loading? true : false}>
-                                                    {props?.data?.newRequest?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Cancel Request'}
-                                                </button>
+                                                {Request?.resp?.data?.requestedBy?._id === userData?.getProfile?._id && reviewerIds.includes(userData?.getProfile?._id) && (
+                                                    <button type="submit" className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 ${props?.data?.newRequest?.loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.newRequest?.loading? true : false}>
+                                                        {props?.data?.newRequest?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Cancel Request'}
+                                                    </button>
+                                                )}
+                                                
 
-                                                <button type="submit" className={`my-4 text-xs border-2 ${!message && 'opacity-20'} border-text_primary text-center text-text_primary font-bold p-2 ${props?.data?.newRequest?.loading || !message? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.newRequest?.loading? true : !message?true:false}>
-                                                    {props?.data?.newRequest?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Comment'}
+                                                <button type="submit" className={`my-4 text-xs border-2 ${!message && 'opacity-20'} border-text_primary text-center text-text_primary font-bold p-2 ${props?.data?.addComment?.loading || !message? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.addComment?.loading? true : !message?true:false}>
+                                                    {props?.data?.addComment?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Comment'}
                                                 </button>
                                             </div>
                                             
@@ -194,17 +247,18 @@ const ViewRequest = (props) => {
                             )
                             :
                             (
+                                
                                 <div className='text-text_primary text-sm px-2'>
                                     <div className='lg:flex justify-between items-center mb-2'>
-                                        <div className='w-full'>
+                                        <div className='w-full mb-2'>
                                             <p className='font-bold'>FYI {Request?.resp?.data?.budget.fyi} Budget</p>
                                             <label className='py-2 text-text_primary text-xs font-light'>
                                                 {Request?.resp?.data?.budget.institution?.institutionName}
                                             </label>
                                         </div>
 
-                                        <div className='flex justify-end items-center gap-2 lg:w-2/5 relative'>
-                                            <div className='flex justify-end gap-2 w-full'>
+                                        <div className='flex lg:justify-end justify-between items-center gap-2 lg:w-2/5 relative mb-2'>
+                                            <div className='flex lg:justify-end justify-start gap-2 w-full'>
                                                 <label className='font-bold'>Total Budget:</label>
                                                 <p>{Request?.resp?.data?.budget.amount} $</p>
                                             </div>
@@ -220,10 +274,10 @@ const ViewRequest = (props) => {
                                                             <div className='w-full mb-2 py-2'>
                                                                 <p className='font-bold'>Submit your review</p>
                                                             </div>
-                                                            <form>
+                                                            <form className='w-full' method='POST' onSubmit={(e)=>handleSubmitReview(e)}>
 
                                                                 <div className='w-full text-xs mb-4'>
-                                                                    <textarea rows={5} formData={reviewMsg}  className="text-text_secondary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Leave a comment" required></textarea>
+                                                                    <textarea rows={5}onChange={(e)=>setReviewMsg(e.target.value)} value={reviewMsg}  className="text-text_secondary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Leave a comment" required></textarea>
                                                                 </div>
                                                                 <div className='text-xs mb-2 flex justify-start items-start gap-2'>
                                                                     <input onChange={handleChange} type="radio" name="action" value={"comment"} className="text-text_secondary mr-2 rounded-lg outline-primary px-4 my-1 border border-text_primary border-opacity-40 placeholder-text_primary cursor-pointer" checked={action === "comment"?true:false}/>
@@ -255,7 +309,7 @@ const ViewRequest = (props) => {
                                                                 </div>
 
                                                                 <button className={` ${!action? "cursor-not-allowed opacity-40": "cursor-pointer"} text-xs bg-secondary text-center text-primary p-1 flex items-center justify-center gap-2 w-2/4 mt-4`} disabled={!action?true:false}>
-                                                                    Submit review
+                                                                    {props?.data?.sendReview?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Submit review'}
                                                                 </button>
                                                             </form>
                                                         </div>
@@ -275,9 +329,9 @@ const ViewRequest = (props) => {
                                     <div className=' text-text_primary py-2'>
                                         <h1 className='font-bold'>Budget percentage allocated to each expenditure</h1>
 
-                                        <div className='max-h-72 overflow-y-auto'>
+                                        <div className='lg:max-h-72 max-h-full overflow-y-auto'>
                                             <table border={10} cellSpacing={0} cellPadding={10} className='mb-8  w-full py-2 text-text_primary text-left'>
-                                                <thead className='font-bold text-sm'>
+                                                <thead className='font-bold lg:text-sm text-xs'>
                                                     <tr>
                                                         <th className='w-2'>#</th>
                                                         <th>Expense Category</th>
@@ -305,68 +359,86 @@ const ViewRequest = (props) => {
                             )}
                             
                         </div>
+
+                        {/* Reviewers section */}
                         {section.toLowerCase()=="" &&
                             <div className='relative overflow-hidden mb-4 rounded-lg bg-primary2 w-full py-4'>
                                 <div className=' text-text_primary px-2 flex justify-between items-center mb-2'>
                                     <h1 className='text-sm font-bold'>Reviewers</h1>
 
                                     {Request?.resp?.data?.requestedBy?._id === userData?.getProfile?._id &&
-                                    <div className='group text-secondary  duration-200 delay-100 cursor-pointer'>
-                                        <RiAddCircleFill size={20}/>
+                                    <div className='group text-secondary  duration-200 delay-100'>
+                                        <RiAddCircleFill size={20} className='cursor-pointer' onClick={()=>setAddReviewerModal(true)}/>
 
-                                        <div className='group-hover:block hidden absolute top-6 w-11/12 right-2 rounded-lg shadow-lg py-4 text-sm bg-primary2 px-2'>
-                                            <div className='relative w-full mb-2'>
-                                                <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
-                                                {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
-                                            </div>
+                                        {addReviewerModal && (
+                                       
+                                            <div className='absolute top-6 w-11/12 right-2 rounded-lg shadow-lg py-2 text-sm bg-primary2 px-2'>
+                                                <div className='relative w-full mb-2'>
+                                                    <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
+                                                    {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
+                                                </div>
 
-                                            {users?.loading?(
-                                                <Loading/>
-                                            )
-                                            :
-                                            (users?.success?(
-                                                filteredUsers().length <=0?(
-                                                    <NoDataFound/>
+                                                {users?.loading?(
+                                                    <Loading/>
+                                                )
+                                                :
+                                                (users?.success?(
+                                                    filteredUsers().length <=0?(
+                                                        <NoDataFound/>
+                                                    )
+                                                    :
+                                                    (
+                                                        <ul className='list-none -ml-4 h-32 overflow-y-auto'>
+                                                        {filteredUsers().map((item,index)=>(
+                                                            
+                                                            <li key={index} className={`flex items-center justify-start gap-2 relative mb-2 py-2 duration-500 delay-100 cursor-pointer text-text_primary font-light hover:text-secondary text-xs`}
+                                                            onClick={()=>handleAddReviewer(item._id)}
+                                                            >
+                                                                <div className={`h-4 delay-100 duration-200 cursor-pointer px-2 rounded-full w-4 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
+                                                                <p>{item.fullNames}</p>
+                                                                {/* {props.formData === item.institutionName && <TiTick/>} */}
+                                                            </li>
+                                                        ))}
+                                                        </ul>
+                                                    )
                                                 )
                                                 :
                                                 (
-                                                    <ul className='list-none -ml-4'>
-                                                    {filteredUsers().map((item,index)=>(
-                                                        
-                                                        <li className={`flex items-center justify-start gap-2 relative mb-2 py-2 duration-500 delay-100 cursor-pointer text-text_primary font-light hover:text-secondary text-xs`} key={index}
-                                                        onClick={()=>handleAddReviewer(item._id)}
-                                                        >
-                                                            <div className={`h-4 delay-100 duration-200 cursor-pointer px-2 rounded-full w-4 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
-                                                            <p>{item.fullNames}</p>
-                                                            {/* {props.formData === item.institutionName && <TiTick/>} */}
-                                                        </li>
-                                                    ))}
-                                                    </ul>
+                                                    <Error code={users?.error?.code} message={users?.error?.message}/>
                                                 )
-                                            )
-                                            :
-                                            (
-                                                <Error code={users?.error?.code} message={users?.error?.message}/>
-                                            )
-                                            )}
-                                        </div>
+                                                )}
+                                            </div>
+                                                 
+                                        )}
                                     </div>
                                     }
                                     
                                 </div>
                                 
 
-                                <div className='py-2 px-2 h-full overflow-y-auto'>
+                                <div className='py-2 px-2 h-40 overflow-y-auto'>
                                     {Request?.resp?.data?.reviewers.length ===0?(
                                         <p className='text-xs font-light text-center text-text_primary'>No reviewer added yet</p>
                                     ):(
                                         Request?.resp?.data?.reviewers?.map((item,index)=>(
-                                            <div className='flex justify-start gap-2 items-start cursor-pointer hover:text-secondary duration-500 delay-100 text-text_primary' onClick={()=>handleRemoveReviewer(item.user._id)}>
-                                                <div className={`h-4 delay-100 duration-200 cursor-pointer rounded-full w-4 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
-                                                
-                                                <div className='text-xs'>
-                                                    <p>{item.user?.fullNames}</p>
-                                                </div>  
+                                            <div key={index} className='relative flex justify-between gap-2 items-start cursor-pointer hover:text-secondary duration-500 delay-100 text-text_primary' onClick={()=>Request?.resp?.data?.requestedBy?._id === userData?.getProfile?._id && handleRemoveReviewer(item.user._id)}>
+                                                <div  className='relative flex justify-start gap-2 items-start'>
+                                                    <div className={`h-4 delay-100 duration-200 cursor-pointer rounded-full w-4 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
+                                                    
+                                                    <div className='text-xs'>
+                                                        <p>{item.user?.fullNames}</p>
+                                                    </div>
+                                                </div>
+
+                                                {item.reviewerStatus.toLowerCase() === "request for change"?
+                                                    <MdOutlinePublishedWithChanges size={15}/>
+                                                :
+                                                item.reviewerStatus ==="approved"?
+                                                    <IoMdCheckmarkCircleOutline size={15}/>
+                                                :
+                                                    <MdOutlineBlock size={15}/>
+                                                }
+
                                             </div>
 
                                         ))
@@ -393,4 +465,4 @@ const ViewRequest = (props) => {
 
 const mapState=(data)=>({data:data})
 
-export default connect(mapState,{getRequest,getAllUsers,addReviewer,removeReviewer,addComment}) (ViewRequest)
+export default connect(mapState,{getRequest,getAllUsers,addReviewer,removeReviewer,addComment,sendReview}) (ViewRequest)

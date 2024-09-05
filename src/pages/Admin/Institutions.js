@@ -17,7 +17,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Institutions = (props) => {
     const [currentPage,setCurrentPage]=useState(0);
-    const [reload,setReload]=useState(false);
     const [Delete,setDelete]=useState({
         id:"",
         open:false
@@ -34,7 +33,7 @@ const Institutions = (props) => {
 
     useEffect(()=>{
         props.fetchInst()
-    },[reload])
+    },[])
 
     const institution=props?.data?.inst;    
     
@@ -56,10 +55,9 @@ const Institutions = (props) => {
     }
 
     const handleDelete=(id)=>{
-        if (props.deleteInstution(id)) {
-            setDelete({id:"",open:false})
-            setReload(!reload);            
-        }
+        props.deleteInstution(id)
+        setDelete({id:"",open:false})
+        
     }
     
 

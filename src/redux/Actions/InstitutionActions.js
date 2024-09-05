@@ -1,6 +1,30 @@
 import * as types from './actionTypes'
 import axios from 'axios'
 
+export const fetchInst=()=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.GET_ALL_INST_LOADING
+        })
+
+        const res=await axios.get(`${process.env.BACKEND_URL}/institutions/`,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.GET_ALL_INST_SUCCESS,payload:res
+        });
+
+    } catch (error) {
+        dispatch({
+            type:types.GET_ALL_INST_FAIL,payload:error
+        });        
+
+    }
+}
 export const addInstitution=(formData)=>async(dispatch)=>{
     try {
         dispatch({
@@ -18,6 +42,8 @@ export const addInstitution=(formData)=>async(dispatch)=>{
         dispatch({
             type:types.ADD_NEW_INST_SUCCESS,payload:res
         })
+
+        dispatch(fetchInst())
     } catch (error) {
         dispatch({
             type:types.ADD_NEW_INST_FAIL,payload:error
@@ -70,6 +96,9 @@ export const deleteInstution=(id)=>async(dispatch)=>{
         dispatch({
             type:types.DELETE_INST_SUCCESS,payload:res
         })
+
+        dispatch(fetchInst());
+
     } catch (error) {
         dispatch({
             type:types.DELETE_INST_FAIL,payload:error
@@ -102,27 +131,3 @@ export const fetchOne=(id)=>async(dispatch)=>{
     }
 }
 
-export const fetchInst=()=>async(dispatch)=>{
-    try {
-        dispatch({
-            type:types.GET_ALL_INST_LOADING
-        })
-
-        const res=await axios.get(`${process.env.BACKEND_URL}/institutions/`,
-            {
-                headers:{
-                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
-                }
-            }
-        );
-        dispatch({
-            type:types.GET_ALL_INST_SUCCESS,payload:res
-        });
-
-    } catch (error) {
-        dispatch({
-            type:types.GET_ALL_INST_FAIL,payload:error
-        });        
-
-    }
-}

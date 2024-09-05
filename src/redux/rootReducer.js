@@ -1,7 +1,7 @@
 
 import { combineReducers } from 'redux';
 import reducer from './Reducers/counterReducer';
-import { addBudgets, addReviewer, fetchMyBudgets, fetchRequests, getRequest, newRequest, removeReviewer,addComment } from './Reducers/BudgetReducer';
+import { addBudgets, addReviewer, fetchMyBudgets, fetchRequests, getRequest, newRequest, removeReviewer,addComment, sendReview } from './Reducers/BudgetReducer';
 import { addInstitution, deleteInstitution, fetchInstitution, fetchOne, updateInstitution } from './Reducers/InstReducer';
 import { deleteUser, fetchUsers, newUsers } from './Reducers/usersReducer';
 
@@ -22,7 +22,8 @@ const rootReducer = combineReducers({
     oneRequest:getRequest,
     addReviewer:addReviewer,
     removeReviewer:removeReviewer,
-    addComment:addComment
+    addComment:addComment,
+    sendReview:sendReview
 });
 
 export default rootReducer;

@@ -32,11 +32,7 @@ const AddOfficials = (props) => {
     const handleRegister=(e)=>{
         e.preventDefault();
         const reg = new RegExp("^((072|078|073))[0-9]{7}$", "i");
-
-        if(props.registerUser(formData)){
-            props.setReload(true);
-            props.getAllUsers()
-        }
+        props.registerUser(formData)
 
     }
 
@@ -67,6 +63,9 @@ const AddOfficials = (props) => {
                         <option value={"Dr"}>Dr</option>
                         <option value={"Hon"}>Hon.</option>
                         <option value={"Amb"}>Amb.</option>
+                        <option value={"Mr"}>Mr</option>
+                        <option value={"Ms"}>Ms</option>
+
                     </select>
                 </div>
 

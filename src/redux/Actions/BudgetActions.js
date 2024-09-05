@@ -191,11 +191,40 @@ export const addComment=(id,comment)=>async(dispatch)=>{
         dispatch({
             type:types.ADD_COMMENT_SUCCESS,payload:res
         });
+
+        dispatch(getRequest(id))
         
     } catch (error) {
         dispatch({
             type:types.ADD_COMMENT_FAIL,payload:error
         });
+    }
+}
+
+export const sendReview=(id,formData)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.SEND_REVIEW_LOADING
+        })
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/request/${id}/review`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.SEND_REVIEW_SUCCESS,payload:res
+        });
+
+        dispatch(getRequest(id))
+    } catch (error) {
+        dispatch({
+            type:types.SEND_REVIEW_FAIL,payload:error
+        });
+
+        console.log(error);
+        
     }
 }
 

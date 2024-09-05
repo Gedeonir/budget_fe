@@ -23,12 +23,9 @@ const AddInstitution = (props) => {
 
     const handleAdd=(e)=>{
         e.preventDefault();
-
-        if(props.addInstitution(formData)){
-            props.setReload(true);
-            props.fetchInst();
-            props.setAddInstitutionModal(false)
-        }
+        props.addInstitution(formData)
+        props.setAddInstitutionModal(false)
+        
     }
 
     

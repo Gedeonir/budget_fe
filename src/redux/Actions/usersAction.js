@@ -40,12 +40,13 @@ export const registerUser=(formData)=>async(dispatch)=>{
         dispatch({
             type:types.REGISTER_USER_SUCCESS,payload:res
         });
+
+        dispatch(getAllUsers());
     } catch (error) {
         dispatch({
             type:types.REGISTER_USER_FAIL,payload:error
         });  
 
-        console.log(error);
     }
 
 }
@@ -67,6 +68,8 @@ export const deleteUser=(id)=>async(dispatch)=>{
         dispatch({
             type:types.DELETE_USER_SUCCESS,payload:res
         })
+
+        dispatch(getAllUsers());
     } catch (error) {
         dispatch({
             type:types.DELETE_USER_FAIL,payload:error

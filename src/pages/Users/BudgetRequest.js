@@ -59,6 +59,8 @@ const BudgetRequest = (props) => {
                     <li onClick={()=>setSection("pending")} className={`${section.toLowerCase()=="pending"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Pending</li>
                     <li onClick={()=>setSection("approved")} className={`${section.toLowerCase()=="approved"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Approved</li>
                     <li onClick={()=>setSection("declined")} className={`${section.toLowerCase()=="declined"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Declined</li>
+                    <li onClick={()=>setSection("closed")} className={`${section.toLowerCase()=="closed"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Closed</li>
+
                 </ul>
                 <div className='relative w-4/5 mb-4'>
                     <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>

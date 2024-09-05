@@ -54,11 +54,10 @@ const Officials = (props) => {
     }
 
     const handleDelete=(id)=>{
-        if (props.deleteUser(id)) {
-            setDelete({id:"",open:false})
-            setReload(!reload); 
-            props.getAllUsers()           
-        }
+        props.deleteUser(id)
+        setDelete({id:"",open:false})
+        setReload(!reload); 
+
     }
     
 
