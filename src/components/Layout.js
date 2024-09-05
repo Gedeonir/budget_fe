@@ -20,6 +20,10 @@ const Layout = (props) => {
       const {data}=getProfile;
       props?.setUserData(data); //passing data to Homepage
       setUserData(data);
+
+      if(data?.getProfile?.role !=="user"){
+        navigate("/signin");
+      }
     }catch(error){
       navigate("/signin",{state:{data:"Not Authorized or token expired, Please Login again"}});
       sessionStorage.removeItem('userToken'); 

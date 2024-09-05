@@ -1,34 +1,43 @@
 import React,{useEffect, useState} from 'react'
-import Layout from '../../components/Layout'
 import { Link, useLocation } from 'react-router-dom';
-import RequestsList from '../../components/RequestList';
+import { IoSearchOutline } from 'react-icons/io5';
+import { connect } from 'react-redux';
+import { getRequests } from '../redux/Actions/BudgetActions';
+import Loading from './Loading';
+import Error from './Error';
+import { pagination } from '../utils/paginationHandler';
+import Pagination from './Pagination';
+import NoDataFound from './NoDataFound';
+import { FaRegMessage } from "react-icons/fa6";
+
+const RequestsList = (props) => {
+    const location=useLocation();
+    const [searchWord,setSearchWord]=useState("");
+
+    const [currentPage,setCurrentPage]=useState(0);
+    const handlePagination = (pageNumber) => {
+        setCurrentPage (pageNumber);
+    };
+
+    useEffect(()=>{
+        props.getRequests();
+    },[])
+
+    const allRequests=props?.data?.allRequest;
+    const [section,setSection]=useState("");
+
+    const filteredRequests=()=>{
+        return allRequests?.resp?.data?.filter((item)=>
+            item.budget.fyi.toLowerCase().includes(searchWord.toLowerCase()) 
+            && item.budget.institution._id.toLowerCase().includes(location.pathname.includes("dashboard")?"":props?.userData?.getProfile?.institution?._id?.toLowerCase()) 
+            && item.status.toLowerCase().includes(section.toLowerCase()));
+    }
 
 
-const BudgetRequest = (props) => {
-    const [userData,setUserData]=useState([]);
-    
+
   return (
-    <Layout setUserData={setUserData}>
-        <div className='py-4 font-bold text-text_primary text-sm flex justify-start gap-4'>
-            <Link to={"/my-budgets"} className={`${location.pathname.includes("my-budgets") && 'text-secondary border-b-2 pb-2'}`}>My budgets</Link>
-            <Link to={"/budget/requests"} className={`${location.pathname.includes("requests") && 'text-secondary border-b-2 pb-2'}`}>Requests</Link>
-        </div>
-
-        <div className='flex justify-start items-center py-2 text-text_primary'>
-            <div className='text-center w-full'>
-                <h1 className='font-bold py-4 mb-2'>Welcome to Request</h1>
-                <p>
-                    Budget request helps you to collaborate on budget with other people.
-                    As budget requests are created, they’ll appear here in a searchable and filterable list.
-                    To get started, you should create a request.
-                </p>
-            </div>
-            
-        </div>
-        
-        <RequestsList userData={userData}/>
-
-        {/* <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-2 max-h-screen h-full'>
+    <div>
+        <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-2 max-h-screen h-full'>
             <div className='lg:flex justify-between mb-2 items-center gap-4'>
                 <ul className='list-none flex justify-start gap-4 -mx-4 w-full font-semibold text-sm'>
                     <li onClick={()=>setSection("")} className={`${section.toLowerCase()==""?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>All</li>
@@ -43,9 +52,11 @@ const BudgetRequest = (props) => {
                     {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
                 </div>
 
-                <Link to={"new"} className={`mb-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-1/5`}>
-                    New request
-                </Link>
+                {!location.pathname.includes("dashboard") &&
+                    <Link to={"new"} className={`mb-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-1/5`}>
+                        New request
+                    </Link>
+                }
             </div>
             {allRequests?.loading?(
                 <Loading/>
@@ -65,7 +76,7 @@ const BudgetRequest = (props) => {
                                     <input required type='checkbox' name='confirm' className="text-text_secondary rounded-lg outline-primary px-4 my-1 border border-text_primary border-opacity-40 placeholder-text_primary cursor-pointer"/>
 
                                     <div>
-                                        <Link to={`/budget/requests/${item._id}`} className='font-bold text-secondary cursor-pointer'>FYI {item.budget.fyi} Budget</Link>
+                                        <Link to={`${location.pathname.includes("dashboard")?`/dashboard/budget/requests/${item._id}`:`/budget/requests/${item._id}`}`} className='font-bold text-secondary cursor-pointer'>FYI {item.budget.fyi} Budget</Link>
                                         <p className='font-light text-xs'>opened on {new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()} by {item.budget.institution.institutionName} </p>
                                     </div>
                                 </div>
@@ -95,12 +106,13 @@ const BudgetRequest = (props) => {
                 <Error code={allRequests?.error?.code} message={allRequests?.error?.message}/>
             )
             )}
-        </div> */}
-
-
-    </Layout>
+        </div>
+    </div>
   )
 }
 
+const mapState=(data)=>({
+    data:data
+})
 
-export default BudgetRequest
+export default connect(mapState,{getRequests}) (RequestsList)

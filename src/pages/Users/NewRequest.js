@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoSearchOutline } from 'react-icons/io5';
 import Layout from '../../components/Layout';
 import { connect } from 'react-redux';
-import { getMyBudgets, newRequest } from '../../redux/Actions/BudgetActions';
+import { getMyBudgets, getRequests, newRequest } from '../../redux/Actions/BudgetActions';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 
@@ -17,16 +17,24 @@ const NewRequest = (props) => {
     const navigate=useNavigate();
     
     useEffect(()=>{
+        props.getRequests()
         props.getMyBudgets()
-
-        if (props?.data?.newRequest?.success) {
-            navigate(`/budget/requests/${props?.data?.newRequest?.resp?.data?.budget}`)
+        if (reload) {
+            navigate(`/budget/requests/`)
         }
-    },[props?.data?.newRequest?.success])
+    },[reload])
 
+    const allRequests=props?.data?.allRequest;
+
+    const budgetIds =allRequests?.resp?.data?.map(budget =>{ return budget?.budget?._id});    
+
+    
+    
     const filteredBudget=()=>{
-        return myBudgetData?.resp?.data?.filter((item)=>item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()));
-    }
+        return myBudgetData?.resp?.data?.filter((item)=>item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()) 
+        && !budgetIds?.includes(item._id)
+    );
+    }    
 
     const [formData,setFormData]=useState({
         budget:"",
@@ -42,9 +50,19 @@ const NewRequest = (props) => {
         }));
     }
 
+    /**
+     * Handles the request form submission
+     * 
+     * @param {Event} e - The form submission event
+     * 
+     * @returns {void}
+     */
     const handleRequest=(e)=>{
         e.preventDefault()
-        props.newRequest(formData);
+        // call the newRequest action and pass the formData as an argument
+        // if the request is successful, toggle the reload state to force a re-render
+        if(props.newRequest(formData))
+            setReload(!reload)
 
     }    
 
@@ -91,4 +109,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{getMyBudgets,newRequest})(NewRequest)
+export default connect(mapState,{getMyBudgets,newRequest,getRequests})(NewRequest)

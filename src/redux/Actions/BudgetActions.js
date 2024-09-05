@@ -139,6 +139,8 @@ export const newRequest=(formData)=>async(dispatch)=>{
         dispatch({
             type:types.NEW_REQUEST_SUCCESS,payload:res,
         })
+
+        dispatch(getRequests())
     } catch (error) {
         dispatch({
             type:types.NEW_REQUEST_FAIL,payload:error

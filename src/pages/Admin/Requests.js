@@ -8,16 +8,23 @@ import { SlLike } from "react-icons/sl";
 import { SlDislike } from "react-icons/sl";
 import { MdCurrencyExchange } from "react-icons/md";
 import Pagination from '../../components/Pagination';
+import { connect } from 'react-redux';
+import { getRequests } from '../../redux/Actions/BudgetActions';
+import RequestList from '../../components/RequestList';
 
 
-const Requests = () => {
+const Requests = (props) => {
     const [userData,setUserData]=useState([]);
     const location=useLocation();
     const [section,setSection]=useState("All");
-    const [currentPage,setCurrentPage]=useState(1);
+    const [currentPage,setCurrentPage]=useState(0);
+
     const handlePagination = (pageNumber) => {
         setCurrentPage (pageNumber);
     };
+
+    const allRequests=props?.data?.allRequest;
+
 
 
   return (
@@ -25,7 +32,8 @@ const Requests = () => {
         <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
             <p>Budget Requests</p>
         </div>
-        <div className='w-full bg-primary2 rounded-lg py-4 px-2'>
+        <RequestList userData={userData}/>
+        {/* <div className='w-full bg-primary2 rounded-lg py-4 px-2'>
             <div className='lg:flex justify-between '>
                 <ul className='list-none flex justify-start gap-4 -mx-4 w-full font-semibold text-md'>
                     <li onClick={()=>setSection("all")} className={`${section.toLowerCase()=="all"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>All</li>
@@ -94,10 +102,12 @@ const Requests = () => {
 
             
 
-        </div>
+        </div> */}
 
     </AdminDashboard>
   )
 }
 
-export default Requests
+const mapState=(data)=>({data:data})
+
+export default connect(mapState,{getRequests}) (Requests)

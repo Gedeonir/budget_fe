@@ -21,6 +21,7 @@ import UpdateInstitution from "./pages/Admin/UpdateInstitution";
 import BudgetRequest from "./pages/Users/BudgetRequest";
 import NewRequest from "./pages/Users/NewRequest";
 import ViewRequest from "./pages/Users/ViewRequest";
+import ViewRequestAdmin from "./pages/Admin/ViewRequestAdmin";
 
 
 const AppRoutes = (prop) => {
@@ -77,7 +78,7 @@ const AppRoutes = (prop) => {
         <Route path="dashboard/institutions" element={<Institutions/>}/>
         <Route path="dashboard/officials" element={<Officials/>}/>
         <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
-
+        <Route path="/dashboard/budget/requests/:id" element={<ViewRequestAdmin/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
     </Routes>
