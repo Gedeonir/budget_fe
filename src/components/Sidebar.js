@@ -86,7 +86,7 @@ const Sidebar = (props) => {
         </div>
         <ul className='my-4 w-full list-none items-start border-b pb-2 border-text_primary border-opacity-40'>
             {sideBarMenu1.map((item,index)=>(
-                <li key={index} className={`w-full py-1 my-2 px-2 rounded-l-full ${location.pathname===`${item.menuLeadTo}`?'bg-primary text-secondary':'text-text_primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
+                <li key={index} className={` text-sm w-full py-1 my-2 px-2 rounded-l-full ${location.pathname===`${item.menuLeadTo}`?'bg-primary text-secondary':'text-text_primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
                     {item.menuIcon}
                     <Link to={item.menuLeadTo} className='py-0.5 mx-2 text-sm'>{item.menuItem}</Link>
                 </li>  

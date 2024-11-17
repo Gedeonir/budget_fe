@@ -18,7 +18,13 @@ import Pagination from '../../components/Pagination';
 import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
 import { connect } from 'react-redux';
-import { getMyBudgets } from '../../redux/Actions/BudgetActions';
+import { allTransactions, getMyBudgets } from '../../redux/Actions/BudgetActions';
+import AddTransaction from '../../components/AddTransaction';
+import Loading from '../../components/Loading';
+import NoDataFound from '../../components/NoDataFound';
+import Error from '../../components/Error';
+import { pagination } from '../../utils/paginationHandler';
+import { calculateTotalsByCategory } from '../../utils/generatePieData';
 
 const QuickLinks=[
   {
@@ -53,6 +59,7 @@ function Homepage(props) {
 
   const myBudgetData=props?.data?.budgets;
 
+  const [currentPage,setCurrentPage]=useState(0);
 
  
 
@@ -109,23 +116,6 @@ function Homepage(props) {
     },
   };
 
-  const latest=[1,2,3,4,];
-
-  const sampleData = [ 
-    ['Books', 30], 
-    ['Cars', 40], 
-    ['Table', 30], 
-  ]; 
-
-  const pieData= [
-    { id: 0, value: 10, color: "#f44336", label: "Food" },
-    { id: 1, value: 15, color: "#2196f3", label: "Transport" },
-    { id: 2, value: 20, color: "#ff9800", label: "Household" },
-    { id: 3, value: 59, color: "#f44337", label: "Rent" },
-    { id: 4, value: 70, color: "#2196f9", label: "Salaries" },
-    { id: 5, value: 50, color: "#ff9806", label: "Medical" },
-  ]
-
   
   const [cards,setCards]=useState([])
 
@@ -170,6 +160,8 @@ function Homepage(props) {
 
         setCards((prev)=>[...prev,card]);
       })
+
+      props?.allTransactions();
     }
   },[financialYear,myBudgetData.success])
 
@@ -177,6 +169,42 @@ function Homepage(props) {
   const filterBudget=()=>{
     return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
   }
+
+  const [addTransaction,setAddTransaction]=useState(false);
+
+  const transactions=props?.data?.allTransactions;
+
+  const [searchWord,setSearchWord]=useState("");
+
+  const filteredTransactions=()=>{
+      return transactions?.resp?.data?.filter((item)=>item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase()) 
+      && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
+      && item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase()));
+  }
+
+  const calculateTotalSpendin=(spending)=>{ 
+    let total=0;    
+
+    spending?.map((item)=>{
+      total+=item?.value
+    })
+
+    return total.toFixed(5);
+  }
+
+  const yearlyTransactions = transactions?.resp?.data?.filter((transaction) => {
+    const transactionYear = transaction?.budget?.fyi;     
+    return transactionYear === financialYear
+  });
+  
+
+
+
+
+  
+  
+  
+
   
 
   
@@ -192,7 +220,7 @@ function Homepage(props) {
             <p>{userData?.getProfile?.institution?.institutionName}</p>
           </div>
           <div className='mb-3'>
-            <p className='text-lg font-normal text-wrap text-justify'>Budget planning and execution system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
+            <p className='text-sm font-normal text-wrap text-justify'>Budget planning and execution system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
           </div>
           <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
             {QuickLinks.map((item,index)=>{
@@ -214,9 +242,9 @@ function Homepage(props) {
           <div className='grid lg:grid-cols-3 gap-8'>
             {cards.map((item,index)=>{
               return(
-                <div key={index} className='flex justify-between items-center bg-primary2 p-4 rounded-lg shadow-lg text-text_primary'>
+                <div key={index} className='flex justify-between items-center bg-primary2 px-4 py-2 rounded-lg shadow-lg text-text_primary'>
                   <div>
-                    <h1 className='font-bold lg:text-xl text-md'>{item.label}</h1>
+                    <h1 className='font-bold text-sm'>{item.label}</h1>
                     <p className='lg:text-lg text-sm'>{item.amount}</p>
                   </div>
                   <div className='p-2 lg:w-24 lg:h-24 w-12 h-12 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
@@ -231,8 +259,8 @@ function Homepage(props) {
             <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Spending Analysis</p>
             </div>
-            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 '>
-              <div className='lg:px-8 lg:py-8 py-4 text-text_primary'>
+            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4 '>
+              <div className='py-4 text-text_primary'>
                 <h2 className='font-bold lg:text-2xl text-lg'>6800$</h2>
                 <p className='flex gap-2 text-sm'>Your spending is <span className='text-red flex justify-start items-end'>9%<FaArrowDownLong size={10}/></span> compared to last year</p>
               </div>
@@ -243,32 +271,44 @@ function Homepage(props) {
         
         <div className='col-span-1 flex flex-col'>
           <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 lg:h-1/2 h-full overflow-hidden'>
-            <div className='font-bold text-text_primary w-full overflow-x-hidden'>
+            <div className='font-bold text-text_primary w-full overflow-x-hidden text-sm'>
               <p>Latest Transactions</p>
             </div>
-            {latest.map((item,index)=>{
-              return(
-                <div key={index} className='w-full flex justify-between mt-4'>
-                  <div className='flex justify-start gap-3 items-center'>
-                    <div className='w-8 h-8'>
-                      <img src={GovernmentLogo} className='w-full h-full object-cover'/>
-                    </div>
+            {transactions?.loading?(
+                <Loading/>
+              ):(
+                transactions?.success?(
+                  yearlyTransactions?.length<=0?(
+                      <NoDataFound/>
+                  ):(
+                    yearlyTransactions?.slice(0, 6).map((item,index)=>{
+                      return(
+                        <div key={index} className='w-full flex justify-between mt-4 gap-3'>
+                          <div className='flex justify-start gap-3 items-center w-3/5'>
 
-                    <div className='text-text_primary'>
-                      <h2 className='font-semibold text-md'>Salaries</h2>
-                      <p className='text-sm'>23 oct 2028</p>
-                    </div>
-                  </div>
-                  <div className='text-xs text-red font-normal'>
-                    <label>
-                      -6800$
-                    </label>
-                  </div>
+                            <div className='text-text_primary w-full'>
+                              <h2 className='text-xs font-medium  truncate'>{item.transactionDescription}</h2>
+                              <p className='text-xs'>{new Date(item.createdAt).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                          <div className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'} text-xs`}>
+                            <label>
+                            {item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $
+                            </label>
+                          </div>
 
-                </div> 
-              )
-            })}
-
+                        </div>
+                      )
+                    })
+                  )
+                  
+                ):(
+                  
+                  <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
+                  
+                )
+              )}
+            
             <div className='lg:absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
               <Link className='text-text_primary text-sm font-bold border-2 border-primary rounded-lg  w-full p-2 text-center pointer-cursor flex items-center justify-center'>View all</Link>
             </div>
@@ -280,45 +320,63 @@ function Homepage(props) {
               <div className='font-bold text-text_primary w-full'>
                 <p>Spending Category</p>
               </div>
-
-              <div className='py-2 text-text_primary flex justify-between items-center'>
-                <div>
-                  <h2 className='font-bold lg:text-2xl text-lg'>6800.289$</h2>
-                  <p className='flex gap-2 text-xs'>From 24 Oct to 24 Dec 2024</p>
-                </div>
-                <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>
-              </div>
               
               <div className='w-full'>
-                <PieChart
-                  series={[
-                    {
-                      data:pieData,
-                      arcLabel: (item) => `${item.label}`,
-                      arcLabelMinAngle: 45,
-                      innerRadius: 20,
-                      outerRadius: 100,
-                      paddingAngle: 5,
-                      cornerRadius: 5,
-                      startAngle: -90,
-                      endAngle: 180,
-                      cx: 150,
-                      cy: 100,
-                      highlightScope: { faded: 'global', highlighted: 'item' },
-                      faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                    }
-                  ]}
-                  sx={{
-                    [`& .${pieArcLabelClasses.root}`]: {
-                      fill: 'white',
-                      fontWeight: 'regular',
-                      fontSize: 8,
-                    },
-                  }}
-                  width={600}
-                  height={200}
-                  className='w-full'
-                />
+                {transactions?.loading?(
+                  <Loading/>
+                ):(
+                  transactions?.success?(
+                    transactions?.resp?.data?.length<=0?(
+                        <NoDataFound/>
+                    ):(
+                      <>
+                      <div className='py-2 text-text_primary flex justify-between items-center'>
+                        <div>
+                          <h2 className='font-bold lg:text-2xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))}$</h2>
+                          <p className='flex gap-2 text-xs'>Total spendings</p>
+                        </div>
+                        <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>
+                      </div>
+                        <PieChart
+                          series={[
+                            {
+                              data:calculateTotalsByCategory(transactions?.resp?.data,financialYear),
+                              arcLabelMinAngle: 45,
+                              innerRadius: 20,
+                              outerRadius: 100,
+                              paddingAngle: 5,
+                              cornerRadius: 5,
+                              startAngle: -90,
+                              endAngle: 180,
+                              cx: 150,
+                              cy: 100,
+                              highlightScope: { faded: 'global', highlighted: 'item' },
+                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                            }
+                          ]}
+                          sx={{
+                            [`& .${pieArcLabelClasses.root}`]: {
+                              fill: 'white',
+                              fontWeight: 'regular',
+                              fontSize: 8,
+                            },
+                          }}
+                          width={900}
+                          height={200}
+                          className='w-full'
+                        />
+                        
+                      </>
+                    )
+                    
+                  ):(
+                    
+                    <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
+                    
+                  )
+                )}
+
+
               </div>
             </div>
           
@@ -328,16 +386,23 @@ function Homepage(props) {
       </section>
 
       <section className='w-full'>
-        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
+        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
           <p>Transaction History</p>
         </div>
         
         <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
           <div className='flex justify-between items-center'>
-            <div className='relative lg:w-2/5 w-full'>
-              <input type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
-              <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>
+            <div className='flex justify-start gap-2 lg:w-3/5 w-full'>
+              <div className='relative lg:w-3/5 w-full'>
+                <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
+                {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
+              </div>
+
+              <div className='text-primary rounded-lg'>
+                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={()=>setAddTransaction(!addTransaction)}>Add transaction</button>
+              </div>
             </div>
+           
 
             <div className='w-28 relative group flex justify-end gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
               <label>Latest</label>
@@ -352,36 +417,62 @@ function Homepage(props) {
               
             </div>
           </div>
-          <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-lg text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>
-            <thead className='bg-primary'>
+          <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
+            <thead className='bg-primary font-bold'>
                 <tr>
-                    <th className='font-normal'>Transaction name</th>
-                    <th className='font-normal'>Budget</th>
-                    <th className='font-normal'>Date</th>
-                    <th className='font-normal'>Payement Method</th>
-                    <th className='font-normal'>Amount Paid</th>
+                    <th>Transaction name</th>
+                    <th>Budget</th>
+                    <th>Date</th>
+                    <th>Transaction Type</th>
+                    <th>Amount Paid</th>
                 </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td className='font-bold'>Salaries</td>
-                <td>FYI 2024-2025 Budget</td>
-                <td>2024-01-05 12:00:51 PM</td>
-                <td>Cash</td>
-                <td className='text-red'>-7000 $</td>                
-              </tr>
-            </tbody>
+             <tbody>
+              {transactions?.loading?(
+                  <tr>
+                    <td colSpan={5} className='text-center'><Loading/></td>
+                  </tr>
+              ):(
+                transactions?.success?(
+                  filteredTransactions()?.length<=0?(
+                    <tr>
+                      <td colSpan={5} className='text-center'><NoDataFound/></td>
+                    </tr>
+                  ):(
+                    pagination(filteredTransactions,10).length>0 && pagination(filteredTransactions,10)[currentPage].map((item,index)=>{
+                      return(
+                        <tr key={index}>
+                          <td className=''>{item.transactionDescription}</td>
+                          <td>FYI {item.budget.fyi}</td>
+                          <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                          <td><span className={`p-1 ${item.type.toLowerCase()=='expense'?'text-red border-red':' border-success text-success'} rounded-lg`}>{item.type}</span></td>
+                          <td className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'}`}>{item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $</td>                
+                        </tr>
+                      )
+                    })
+                  )
+                  
+                ):(
+                  <tr>
+                    <td colSpan={5} className='text-center'><Error code={transactions?.error?.code} message={transactions?.error?.message}/></td>
+                  </tr>
+                )
+              )}
+            </tbody> 
           </table>
 
           <Pagination
-            length={100}
+            length={filteredTransactions()?.length}
             postsPerPage={20}
             handlePagination={handlePagination}
+            currentPage={currentPage}
           />
         </div>
 
         
       </section>
+
+      {addTransaction && <AddTransaction/>}
       
     </Layout>
   )
@@ -391,4 +482,4 @@ const mapState=(data)=>({
   data:data
 })
 
-export default connect(mapState,{getMyBudgets}) (Homepage)
+export default connect(mapState,{getMyBudgets,allTransactions}) (Homepage)

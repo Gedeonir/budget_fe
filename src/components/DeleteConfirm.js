@@ -8,8 +8,8 @@ const DeleteConfirm = (props) => {
     
 
   return (
-    <div className='py-4 px-4 mx-auto top-1/4 left-0 right-0 lg:w-1/4 bg-primary rounded-lg shadow-lg absolute'>
-        <p className='text-text_primary text-sm'>Are you sure you want to delete this {props.item}</p>
+    <div className='py-4 px-4 mx-auto top-1/4 left-0 right-0 lg:w-2/4 bg-primary rounded-lg shadow-lg absolute'>
+        <p className='text-text_primary text-sm'>Are you sure you want to {props.action? props.action:`delete this ${props.item}`}</p>
         <div className='flex justify-start gap-4 w-full'>
             <button type='reset' size="sm" className=' my-4 text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>props.setDelete({id:"",open:false})}>No</button>
             <button onClick={()=>props.handleDelete(props?.Delete?.id)} type='submit' size='sm' className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={loading? true : false}>

@@ -61,16 +61,18 @@ const AdminDashboard = (props) => {
                     <img src={Logo} className='w-full h-full object-cover'/>
                 </div>
                 <div className='flex relative items-center justify-center gap-2 py-2 px-2 rounded-lg'>
-                    <form className='justify-start gap-1 hidden lg:flex'>
-                        <label className='text-text_primary text-sm'>FYI</label>
-                        <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                            {academicYear.map((item)=>{
-                                return(
-                                    <option value={item} key={item}>{item}</option>
-                                )
-                            })}
-                        </select>
-                    </form>
+                    {location.pathname =='/dashboard' &&
+                        <form className='justify-start gap-1 hidden lg:flex'>
+                            <label className='text-text_primary text-sm'>FYI</label>
+                            <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                                {academicYear.map((item)=>{
+                                    return(
+                                        <option value={item} key={item}>{item}</option>
+                                    )
+                                })}
+                            </select>
+                        </form>
+                    }
                     <IoSearchOutline size={20} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
 
                     <IoIosNotificationsOutline size={25} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>

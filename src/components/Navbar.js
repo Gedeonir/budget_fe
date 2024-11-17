@@ -35,13 +35,13 @@ const Navbar = (props) => {
                         <Link to="/incomes-and-revenues">
                             Incomes
                         </Link>
-                    </li>    */}
+                    </li>    
 
                     <li className={`${location.pathname==="/expennditures"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
                         <Link to="/expennditures">
                             Expenses
                         </Link>
-                    </li>   
+                    </li>   */}
 
                     <li className={`${location.pathname==="/incomes"?'text-list_hover border-list_hover border-b-2':'text-text_primary'} p-1 text-md font-extrabold hover:text-list_hover cursor-pointer mx-4 delay-100 duration-500`}>
                         <Link to="/report-and-analytics">
@@ -57,7 +57,7 @@ const Navbar = (props) => {
                             <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                                 {academicYear.map((item)=>{
                                     return(
-                                        <option value={item} key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
+                                        <option key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
                                     )
                                 })}
                             </select>

@@ -43,7 +43,7 @@ const AddOfficials = (props) => {
         "Head of Department of Planning, Monitoring & Evaluation, and Health Financing",
         "Single Project Implementation Unit (SPIU) Coordinator",
         "Director General of Corporate Services",
-        "the Legal Affairs  Specialist"
+        "Legal Affairs  Specialist"
     ]
     
   return (

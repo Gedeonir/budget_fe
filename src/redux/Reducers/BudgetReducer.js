@@ -246,3 +246,105 @@ export const sendReview=(state=initialState,action)=>{
             return state
     }
 }
+
+export const changeStatus=(state=initialState,action)=>{
+    switch(action.type){
+        case types.CHANGE_STATUS_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.CHANGE_STATUS_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.CHANGE_STATUS_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}
+
+export const approveBudget=(state=initialState,action)=>{
+    switch(action.type){
+        case types.APPROVE_BUDGET_LOADING:
+            return {
+                loading:false
+            }
+        case types.APPROVE_BUDGET_SUCCESS:
+            return {
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.APPROVE_BUDGET_FAIL:
+            return {
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
+export const getBudgetReducer=(state=initialState,action)=>{
+    switch(action.type){
+        case types.GET_BUDGET_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.GET_BUDGET_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.GET_BUDGET_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}
+
+
+export const transactionsReducer=(state=initialState,action)=>{
+    switch(action.type){
+        case types.GET_ALL_TRANSACTIONS_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.GET_ALL_TRANSACTIONS_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.GET_ALL_TRANSACTIONS_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}

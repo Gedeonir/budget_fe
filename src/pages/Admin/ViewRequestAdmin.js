@@ -1,14 +1,34 @@
 import React, { useState } from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
 import Request from '../../components/Request'
+import { connect } from 'react-redux';
+import { getRequest } from '../../redux/Actions/BudgetActions';
 
-const ViewRequestAdmin = () => {
+
+const ViewRequestAdmin = (props) => {
     const [userData,setUserData]=useState([]);
+
+    const request=props?.data?.oneRequest;
+
+    const filterReviewers=request?.resp?.data?.reviewers?.filter((reviewer)=>
+      reviewer?.user?.role !=='admin'
+      && reviewer?.reviewerStatus?.toLowerCase() ==="approved"
+      && !request?.resp?.data?.reviewers?.some(item=> item.reviewerStatus.toLowerCase() ==='request for change' || item.reviewerStatus.toLowerCase() === 'rejected') 
+    );
+
+    console.log(request?.resp?.data?.reviewers?.some(item=> item.reviewerStatus.toLowerCase() ==='request for change'));
+    
+    
+    console.log(filterReviewers,"request");
+    
     return (
-    <AdminDashboard setUserData={setUserData}>
-        <Request userData={userData}/>
-    </AdminDashboard>
-  )
+      <AdminDashboard setUserData={setUserData}>
+        <Request userData={userData} filterReviewers={filterReviewers}/>
+      </AdminDashboard>
+    )
 }
 
-export default ViewRequestAdmin
+const mapState=(data)=>({
+    data:data
+})
+export default connect(mapState,{getRequest})(ViewRequestAdmin)

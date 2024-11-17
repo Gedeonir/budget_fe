@@ -26,7 +26,7 @@ const NewRequest = (props) => {
 
     const allRequests=props?.data?.allRequest;
 
-    const budgetIds =allRequests?.resp?.data?.map(budget =>{ return budget?.budget?._id});    
+    const budgetIds =allRequests?.resp?.data?.map(budget =>{ return  budget?.status ==="open" && budget?.budget?._id});    
 
     
     

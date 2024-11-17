@@ -13,9 +13,9 @@ import { MdNavigateBefore } from "react-icons/md";
             <div className='lg:flex justify-center gap-2 mt-2'>
                 <div className='flex lg:justify-start my-4 justify-between items-center text-text_primary'>
                     <MdNavigateBefore size={25}/>
-                    <div className='px-4 flex justify-start'>
+                    <div className='px-4 flex justify-start flex-wrap gap-2'>
                         {paginationNumbers.map((pageNumber,index) => (
-                            <button key={pageNumber} className={`${currentPage === index? 'bg-secondary text-primary2':'text-secondary'} border  hover:bg-secondary duration-300 delay-200 hover:text-primary2 cursor-pointer border-secondary h-8 w-8 px-2`} onClick={()=>handlePagination(index)}>{pageNumber}</button>
+                            <button key={pageNumber} className={`${currentPage === index? 'bg-secondary text-primary2':'text-secondary'} border  hover:bg-secondary duration-300 delay-200 hover:text-primary2 cursor-pointer border-secondary h-8 w-8 px-2 text-xs`} onClick={()=>handlePagination(index)}>{pageNumber}</button>
                         ))}
                     </div>
                     <MdNavigateNext size={25}/>

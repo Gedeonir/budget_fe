@@ -38,11 +38,6 @@ const MyBudgets = (props) => {
 
     const location=useLocation();
     
-    
-
-   
-    
-
     return (
         <Layout setUserData={setUserData}>
             <div className='py-4 font-bold text-text_primary text-sm flex justify-start gap-4'>
@@ -98,17 +93,17 @@ const MyBudgets = (props) => {
                                 {pagination(filteredBudget,10).length>0 && pagination(filteredBudget,10)[currentPage].map((item,index)=>(
 
                                     <tr key={index}>
-                                        <td>FYI {item.fyi} Budget</td>
+                                        <td><Link to={`/my-budgets/${item._id}`} className='text-secondary p-1'>FYI {item.fyi} Budget</Link></td>
                                         <td className='flex w-full justify-start gap-2 cursor-pointer items-center'>
                                             <div className='w-4 h-4 hidden lg:block'>
                                                 <img src={GovernmentLogo} className='w-full h-full object-cover'/>
                                             </div>
-                                            <Link className='text-secondary p-1'>{item.institution.institutionName}</Link>
+                                            <p className='p-1'>{item.institution.institutionName}</p>
                                         </td>
                                         <td>{item.amount} $</td>
                                         <td>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>
                                         <td>
-                                            <div className={`${item.status ==='approved'?'text-success':item.status === 'rejected'?'text-red':'text-text_primary'} font-bold px-1 text-xs py-1 rounded-lg mx-auto`}>
+                                            <div className={`${item.status.toLowerCase()==="approved"?"text-success":item.status.toLowerCase()==="rejected"?"text-red":item.status.toLowerCase()==="under review"?"text-[#FBA801]":"text-text_primary"} opacity-50} font-bold px-1 text-xs py-1 rounded-lg mx-auto`}>
                                                 <label className={``}>
                                                     {item.status}
                                                 </label> 
@@ -117,12 +112,12 @@ const MyBudgets = (props) => {
                                         </td>
                                         <td className='flex justify-start gap-3'>
                                             <div className='group relative'>
-                                                <AiFillDelete size={15} className='text-red cursor-pointer  duration-300 delay-200'/>
-                                                <label className='absolute -top-6 -right-2 text-xs text-primary rounded-lg p-1 bg-red hidden group-hover:block'>Remove</label>
+                                                <AiFillDelete size={15} className='cursor-pointer  duration-300 delay-200'/>
+                                                <label className='absolute -top-6 -right-2 text-xs text-primary rounded-lg p-1 bg-text_primary hidden group-hover:block'>Remove</label>
                                             </div>
                                             <div className='group relative text-sm'>
-                                                <MdCurrencyExchange size={15} className='text-secondary cursor-pointer  duration-300 delay-200'/>
-                                                <label className='absolute -top-6 -right-2 text-xs text-primary rounded-lg p-1 bg-secondary hidden group-hover:block'>Modify</label>
+                                                <MdCurrencyExchange size={15} className='cursor-pointer  duration-300 delay-200'/>
+                                                <label className='absolute -top-6 -right-2 text-xs text-primary rounded-lg p-1 bg-text_primary hidden group-hover:block'>Modify</label>
                                             </div>
                                         </td>
                                         

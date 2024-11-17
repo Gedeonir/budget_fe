@@ -230,3 +230,103 @@ export const sendReview=(id,formData)=>async(dispatch)=>{
     }
 }
 
+export const changeStatus=(id,formData)=>async(dispatch)=>{        
+    try {
+        dispatch({
+            type:types.CHANGE_STATUS_LOADING
+        })
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/request/${id}/modify`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.CHANGE_STATUS_SUCCESS,payload:res
+        });
+
+    } catch (error) {
+        dispatch({
+            type:types.CHANGE_STATUS_FAIL,payload:error
+        });
+
+        
+    }
+}
+
+export const approveBudget=(id,status)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.APPROVE_BUDGET_LOADING
+        })
+
+        const res=await axios.patch(`${process.env.BACKEND_URL}/budget/${id}/approve`,status,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.APPROVE_BUDGET_SUCCESS,payload:res
+        });
+
+    } catch (error) {
+        dispatch({
+            type:types.APPROVE_BUDGET_FAIL,payload:error
+        });
+    }
+
+}
+
+export const getBudget=(id)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.GET_BUDGET_LOADING
+        })
+
+        const res=await axios.get(`${process.env.BACKEND_URL}/budget/one/${id}`,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({    
+            type:types.GET_BUDGET_SUCCESS,payload:res
+        });
+
+    } catch (error) {
+        dispatch({
+            type:types.GET_BUDGET_FAIL,payload:error
+        });
+        
+    }
+}
+
+
+export const allTransactions=()=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.GET_ALL_TRANSACTIONS_LOADING
+        });
+
+        const res=await axios.get(`${process.env.BACKEND_URL}/budget/transactions/all`,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.GET_ALL_TRANSACTIONS_SUCCESS,payload:res
+        });
+
+    } catch (error) {
+        dispatch({
+            type:types.GET_ALL_TRANSACTIONS_FAIL,payload:error
+        });
+        
+    }
+}

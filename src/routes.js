@@ -22,6 +22,7 @@ import BudgetRequest from "./pages/Users/BudgetRequest";
 import NewRequest from "./pages/Users/NewRequest";
 import ViewRequest from "./pages/Users/ViewRequest";
 import ViewRequestAdmin from "./pages/Admin/ViewRequestAdmin";
+import BudgetDetails from "./pages/Users/BudgetDetails";
 
 
 const AppRoutes = (prop) => {
@@ -50,6 +51,12 @@ const AppRoutes = (prop) => {
         <Route path="/my-budgets" element={
           <Protected route="/signin">
             <MyBudgets/>
+          </Protected>
+        }></Route>
+
+        <Route path="/my-budgets/:id" element={
+          <Protected route="/signin">
+            <BudgetDetails/>
           </Protected>
         }></Route>
 

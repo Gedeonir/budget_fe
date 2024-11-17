@@ -35,7 +35,7 @@ const Officials = (props) => {
 
     useEffect(()=>{
         props.getAllUsers()
-    },[reload,userData])
+    },[userData])
 
     const users=props?.data?.users;
 
@@ -56,7 +56,6 @@ const Officials = (props) => {
     const handleDelete=(id)=>{
         props.deleteUser(id)
         setDelete({id:"",open:false})
-        setReload(!reload); 
 
     }
     
