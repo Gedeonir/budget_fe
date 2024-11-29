@@ -63,6 +63,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-state-sync": "^3.1.4",
     "redux-thunk": "^2.4.2",
+    "socket.io-client": "^4.8.1",
     "xlsx": "^0.18.5"
   }
 }

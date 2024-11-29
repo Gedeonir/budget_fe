@@ -88,7 +88,55 @@ const barData = [
     },
 ]
 
-function BarCharts() {
+function BarCharts(props) {
+    const transactions=props.transactions;
+    function getMonthlyIncomeAndExpenses(transactions) {
+        // Initialize the results array with 12 months
+        const monthlyData = Array.from({ length: 12 }, (_, index) => ({
+          month: new Date(0, index).toLocaleString('default', { month: 'short' }), // Short month names (e.g., "Jan")
+          income: 0,
+          expenses: 0,
+          expensesPercentage: "0%", // Default percentage
+          incomePercentage: "0%"    // Default percentage
+        }));
+
+        const filteredTransactions=()=>{
+            return transactions?.filter((item)=>item.budget.fyi.toLowerCase().includes(props.financialYear));
+        }
+      
+        filteredTransactions()?.forEach(transaction => {
+          // Parse the month from the transaction date
+          const dateObj = new Date(transaction.createdAt);
+          const monthIndex = dateObj.getMonth(); // 0 = January, 11 = December
+      
+          // Accumulate amounts based on the transaction type
+          const amount = parseFloat(transaction.amount); // Ensure the amount is a number          
+          if (transaction.type === 'Income') {
+            monthlyData[monthIndex].income += amount;
+          } else if (transaction.type === 'Expense') {
+            monthlyData[monthIndex].expenses += amount;
+          }
+        });
+      
+        // Calculate percentages for income and expenses
+        monthlyData.forEach(month => {
+          const total = month.income + month.expenses;
+          if (total > 0) {
+            month.expensesPercentage = ((month.expenses / total) * 100).toFixed(0) + "%";
+            month.incomePercentage = ((month.income / total) * 100).toFixed(0) + "%";
+          }
+          // Format amounts as strings for consistency
+          month.income = month.income.toFixed(2);
+          month.expenses = month.expenses.toFixed(2);
+        });
+      
+        return monthlyData;
+      }
+
+      
+    const monthlySummary = getMonthlyIncomeAndExpenses(transactions);
+     
+      
 
   return (
     <div className='flex justify-end h-80'>
@@ -100,15 +148,15 @@ function BarCharts() {
 
         </div>
         <div className="flex h-72 items-end justify-start flex-grow w-full lg:w-11/12 lg:space-x-2 space-x-1 relative text-text_primary">
-            {barData.map((value,index)=>(
+            {monthlySummary?.map((value,index)=>(
                 <div key={index} className="relative flex flex-col items-center flex-grow group cursor-pointer">
-                    <div className="absolute top-8 right-2 z-20 hidden text-xs font-bold group-hover:block rounded-lg p-2 w-24 bg-primary shadow-lg drop-shadow-lg">
-                        <p><span className='text-success'>I:</span>{value.income}({value.incomepercentage})</p>
-                        <p><span className='text-red'>E:</span>{value.expenses}({value.expensespercentage})</p>
+                    <div className="absolute top-8 -right-12 z-20 hidden text-xs group-hover:block rounded-lg p-2 w-40 bg-primary shadow-lg drop-shadow-lg">
+                        <p><span className='text-success'>I:</span>{value.income}({value.incomePercentage})</p>
+                        <p><span className='text-red'>E:</span>{value.expenses}({value.expensesPercentage})</p>
                     </div>
                     <div className="flex items-end w-4 h-72 hover:opacity-25 z-10">
-                        <div className={`relative flex justify-center flex-grow bg-success`} style={{ height: value.incomepercentage }}></div>
-                        <div className="relative flex justify-center flex-grow bg-red"  style={{ height: value.expensespercentage}}></div>	
+                        <div className={`relative flex justify-center flex-grow bg-success`} style={{ height: value.incomePercentage }}></div>
+                        <div className="relative flex justify-center flex-grow bg-red"  style={{ height: value.expensesPercentage}}></div>	
                     </div>
                     <span className="absolute -bottom-5 text-xs font-bold ">{value.month}</span>
                 </div>

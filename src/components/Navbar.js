@@ -64,7 +64,6 @@ const Navbar = (props) => {
                         </form>
                     }
                     
-                    <IoSearchOutline size={20} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
 
                     <IoIosNotificationsOutline size={25} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
                     

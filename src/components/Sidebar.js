@@ -27,16 +27,16 @@ const sideBarMenu1=[
         "menuIcon":<AiOutlinePullRequest size={20}/>,
         "menuLeadTo":"/dashboard/requests/"
     },
-    {
-        "menuItem":"Incomes/Revenues",
-        "menuIcon":<AiOutlineFundProjectionScreen size={20}/>,
-        "menuLeadTo":"/dashboard/incomes"
-    },
-    {
-        "menuItem":"Expenses",
-        "menuIcon":<TbProgressDown size={20}/>,
-        "menuLeadTo":"/dashboard/expenses"
-    },
+    // {
+    //     "menuItem":"Incomes/Revenues",
+    //     "menuIcon":<AiOutlineFundProjectionScreen size={20}/>,
+    //     "menuLeadTo":"/dashboard/incomes"
+    // },
+    // {
+    //     "menuItem":"Expenses",
+    //     "menuIcon":<TbProgressDown size={20}/>,
+    //     "menuLeadTo":"/dashboard/expenses"
+    // },
     {
         "menuItem":"Reports",
         "menuIcon":<TbReportAnalytics  size={20}/>,

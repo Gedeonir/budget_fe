@@ -1,46 +1,19 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
 import { GoStop } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import LineChart from '../../components/LineChart';
+import { allTransactions, getMyBudgets } from '../../redux/Actions/BudgetActions';
+import { connect } from 'react-redux';
 
-const Forecast = () => {
-    const data = {
-        labels: [0,"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov"],
-        datasets: [
-          {
-            label: 'Actual',
-            data: [100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
-            borderColor: '#26B2AB',
-            backgroundColor: '#26B2AB',
-            fill: false,
-            tension: 0.1,
-            pointStyle: 'circle',
-            pointRadius: 5,
-            pointBackgroundColor: '#26B2AB',
-            pointBorderColor: '#26B2AB',
-          },
-          {
-            label: 'Expected',
-            data: [100000, 75000, 75000, 75000, 50000, 25000, 25000, 25000, 50000, 100000, 50000, 50000],
-            borderColor: '#65758B',
-            backgroundColor: '#65758B',
-            fill: false,
-            tension: 0.1,
-            pointStyle: 'circle',
-            pointRadius: 5,
-            pointBackgroundColor: '#65758B',
-            pointBorderColor: '#65758B',
-          },
-        ],
-    };
-    
+const Forecast = (props) => {
+    const[type,setType]=useState('income');
     const options = {
         scales: {
           x: {
             title: {
               display: true,
-              text: 'Month',
+              text: 'Budget',
             },
           },
           y: {
@@ -59,10 +32,154 @@ const Forecast = () => {
     };
 
     const [userData,setUserData]=useState([]);
+    const [financialYear,setFinancialYear]=useState(() => {
+        const year = localStorage.getItem('financialYear');
+        return year ? year : " ";
+      })
+    
+      useEffect(()=>{
+        localStorage.setItem('financialYear', financialYear);
+    
+        props?.allTransactions();
+        props.getMyBudgets();
+      },[financialYear])
+
+      const transactions=props?.data?.allTransactions;
+
+      const filteredTransactions=()=>{
+        return transactions?.resp?.data?.filter((item)=>item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase()));
+      }
+
+      const calculateIncome=()=>{
+        let totalIncome=0;
+    
+        filteredTransactions()?.forEach((item) => {
+          if (item?.type?.toLowerCase() =='income') {
+            totalIncome += parseInt(item.amount);
+          }
+        });
+    
+        return totalIncome;
+      }
+    
+      const calculateExpense=()=>{
+        let totalExpense=0;
+    
+        filteredTransactions()?.forEach((item) => {
+          if (item?.type?.toLowerCase() =='expense') {
+            totalExpense += parseInt(item.amount);
+          }
+        });
+    
+        return totalExpense;
+      }
+
+      const myBudgetData=props?.data?.budgets;
+      const filterBudget=()=>{
+        return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
+      }
+
+      const calculateExpectedExpenses=()=>{
+        let totalExpense=0;
+    
+        filterBudget()?.forEach((item) => {
+            item?.expenditures?.forEach((budgetItem) => {
+                totalExpense += parseInt(budgetItem.amountToSpent);
+            })
+        });
+    
+        return totalExpense;
+      }
+
+      const calculateExpectedIncome=()=>{
+        let totalIncome=0;
+    
+        filterBudget()?.forEach((item) => {
+            item?.revenues?.forEach((budgetItem) => {
+                totalIncome += parseInt(budgetItem.amountToCollect);
+            })
+        });
+    
+        return totalIncome;
+      }
+    
+      function generateChartDataByFiscalYear(transactions) {
+        // Initialize the result object
+        const data = {
+          labels: [], // Fiscal year labels will be populated dynamically
+          datasets: [
+            {
+              label: 'Actual',
+              data: [], // Will accumulate actual expenses
+              borderColor: '#26B2AB',
+              backgroundColor: '#26B2AB',
+              fill: false,
+              tension: 0.1,
+              pointStyle: 'circle',
+              pointRadius: 5,
+              pointBackgroundColor: '#26B2AB',
+              pointBorderColor: '#26B2AB',
+            },
+            {
+              label: 'Expected',
+              data: [], // Placeholder for expected values
+              borderColor: '#65758B',
+              backgroundColor: '#65758B',
+              fill: false,
+              tension: 0.1,
+              pointStyle: 'circle',
+              pointRadius: 5,
+              pointBackgroundColor: '#65758B',
+              pointBorderColor: '#65758B',
+            },
+          ],
+        };
+      
+        // Group transactions by fiscal year
+        const fiscalYearData = {};
+      
+        transactions?.resp?.data?.forEach(transaction => {
+          if (transaction.type.toLowerCase() ==type) {
+            // Extract fiscal year from the budget
+            const fiscalYear = transaction.budget.fyi; // Assuming budget ID correlates to fiscal year
+      
+            if (!fiscalYearData[fiscalYear]) {
+              fiscalYearData[fiscalYear] = {
+                actual: 0,
+                expected: 0, // Placeholder for expected
+              };
+            }
+      
+            // Accumulate the expenses for the fiscal year
+            fiscalYearData[fiscalYear].actual += Math.floor(parseFloat(transaction.amount));
+
+            type == 'expense' && transaction.budget.expenditures.forEach(budget => {
+              fiscalYearData[fiscalYear].expected += Math.floor(parseFloat(budget.amountToSpent));
+            });
+
+          }
+        });
+      
+        // Populate the chart data
+        for (const [fiscalYear, values] of Object.entries(fiscalYearData)) {
+          data.labels.push(fiscalYear);
+          data.datasets[0].data.push(values.actual);
+          data.datasets[1].data.push(values.expected); // Placeholder; replace with actual expected data if available
+        }
+      
+        return data;
+      }
+      
+      // Example usage
+      
+      const chartData = generateChartDataByFiscalYear(transactions);
+      
+
+
 
   return (
-    <AdminDashboard setUserData={setUserData}>
-        <div className='grid grid-cols-3 gap-3 w-full p-2'>
+    <AdminDashboard setUserData={setUserData} setFinancialYear={setFinancialYear}>
+        <div className='grid lg:grid-cols-3 gap-3 w-full p-2'>
             <div className=''>
                 <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Budget projection</p>
@@ -71,26 +188,26 @@ const Forecast = () => {
                 <div className='flex justify-between mb-4'>
                     <div className='text-text_primary'>
                         <label className='text-sm my-2'>Income collected</label>
-                        <p className='text-lg font-bold'>300000</p>
+                        <p className='text-lg font-bold'>{calculateIncome()}</p>
                     </div>
                     <div className='text-text_primary'>
                         <label className='text-sm my-2'>Income Expected</label>
-                        <p className='text-lg font-bold'>800000</p>
+                        <p className='text-lg font-bold'>{calculateExpectedIncome()}</p>
                     </div>
                 </div>
 
                 <div className='flex justify-between mb-4'>
                     <div className='text-text_primary'>
                         <label className='text-sm my-2'>Budget spent</label>
-                        <p className='text-lg font-bold'>300000</p>
+                        <p className='text-lg font-bold'>{calculateExpense()}</p>
                     </div>
                     <div className='text-text_primary'>
                         <label className='text-sm my-2'>Expense Expected</label>
-                        <p className='text-lg font-bold'>800000</p>
+                        <p className='text-lg font-bold'>{calculateExpectedExpenses()}</p>
                     </div>
                 </div>
             </div>
-            <div className='px-4'>
+            <div className='lg:px-4'>
                 <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
                     <p>Budget Insights</p>
                 </div>
@@ -146,18 +263,22 @@ const Forecast = () => {
                 </div>
 
                 <form className='justify-start gap-1 hidden lg:flex'>
-                    <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                        <option value={"Income"}>Income</option>
-                        <option value={"Expenses"}>Expenses</option>
+                    <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={(e)=>setType(e.target.value)}>
+                        <option value={"income"}>Income</option>
+                        <option value={"expense"}>Expenses</option>
                     </select>
                 </form>
             </div>
 
-            <LineChart options={options} data={data}/>
+            <LineChart options={options} data={chartData}/>
 
         </section>
     </AdminDashboard>
   )
 }
 
-export default Forecast
+const mapState=(data)=>({
+    data:data
+  })
+  
+  export default connect(mapState,{allTransactions,getMyBudgets})(Forecast)

@@ -72,7 +72,7 @@ function Homepage(props) {
     datasets: [
       {
         label: 'Actual',
-        data: [100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
+        data: [0,100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
         borderColor: '#26B2AB',
         backgroundColor: '#26B2AB',
         fill: false,
@@ -281,7 +281,7 @@ function Homepage(props) {
                   yearlyTransactions?.length<=0?(
                       <NoDataFound/>
                   ):(
-                    yearlyTransactions?.slice(0, 6).map((item,index)=>{
+                    yearlyTransactions?.slice(0, 5).map((item,index)=>{
                       return(
                         <div key={index} className='w-full flex justify-between mt-4 gap-3'>
                           <div className='flex justify-start gap-3 items-center w-3/5'>
@@ -315,7 +315,7 @@ function Homepage(props) {
             
           </div>
 
-          <div className='relative flex items-end lg:h-1/2 h-full pt-8'>
+          <div className='relative flex items-end lg:h-1/2 h-full pt-4'>
             <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
               <div className='font-bold text-text_primary w-full'>
                 <p>Spending Category</p>
@@ -332,7 +332,7 @@ function Homepage(props) {
                       <>
                       <div className='py-2 text-text_primary flex justify-between items-center'>
                         <div>
-                          <h2 className='font-bold lg:text-2xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))}$</h2>
+                          <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))}$</h2>
                           <p className='flex gap-2 text-xs'>Total spendings</p>
                         </div>
                         <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>
@@ -348,8 +348,8 @@ function Homepage(props) {
                               cornerRadius: 5,
                               startAngle: -90,
                               endAngle: 180,
-                              cx: 150,
-                              cy: 100,
+                              cx: 100,
+                              cy: 90,
                               highlightScope: { faded: 'global', highlighted: 'item' },
                               faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                             }
@@ -361,8 +361,8 @@ function Homepage(props) {
                               fontSize: 8,
                             },
                           }}
-                          width={900}
-                          height={200}
+                          width={800}
+                          height={250}
                           className='w-full'
                         />
                         
@@ -442,7 +442,7 @@ function Homepage(props) {
                     pagination(filteredTransactions,10).length>0 && pagination(filteredTransactions,10)[currentPage].map((item,index)=>{
                       return(
                         <tr key={index}>
-                          <td className=''>{item.transactionDescription}</td>
+                          <td className=''>{item.category}</td>
                           <td>FYI {item.budget.fyi}</td>
                           <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                           <td><span className={`p-1 ${item.type.toLowerCase()=='expense'?'text-red border-red':' border-success text-success'} rounded-lg`}>{item.type}</span></td>

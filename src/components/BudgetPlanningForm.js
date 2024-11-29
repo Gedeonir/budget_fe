@@ -135,10 +135,6 @@ const BudgetPlanningForm = (props) => {
             <div className='lg:flex justify-between items-center'>
                 <div className='flex justify-start gap-4 font-bold w-full'>
                     <p>Budget planning</p>
-                    {/* <label className='p-2 text-[#FBA801] text-xs flex justify-start gap-1 items-center'>
-                        <span className='w-2 h-2 rounded-full bg-[#FBA801]'/>
-                        <label>Under review</label>
-                    </label> */}
                 </div>
 
                 <div className='flex lg:justify-end gap-4 items-center text-secondary w-full'>

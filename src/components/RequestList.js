@@ -25,12 +25,14 @@ const RequestsList = (props) => {
 
     const allRequests=props?.data?.allRequest;
     const [section,setSection]=useState("");
+    console.log(allRequests);
+    
 
     const filteredRequests=()=>{
         return allRequests?.resp?.data?.filter((item)=>
-            item.budget.fyi.toLowerCase().includes(searchWord.toLowerCase()) 
-            && item.budget.institution._id.toLowerCase().includes(location.pathname.includes("dashboard")?"":props?.userData?.getProfile?.institution?._id?.toLowerCase()) 
-            && item.status.toLowerCase().includes(section.toLowerCase()));
+            item?.budget?.fyi?.toLowerCase().includes(searchWord.toLowerCase()) 
+            && item?.budget?.institution?._id?.toLowerCase().includes(location.pathname.includes("dashboard")?"":props?.userData?.getProfile?.institution?._id?.toLowerCase()) 
+            && item?.status?.toLowerCase().includes(section.toLowerCase()));
     }
 
 
