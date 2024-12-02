@@ -115,7 +115,7 @@ const Institutions = (props) => {
                 )}
 
                 {Delete.open && <DeleteConfirm handleDelete={handleDelete} Delete={Delete} item={"institution"} setDelete={setDelete}/>}                
-                {AddInstitutionModal && <AddInstitution setReload={setReload} setAddInstitutionModal={setAddInstitutionModal}/>}
+                {AddInstitutionModal && <AddInstitution setAddInstitutionModal={setAddInstitutionModal}/>}
             </div>
         )
         :

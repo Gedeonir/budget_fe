@@ -140,7 +140,7 @@ const BudgetPlanningForm = (props) => {
                 <div className='flex lg:justify-end gap-4 items-center text-secondary w-full'>
                     <div className='flex justify-start gap-2'>
                         <label className='font-bold'>Total Budget:</label>
-                        <p>{total}$</p>
+                        <p>{total} RF</p>
                     </div>
 
                     <Link to={"/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
@@ -205,7 +205,7 @@ const BudgetPlanningForm = (props) => {
                             <tr>
                                 <th className='w-2'>#</th>
                                 <th>Expense Category</th>
-                                <th>Planned Amount in USD</th>
+                                <th>Planned Amount</th>
                                 <th>Percentage (%)</th>
                             </tr>
                         </thead>

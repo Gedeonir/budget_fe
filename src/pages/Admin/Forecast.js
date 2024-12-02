@@ -103,76 +103,79 @@ const Forecast = (props) => {
         return totalIncome;
       }
     
-      function generateChartDataByFiscalYear(transactions) {
-        // Initialize the result object
-        const data = {
-          labels: [], // Fiscal year labels will be populated dynamically
-          datasets: [
-            {
-              label: 'Actual',
-              data: [], // Will accumulate actual expenses
-              borderColor: '#26B2AB',
-              backgroundColor: '#26B2AB',
-              fill: false,
-              tension: 0.1,
-              pointStyle: 'circle',
-              pointRadius: 5,
-              pointBackgroundColor: '#26B2AB',
-              pointBorderColor: '#26B2AB',
-            },
-            {
-              label: 'Expected',
-              data: [], // Placeholder for expected values
-              borderColor: '#65758B',
-              backgroundColor: '#65758B',
-              fill: false,
-              tension: 0.1,
-              pointStyle: 'circle',
-              pointRadius: 5,
-              pointBackgroundColor: '#65758B',
-              pointBorderColor: '#65758B',
-            },
-          ],
-        };
-      
-        // Group transactions by fiscal year
-        const fiscalYearData = {};
-      
-        transactions?.resp?.data?.forEach(transaction => {
-          if (transaction.type.toLowerCase() ==type) {
-            // Extract fiscal year from the budget
-            const fiscalYear = transaction.budget.fyi; // Assuming budget ID correlates to fiscal year
-      
-            if (!fiscalYearData[fiscalYear]) {
-              fiscalYearData[fiscalYear] = {
-                actual: 0,
-                expected: 0, // Placeholder for expected
-              };
-            }
-      
-            // Accumulate the expenses for the fiscal year
-            fiscalYearData[fiscalYear].actual += Math.floor(parseFloat(transaction.amount));
-
-            type == 'expense' && transaction.budget.expenditures.forEach(budget => {
-              fiscalYearData[fiscalYear].expected += Math.floor(parseFloat(budget.amountToSpent));
-            });
-
+    function generateChartDataByFiscalYear(transactions) {
+      // Initialize the result object
+      const data = {
+        labels: [], // Fiscal year labels will be populated dynamically
+        datasets: [
+          {
+            label: 'Actual',
+            data: [], // Will accumulate actual expenses
+            borderColor: '#26B2AB',
+            backgroundColor: '#26B2AB',
+            fill: false,
+            tension: 0.1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            pointBackgroundColor: '#26B2AB',
+            pointBorderColor: '#26B2AB',
+          },
+          {
+            label: 'Expected',
+            data: [], // Placeholder for expected values
+            borderColor: '#65758B',
+            backgroundColor: '#65758B',
+            fill: false,
+            tension: 0.1,
+            pointStyle: 'circle',
+            pointRadius: 5,
+            pointBackgroundColor: '#65758B',
+            pointBorderColor: '#65758B',
+          },
+        ],
+      };
+    
+      // Group transactions by fiscal year
+      const fiscalYearData = {};
+    
+      transactions?.resp?.data?.forEach(transaction => {
+        if (transaction.type.toLowerCase() ==type) {
+          // Extract fiscal year from the budget
+          const fiscalYear = transaction.budget.fyi; // Assuming budget ID correlates to fiscal year
+    
+          if (!fiscalYearData[fiscalYear]) {
+            fiscalYearData[fiscalYear] = {
+              actual: 0,
+              expected: 0, // Placeholder for expected
+            };
           }
-        });
-      
-        // Populate the chart data
-        for (const [fiscalYear, values] of Object.entries(fiscalYearData)) {
-          data.labels.push(fiscalYear);
-          data.datasets[0].data.push(values.actual);
-          data.datasets[1].data.push(values.expected); // Placeholder; replace with actual expected data if available
+    
+          // Accumulate the expenses for the fiscal year
+          fiscalYearData[fiscalYear].actual += Math.floor(parseFloat(transaction.amount));
+
+          type == 'expense' && transaction.budget.expenditures.forEach(budget => {
+            fiscalYearData[fiscalYear].expected += Math.floor(parseFloat(budget.amountToSpent));
+          });
+
         }
-      
-        return data;
-      }
-      
-      // Example usage
-      
-      const chartData = generateChartDataByFiscalYear(transactions);
+      });
+    
+      const sortedFiscalYears = Object.keys(fiscalYearData).sort((a, b) => a.localeCompare(b));
+
+      // Populate the chart data in sorted order
+      sortedFiscalYears.forEach(fiscalYear => {
+        const values = fiscalYearData[fiscalYear];
+        data.labels.push(fiscalYear);
+        data.datasets[0].data.push(values.actual);
+        data.datasets[1].data.push(values.expected);
+      });
+    
+      return data;
+    }
+    
+    // Example usage
+    
+    const chartData = generateChartDataByFiscalYear(transactions);
       
 
 

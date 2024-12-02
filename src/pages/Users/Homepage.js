@@ -25,6 +25,7 @@ import NoDataFound from '../../components/NoDataFound';
 import Error from '../../components/Error';
 import { pagination } from '../../utils/paginationHandler';
 import { calculateTotalsByCategory } from '../../utils/generatePieData';
+import { FaArrowUpLong } from "react-icons/fa6";
 
 const QuickLinks=[
   {
@@ -58,6 +59,7 @@ function Homepage(props) {
   const navigate=useNavigate();
 
   const myBudgetData=props?.data?.budgets;
+  const transactions=props?.data?.allTransactions;
 
   const [currentPage,setCurrentPage]=useState(0);
 
@@ -67,38 +69,14 @@ function Homepage(props) {
     setCurrentPage (pageNumber);
   };
 
-  const data = {
-    labels: [0,"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov"],
-    datasets: [
-      {
-        label: 'Actual',
-        data: [0,100000, 25000, 50000, 25000, 25000, 50000, 50000, 75000, 100000, 75000, 25000, 75000],
-        borderColor: '#26B2AB',
-        backgroundColor: '#26B2AB',
-        fill: false,
-        tension: 0.1,
-        pointStyle: 'circle',
-        pointRadius: 5,
-        pointBackgroundColor: '#26B2AB',
-        pointBorderColor: '#26B2AB',
-        borderSize: 0o1
-      },
-      {
-        label: 'Last Year',
-        data: [100000, 75000, 75000, 75000, 50000, 25000, 25000, 25000, 50000, 100000, 50000, 50000],
-        borderColor: '#65758B',
-        backgroundColor: '#65758B',
-        fill: false,
-        tension: 0.1,
-        pointStyle: 'circle',
-        pointRadius: 5,
-        pointBackgroundColor: '#65758B',
-        pointBorderColor: '#65758B',
-      },
-    ],
-  };
+
 
   const options = {
+    plugins: {
+      legend: {
+        display: false, // Disable the top labels
+      },
+    },
     scales: {
       x: {
         title: {
@@ -115,6 +93,8 @@ function Homepage(props) {
       },
     },
   };
+
+  
 
   
   const [cards,setCards]=useState([])
@@ -154,7 +134,9 @@ function Homepage(props) {
       data?.map((item,index)=>{
         const card={
           "label":item.label,
-          "amount":item.label ==="Total Budget"?filterBudget()?.length ===0?0:filterBudget()[0]?.amount:0,
+          "amount":item.label ==="Total Budget"?(filterBudget()?.length ===0?0:filterBudget()[0]?.amount)
+          :item.label ==="Total Spent"?(filteredTransactions()?.length ===0?0:calculateExpense())
+          :(calculateTotalAmount()-calculateExpense()),
           "icon":item.icon
         }
 
@@ -163,7 +145,7 @@ function Homepage(props) {
 
       props?.allTransactions();
     }
-  },[financialYear,myBudgetData.success])
+  },[financialYear,myBudgetData.success,transactions.success])
 
 
   const filterBudget=()=>{
@@ -172,7 +154,6 @@ function Homepage(props) {
 
   const [addTransaction,setAddTransaction]=useState(false);
 
-  const transactions=props?.data?.allTransactions;
 
   const [searchWord,setSearchWord]=useState("");
 
@@ -196,9 +177,156 @@ function Homepage(props) {
     const transactionYear = transaction?.budget?.fyi;     
     return transactionYear === financialYear
   });
+
+  function generateChartDataByMonth(transactions) {
+    // Initialize the result object
+    const data = {
+      labels: [], // Month labels (e.g., "Jan", "Feb")
+      datasets: [
+        {
+          label: 'Income',
+          data: [], // Will accumulate monthly income
+          borderColor: '#26B2AB',
+          backgroundColor: '#26B2AB',
+          fill: false,
+          tension: 0.1,
+          pointStyle: 'circle',
+          pointRadius: 5,
+          pointBackgroundColor: '#26B2AB',
+          pointBorderColor: '#26B2AB',
+        },
+        {
+          label: 'Expenses',
+          data: [], // Will accumulate monthly expenses
+          borderColor: '#65758B',
+          backgroundColor: '#65758B',
+          fill: false,
+          tension: 0.1,
+          pointStyle: 'circle',
+          pointRadius: 5,
+          pointBackgroundColor: '#65758B',
+          pointBorderColor: '#65758B',
+        },
+      ],
+    };
+  
+    // Initialize an object to store monthly data
+    const monthlyData = {};
+  
+    // Prepare month names (short format)
+    const monthNames = Array.from({ length: 12 }, (_, index) =>
+      new Date(0, index).toLocaleString('default', { month: 'short' })
+    );
+  
+    // Filter transactions by financial year (if required)
+    const filteredTransactions = transactions?.resp?.data?.filter(item =>
+      item.budget.fyi.toLowerCase().includes(financialYear)
+    );
+  
+    // Process transactions to group data by month
+    filteredTransactions?.forEach(transaction => {
+      const dateObj = new Date(transaction.createdAt);
+      const monthIndex = dateObj.getMonth();
+      const month = monthNames[monthIndex]; // Get short month name
+  
+      if (!monthlyData[month]) {
+        monthlyData[month] = { expenses: 0 };
+      }
+  
+      const amount = parseFloat(transaction.amount); // Ensure amount is a number
+  
+      if (transaction.type === 'Expense') {
+        monthlyData[month].expenses += amount;
+      }
+    });
+  
+    // Populate the chart data
+    monthNames.forEach(month => {
+      data.labels.push(month);
+  
+      if (monthlyData[month]) {
+        data.datasets[1].data.push(Math.floor(monthlyData[month].expenses));
+      } else {
+        data.datasets[1].data.push(0); // Default expenses
+      }
+    });
+  
+    return data;
+  }
   
 
+ const data=generateChartDataByMonth(transactions);
+  
+ const calculateExpense=()=>{
+    let totalExpense=0;
 
+    filteredTransactions()?.forEach((item) => {
+      if (item?.type?.toLowerCase() =='expense') {
+        totalExpense += parseInt(item.amount);
+      }
+    });
+
+    return totalExpense;
+  }  
+
+  const calculateTotalAmount = () => {
+    let total = 0;    
+    filterBudget()[0]?.expenditures?.forEach((item)=>{          
+      total +=parseInt(item.amountToSpent)
+    })
+
+    return total
+  }
+
+
+  const calculateFYIPercentageChange = (transactions, currentFYI) => {
+    // Parse the current fiscal year (e.g., "2024-25")
+    const [currentStartYear, currentEndYear] = currentFYI.split('-').map(Number);
+  
+    // Calculate the previous fiscal year (e.g., "2023-24")
+    const previousFYI = `${currentStartYear - 1}-${currentEndYear - 1}`;
+  
+    // Filter transactions for the current and previous fiscal years
+    const currentFYITransactions = transactions?.resp?.data?.filter((transaction) =>
+      transaction.budget.fyi === currentFYI
+    );
+  
+    const previousFYITransactions = transactions?.resp?.data?.filter((transaction) =>
+      transaction.budget.fyi === previousFYI
+    );
+  
+    // Sum the amounts for the current and previous fiscal years
+    const currentTotal = currentFYITransactions?.reduce(
+      (sum, transaction) => sum + parseFloat(transaction.amount),
+      0
+    );
+  
+    const previousTotal = previousFYITransactions?.reduce(
+      (sum, transaction) => sum + parseFloat(transaction.amount),
+      0
+    );
+  
+    // Calculate the percentage change
+    let percentageChange = 0;
+    if (previousTotal > 0) {
+      percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
+    } else if (currentTotal > 0) {
+      percentageChange = 100; // No previous data, consider it a 100% increase
+    }
+  
+    return {
+      currentFYI,
+      previousFYI,
+      currentTotal: currentTotal?.toFixed(2),
+      previousTotal: previousTotal?.toFixed(2),
+      percentageChange: percentageChange?.toFixed(2),
+    };
+  };
+
+  
+  const per=calculateFYIPercentageChange(transactions,financialYear)
+  console.log(per);
+  
 
 
   
@@ -259,10 +387,10 @@ function Homepage(props) {
             <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
               <p>Spending Analysis</p>
             </div>
-            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4 '>
-              <div className='py-4 text-text_primary'>
-                <h2 className='font-bold lg:text-2xl text-lg'>6800$</h2>
-                <p className='flex gap-2 text-sm'>Your spending is <span className='text-red flex justify-start items-end'>9%<FaArrowDownLong size={10}/></span> compared to last year</p>
+            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-2'>
+              <div className='py-2 text-text_primary'>
+                <h2 className='font-bold lg:text-xl text-md'>{transactions?.success?calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear)):0} RF</h2>
+                <p className='flex gap-2 text-xs'>Your spending is <span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start items-end`}>{per.percentageChange + "%"} {per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>}</span> compared to last year</p>
               </div>
               <LineChart data={data} options={options}/>
             </div>
@@ -326,16 +454,16 @@ function Homepage(props) {
                   <Loading/>
                 ):(
                   transactions?.success?(
-                    transactions?.resp?.data?.length<=0?(
+                    yearlyTransactions?.length<=0?(
                         <NoDataFound/>
                     ):(
                       <>
                       <div className='py-2 text-text_primary flex justify-between items-center'>
                         <div>
-                          <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))}$</h2>
+                          <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))} RF</h2>
                           <p className='flex gap-2 text-xs'>Total spendings</p>
                         </div>
-                        <p className='flex justify-between text-text_primary text-xs p-1'><span className='text-red flex justify-start gap-2 text-sm'><FaArrowTrendDown size={20}/> 5%</span></p>
+                        <p className='flex justify-between text-text_primary text-xs p-1'><span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start gap-2 text-sm}`}>{per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>} {per.percentageChange + "%"}</span></p>
                       </div>
                         <PieChart
                           series={[
@@ -348,8 +476,8 @@ function Homepage(props) {
                               cornerRadius: 5,
                               startAngle: -90,
                               endAngle: 180,
-                              cx: 100,
-                              cy: 90,
+                              cx: 120,
+                              cy: 100,
                               highlightScope: { faded: 'global', highlighted: 'item' },
                               faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                             }
@@ -359,6 +487,7 @@ function Homepage(props) {
                               fill: 'white',
                               fontWeight: 'regular',
                               fontSize: 8,
+                              border: 5,
                             },
                           }}
                           width={800}
