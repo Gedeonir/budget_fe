@@ -325,18 +325,6 @@ function Homepage(props) {
 
   
   const per=calculateFYIPercentageChange(transactions,financialYear)
-  console.log(per);
-  
-
-
-  
-  
-  
-
-  
-
-  
-
   return (
     <Layout setUserData={setUserData} setFinancialYear={setFinancialYear}>
       <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
@@ -526,7 +514,7 @@ function Homepage(props) {
                 <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
                 {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
               </div>
-
+              {}
               <div className='text-primary rounded-lg'>
                 <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={()=>setAddTransaction(!addTransaction)}>Add transaction</button>
               </div>

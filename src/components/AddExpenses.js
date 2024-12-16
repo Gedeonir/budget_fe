@@ -65,7 +65,7 @@ const AddExpenses = ({setOpenModal,setExpenses,total,expenses,recalculatePercent
             </div>
 
             <div className='w-full mb-2 text-text_primary'>
-                <label>Planned Amount in USD</label>
+                <label>Planned Amount</label>
                 <input onChange={handleChange} type="number" name='amountToSpent' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Planned Amount" required/>
             </div>
 

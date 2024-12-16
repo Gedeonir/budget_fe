@@ -5,17 +5,21 @@ import {IoIosNotificationsOutline} from "react-icons/io"
 import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'
 import getAcademicYears from '../utils/AcademicYears';
+import { connect } from 'react-redux';
+import { getMyBudgets } from '../redux/Actions/BudgetActions';
 
 const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
-    const [academicYear,setAcademiYears]=useState(getAcademicYears());
+    const myBudgetData=props?.data?.budgets;
+    const [academicYear,setAcademiYears]=useState([]);
+    
 
     useEffect(()=>{
         localStorage.setItem('financialYear', academicYear[0]);
     },[])
 
     const selectedYear=localStorage.getItem('financialYear');
-    const location=useLocation()
+    const location=useLocation();    
 
     return (
         <div className='bg-primary drop-shadow-sm w-full py-4 px-4 flex justify-start items-center sticky z-20 top-0'>
@@ -55,9 +59,9 @@ const Navbar = (props) => {
                     {location.pathname =='/' &&
                         <form className='justify-start gap-1 flex'>
                             <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                                {academicYear.map((item)=>{
+                                {getAcademicYears(myBudgetData)?.map((item)=>{
                                     return(
-                                        <option key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
+                                        <option key={item} value={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
                                     )
                                 })}
                             </select>
@@ -77,4 +81,10 @@ const Navbar = (props) => {
     )
 }
 
-export default Navbar
+const mapState=(data)=>({
+    data:data
+})
+
+export default connect(mapState,{
+    getMyBudgets
+})(Navbar)

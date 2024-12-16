@@ -153,7 +153,7 @@ const BudgetPlanningForm = (props) => {
                 </div>
             </div>
             <label className='text-success text-sm' >{props?.data?.addBudget?.success && 'Budget saved successfully'}</label>
-            <label className='text-red text-sm' >{props?.data?.addBudget?.error && 'Saving budget failed'}</label>
+            <label className='text-red text-sm' >{props?.data?.addBudget?.error && props?.data?.addBudget?.error?.message}</label>
 
         </div>
  

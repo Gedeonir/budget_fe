@@ -10,7 +10,8 @@ import { CiMenuFries } from "react-icons/ci";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import getAcademicYears from '../utils/AcademicYears';
-
+import { connect } from 'react-redux';
+import { getMyBudgets } from '../redux/Actions/BudgetActions';
 
 
 const AdminDashboard = (props) => {
@@ -20,6 +21,8 @@ const AdminDashboard = (props) => {
 
     const navigate=useNavigate();
     const [userData,setUserData]=useState([]);
+    
+    const myBudgetData=props?.data?.budgets;
   
 
     const verifyUser=async()=>{
@@ -64,9 +67,9 @@ const AdminDashboard = (props) => {
                 <div className='flex relative items-center justify-center gap-2 py-2 px-2 rounded-lg'>
                     <form className='justify-start gap-1 flex'>
                         <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                            {academicYear.map((item)=>{
+                            {getAcademicYears(myBudgetData)?.map((item)=>{
                                 return(
-                                    <option key={item} selected={item === selectedYear} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
+                                    <option key={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
                                 )
                             })}
                         </select>
@@ -98,4 +101,10 @@ const AdminDashboard = (props) => {
   )
 }
 
-export default AdminDashboard
+const mapState=(data)=>({
+    data:data
+})
+
+export default connect(mapState,{
+    getMyBudgets
+})(AdminDashboard)
