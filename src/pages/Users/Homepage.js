@@ -6,11 +6,6 @@ import Layout from '../../components/Layout';
 import { IoWallet } from "react-icons/io5";
 import BarCharts from '../../components/BarCharts';
 import { IoCashSharp } from "react-icons/io5";
-import GovernmentLogo from '../../assets/Govt.png';
-import { RiAddCircleFill } from "react-icons/ri";
-import { MdPrivacyTip } from "react-icons/md";
-import { FaQuestionCircle } from "react-icons/fa";
-import { IoIosPeople } from "react-icons/io";
 import LineChart from '../../components/LineChart';
 import { FaArrowDownLong } from "react-icons/fa6";
 import { PieChart,pieArcLabelClasses } from '@mui/x-charts/PieChart';
@@ -28,33 +23,7 @@ import { calculateTotalsByCategory } from '../../utils/generatePieData';
 import { FaArrowUpLong } from "react-icons/fa6";
 import getAcademicYears from '../../utils/AcademicYears';
 import { GoBlocked } from "react-icons/go";
-
-const QuickLinks=[
-  {
-    "Icon":<RiAddCircleFill size={20}/>,
-    "label":"New budget",
-    "to":"/plan-budget"
-  },
-  {
-    "Icon":<MdPrivacyTip size={20}/>,
-    "label":"Privacy & Policy",
-  },
-  {
-    "Icon":<FaQuestionCircle size={20}/>,
-    "label":"FAQ",
-  },
-  {
-    "Icon":<IoIosPeople size={20}/>,
-    "label":"HR team",
-  },
-  {
-    "Icon":<IoWallet size={20}/>,
-    "label":"My budgets",
-    "to":"/my-budgets"
-  },
-]
-
-
+import Banner from '../../components/Banner';
 
 function Homepage(props) {
   const [userData,setUserData]=useState([]);
@@ -334,31 +303,8 @@ function Homepage(props) {
   
   return (
     <Layout setUserData={setUserData} setFinancialYear={setFinancialYear}>
-      <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
-        <div className='w-40 hidden lg:block'>
-          <img src={GovernmentLogo} className='w-full h-full object-cover'/>
-        </div>
-        <div className='w-full'>
-          <div className='py-4 font-bold text-secondary w-full overflow-x-hidden'>
-            <p>{userData?.getProfile?.institution?.institutionName}</p>
-          </div>
-          <div className='mb-3'>
-            <p className='text-sm font-normal text-wrap text-justify'>Budget planning and implementation system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
-          </div>
-          <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
-            {QuickLinks.map((item,index)=>{
-              return(
-                <div key={index} className='group flex justify-start items-center gap-2 text-sm' onClick={()=>navigate(item.to)}>
-                  <div className='my-2 group-hover:bg-list_hover mb-2 lg:mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
-                    {item.Icon}
-                  </div>
-                  <div className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</div>  
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
+      <Banner institution={userData?.getProfile?.institution?.institutionName}/>
+
       <div className='relative min-h-screen'>
         {myBudgetData.loading?
         <Loading/>

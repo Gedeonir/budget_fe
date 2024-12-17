@@ -16,6 +16,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { SlLike } from "react-icons/sl";
 import { SlDislike } from "react-icons/sl";
 import { MdCurrencyExchange } from "react-icons/md";
+import Banner from '../../components/Banner';
 
 const MyBudgets = (props) => {
     const [userData,setUserData]=useState([]);
@@ -40,6 +41,7 @@ const MyBudgets = (props) => {
     
     return (
         <Layout setUserData={setUserData}>
+            <Banner institution={userData?.getProfile?.institution?.institutionName}/>
             <div className='py-4 font-bold text-text_primary text-sm flex justify-start gap-4'>
                 <Link to={"/my-budgets"} className={`${location.pathname.includes("my-budgets") && 'text-secondary border-b-2 pb-2'}`}>My budgets</Link>
                 <Link to={"/budget/requests"}>Requests</Link>

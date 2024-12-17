@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import AddExpenses from '../../components/AddExpenses';
 import getAcademicYears from '../../utils/AcademicYears';
 import BudgetPlanningForm from '../../components/BudgetPlanningForm';
+import Banner from '../../components/Banner';
 
 const Plan_new_budget = () => {
     const [userData,setUserData]=useState([]);
@@ -21,6 +22,8 @@ const Plan_new_budget = () => {
 
     return (
         <Layout setUserData={setUserData}>
+            <Banner institution={userData?.getProfile?.institution?.institutionName}/>
+
             <BudgetPlanningForm userData={userData}/>
         </Layout>
     )

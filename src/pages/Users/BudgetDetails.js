@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getBudget } from '../../redux/Actions/BudgetActions';
 import { useParams } from 'react-router-dom';
 import ViewBudget from '../../components/ViewBudget';
+import Banner from '../../components/Banner';
 
 const BudgetDetails = (props) => {
     const [userData,setUserData]=useState([]);
@@ -12,7 +13,9 @@ const BudgetDetails = (props) => {
 
   return (
     <Layout setUserData={setUserData}>
-        <ViewBudget/>
+      <Banner institution={userData?.getProfile?.institution?.institutionName}/>
+
+      <ViewBudget/>
 
     </Layout>
   )
