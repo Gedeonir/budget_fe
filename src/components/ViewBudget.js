@@ -128,7 +128,9 @@ const ViewBudget = (props) => {
                                     </tbody>
                                 </table>    
                             </div>
-
+                            <Link to={"/budget/requests"} className='delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-xs text-center text-primary p-2 lg:w-1/5 w-full'>
+                                {props?.data?.oneBudget?.resp?.data?.status.toLowerCase() ==='pending'?"Send":"Resend"} budget request
+                            </Link>
                             {/* <div>
                                 {error.errorType ==='accept' && <label className={`text-[#FBA801] text-xs`}>{error.errorMsg}</label>}
                                 <div className='flex justify-start gap-2 items-start mb-2'>

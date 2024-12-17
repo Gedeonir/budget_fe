@@ -75,7 +75,7 @@ const sideBarMenu2=[
 
 
 const Sidebar = (props) => {
-    
+    const navigate=useNavigate()
   return (
     <aside className={`py-4 lg:block ${props.showMenu?"absolute top-0 block z-40 bg-primary":"hidden"} min-h-screen max-h-screen group lg:w-1/5 w-3/5 shadow-lg drop-shadow-sm`}>
         <div className="flex items-center w-full justify-start px-6">
@@ -101,7 +101,7 @@ const Sidebar = (props) => {
                 </li>  
             ))}    
 
-                <li className={`w-full cursor-pointer py-1 my-2 px-2 rounded-l-full text-red flex justify-start hover:opacity-70 duration-200 delay-100`} onClick={()=>handleLogout()}>
+                <li className={`w-full cursor-pointer py-1 my-2 px-2 rounded-l-full text-red flex justify-start hover:opacity-70 duration-200 delay-100`} onClick={()=>{handleLogout(),navigate("/signin")}}>
                     <RiLogoutCircleLine size={20}/>
                     <p className='py-0.5 mx-2 text-sm'>Logout</p>
                 </li>           

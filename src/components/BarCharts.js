@@ -111,9 +111,9 @@ function BarCharts(props) {
       
           // Accumulate amounts based on the transaction type
           const amount = parseFloat(transaction.amount); // Ensure the amount is a number          
-          if (transaction.type === 'Income') {
+          if (transaction.type.toLowerCase() === 'income') {
             monthlyData[monthIndex].income += amount;
-          } else if (transaction.type === 'Expense') {
+          } else if (transaction.type.toLowerCase() === 'expense') {
             monthlyData[monthIndex].expenses += amount;
           }
         });

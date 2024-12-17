@@ -7,10 +7,27 @@ import { RiAddCircleFill } from "react-icons/ri";
 import { IoWallet } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import AddExpenses from './AddExpenses';
-import getAcademicYears from '../utils/AcademicYears';
 import { connect } from 'react-redux';
 import { addBudget, getMyBudgets } from '../redux/Actions/BudgetActions';
+import Loading from './Loading';
 
+function getAcademicYears(){
+    let year = new Date().getFullYear();
+    let lastyear = new Date().getFullYear()-1;
+    let range = [];
+    let lastrange = [];
+    let academicYear=[];
+    lastrange.push(lastyear);
+    range.push(year);
+    for (let i = 1; i < 100; i++) 
+    {
+        lastrange.push(lastyear + i);    
+        range.push(year + i);
+        academicYear.push(lastrange[i-1]+"-"+(lastrange[i]).toString().slice(-2));
+        let fullyear = lastrange.concat(range);
+    }
+    return academicYear;
+}
 
 
 
@@ -44,7 +61,7 @@ const BudgetPlanningForm = (props) => {
             recalculatePercentages(expenses);
         }
         props.getMyBudgets();
-    },[expenses])
+    },[expenses,props?.data?.budgets?.success])
     
     const deleteExpense = (indexToDelete) => {
         const updatedExpenses = expenses.filter((_, index) => index !== indexToDelete);
@@ -125,9 +142,10 @@ const BudgetPlanningForm = (props) => {
 
     
     
-    const fyiItems = props?.data?.budgets?.resp?.data?.map(obj => obj.fyi);
+    const fyiItems = props?.data?.budgets?.success && props?.data?.budgets?.resp?.data?.map(obj => obj.fyi);
 
     const filteredFyi = academicYear?.filter(year => !fyiItems?.includes(year));
+        
 
   return (
     <div>
@@ -179,7 +197,7 @@ const BudgetPlanningForm = (props) => {
                 </div>
 
                 <div className='flex text-sm flex-wrap gap-4 w-full py-2 h-56 overflow-y-auto'>
-                    {filteredFyi.map((item,index)=>(
+                    {filteredFyi?.map((item,index)=>(
                         <div key={index} 
                         className={`${fyi.includes(item)?'bg-secondary text-primary2':'text-text_primary'} hover:text-primary2 hover:bg-secondary duration-500 delay-100 cursor-pointer py-1 text-center  px-2 rounded-md border border-primary`}
                         onClick={()=>handleAddFyi(item)}>
@@ -201,7 +219,7 @@ const BudgetPlanningForm = (props) => {
 
                 <div className='max-h-72 overflow-y-auto'>
                     <table border={10} cellSpacing={0} cellPadding={10} className='mb-8 lg:text-lg text-xs w-full py-2 text-text_primary text-left'>
-                        <thead className='font-bold lg:text-lg text-sm'>
+                        <thead className='font-bold lg:text-sm text-xs'>
                             <tr>
                                 <th className='w-2'>#</th>
                                 <th>Expense Category</th>
@@ -259,7 +277,7 @@ const BudgetPlanningForm = (props) => {
             </section>
         </div>
        
-        <div className='flex justify-start gap-4 lg:w-1/5 w-full'>
+        <div className='flex justify-start gap-4 lg:w-2/5 w-full'>
             <button type='reset' size="sm" className=' my-4 text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2'>Save as Draft</button>
             <button
             onClick={()=>handleAddBudget()}

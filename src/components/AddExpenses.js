@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
 
+export const categories=["Health human resources",
+    "Maternal and Child Health",
+    "Health sector planning ang information",
+    "Financial and geographical accessibility",
+   "Specialized health services",
+   "Disease prevention and Control "];
+
 const AddExpenses = ({setOpenModal,setExpenses,total,expenses,recalculatePercentages}) => {
     const [loading,setLoading]=React.useState(false);
 
@@ -8,13 +15,6 @@ const AddExpenses = ({setOpenModal,setExpenses,total,expenses,recalculatePercent
         amountToSpent:0,
         percentage:""
     })
-
-    const categories=["Health human resources",
-        "Maternal and Child Health",
-        "Health sector planning ang information",
-        "Financial and geographical accessibility",
-       "Specialized health services",
-       "Disease prevention and Control "];
 
 
     const handleChange=(e)=>{

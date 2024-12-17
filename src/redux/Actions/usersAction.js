@@ -77,3 +77,28 @@ export const deleteUser=(id)=>async(dispatch)=>{
 
     }
 }
+
+export const changePassword=(formData)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.CHANGE_PASSWORD_LOADING
+        })
+
+        const res=await axios.patch(`${process.env.BACKEND_URL}/auth/changepassword`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        )
+
+        dispatch({
+            type:types.CHANGE_PASSWORD_SUCCESS,payload:res
+        })
+    } catch (error) {
+        dispatch({
+            type:types.CHANGE_PASSWORD_FAIL,payload:error
+        })
+
+    }
+}

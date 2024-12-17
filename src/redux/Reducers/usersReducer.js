@@ -86,3 +86,29 @@ export const deleteUser=(state=initialState,action)=>{
             return state
     }
 }
+
+export const changePassword=(state=initialState,action)=>{
+    switch(action.type){
+        case types.CHANGE_PASSWORD_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.CHANGE_PASSWORD_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.CHANGE_PASSWORD_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}

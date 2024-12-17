@@ -348,3 +348,29 @@ export const transactionsReducer=(state=initialState,action)=>{
             return state
     }
 }
+
+export const addTransaction=(state=initialState,action)=>{
+    switch(action.type){
+        case types.ADD_TRANSACTION_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.ADD_TRANSACTION_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.ADD_TRANSACTION_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}

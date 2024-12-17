@@ -6,4 +6,5 @@ function getAcademicYears(data){
     return lastrange;
 }
 
+
 export default getAcademicYears

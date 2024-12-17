@@ -57,11 +57,6 @@ const AddInstitution = (props) => {
                     <input onChange={handleChange} type="number" name='mobile' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="InstitutionContact" required/>
                 </div>
 
-                {/* <div className='w-full mb-2'>
-                    <label>Institution Logo</label>
-                    <input onChange={handleChange} type="file" name='Attachements' className="my-2 text-text_secondary outline-primary block w-full px-4 py-2 border-2 rounded-lg border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Proofs/Evidences" required/>
-                </div> */}
-
                 <div className='flex justify-between gap-4'>
                     <button type='reset' size="sm" className=' my-4 text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>props.setAddInstitutionModal(false)}>Cancel</button>
                     <button type='submit' size='sm' className={`my-4 bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.addInst?.loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.addInst?.loading? true : false}>

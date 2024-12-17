@@ -203,7 +203,7 @@ function Dashboard(props) {
           </div>
 
         </div>
-        <div className='w-full overflow-hidden max-h-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md pb-4'>
+        <div className='w-full overflow-hidden max-h-full min-h-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md pb-4'>
           <div className='p-4 text-sm font-bold text-text_primary'>
             Recent transactions
           </div>

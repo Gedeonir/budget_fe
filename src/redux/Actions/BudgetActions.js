@@ -330,3 +330,27 @@ export const allTransactions=()=>async(dispatch)=>{
         
     }
 }
+
+export const recordTransaction=(formData)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:types.ADD_TRANSACTION_LOADING
+        })
+
+        const res=await axios.post(`${process.env.BACKEND_URL}/budget/transaction/new`,formData,
+            {
+                headers:{
+                    "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        );
+        dispatch({
+            type:types.ADD_TRANSACTION_SUCCESS,payload:res
+        })
+
+    } catch (error) {
+        dispatch({
+            type:types.ADD_TRANSACTION_FAIL,payload:error
+        })
+    }
+}   

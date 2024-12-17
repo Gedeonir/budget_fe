@@ -17,7 +17,7 @@ const AccountsModal = (props) => {
 
     
     return (
-        <div className={`absolute top-12 right-4 bottom-0 lg:w-1/5 w-4/5 p-4 bg-primary2 rounded-lg drop-shadow-sm shadow-lg ${location?.pathname?.includes("dashboard")?'h-40':'h-64'}`}>
+        <div className={`absolute top-12 right-4 bottom-0 lg:w-2/5 w-full p-4 bg-primary2 rounded-lg drop-shadow-sm shadow-lg ${location?.pathname?.includes("dashboard")?'h-40':'h-64'}`}>
             <div className='flex justify-start gap-2 items-center h-16'>
                 <div className={`h-12 delay-100 duration-200 cursor-pointer px-2 rounded-full w-16 bg-[url(https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png)] bg-cover bg-center bg-no-repeat`}/>
                 <div className='py-2 text-text_primary'>
@@ -48,7 +48,8 @@ const AccountsModal = (props) => {
                 </li>
 
                 <li className={`${location?.pathname?.includes("dashboard")?'hidden':'block'} text-red font-bold hover:text-list_hover cursor-pointer delay-100 duration-500`}>
-                    <button className='border-none bg-transparent cursor-pointer font-bold hover:opacity-90 text-red text-xs' onClick={()=>handleLogout()}>Logout</button>
+                    <button className='border-none bg-transparent cursor-pointer font-bold hover:opacity-90 text-red text-xs' onClick={()=>{handleLogout(); navigate("/")
+                    }}>Logout</button>
                 </li>
             </ul>
 

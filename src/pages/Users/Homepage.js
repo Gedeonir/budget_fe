@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link,useLocation,useNavigate } from 'react-router-dom';
 import { FaArrowTrendDown } from "react-icons/fa6";
 import Layout from '../../components/Layout';
 import { IoWallet } from "react-icons/io5";
@@ -26,6 +26,8 @@ import Error from '../../components/Error';
 import { pagination } from '../../utils/paginationHandler';
 import { calculateTotalsByCategory } from '../../utils/generatePieData';
 import { FaArrowUpLong } from "react-icons/fa6";
+import getAcademicYears from '../../utils/AcademicYears';
+import { GoBlocked } from "react-icons/go";
 
 const QuickLinks=[
   {
@@ -102,9 +104,10 @@ function Homepage(props) {
 
 
   const [financialYear,setFinancialYear]=useState(() => {
-    const year = localStorage.getItem('financialYear');
+    const year = localStorage?.getItem('financialYear');
     return year ? year : " ";
   })
+  
 
   useEffect(()=>{
     props.getMyBudgets()
@@ -145,8 +148,8 @@ function Homepage(props) {
 
       props?.allTransactions();
     }
-  },[financialYear,myBudgetData.success,transactions.success])
-
+  },[financialYear,myBudgetData.success,transactions.success,props?.data?.addTransaction?.success])
+  
 
   const filterBudget=()=>{
     return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
@@ -235,7 +238,7 @@ function Homepage(props) {
   
       const amount = parseFloat(transaction.amount); // Ensure amount is a number
   
-      if (transaction.type === 'Expense') {
+      if (transaction.type.toLowerCase() === 'expense') {
         monthlyData[month].expenses += amount;
       }
     });
@@ -288,11 +291,11 @@ function Homepage(props) {
   
     // Filter transactions for the current and previous fiscal years
     const currentFYITransactions = transactions?.resp?.data?.filter((transaction) =>
-      transaction.budget.fyi === currentFYI
+      transaction.budget.fyi === currentFYI && transaction.type.toLowerCase() === "expense"
     );
   
     const previousFYITransactions = transactions?.resp?.data?.filter((transaction) =>
-      transaction.budget.fyi === previousFYI
+      transaction.budget.fyi === previousFYI && transaction.type.toLowerCase() === "expense"
     );
   
     // Sum the amounts for the current and previous fiscal years
@@ -307,7 +310,7 @@ function Homepage(props) {
     );
   
     // Calculate the percentage change
-    let percentageChange = 0;
+    let percentageChange = 0;    
     if (previousTotal > 0) {
       percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
     } else if (currentTotal > 0) {
@@ -325,6 +328,10 @@ function Homepage(props) {
 
   
   const per=calculateFYIPercentageChange(transactions,financialYear)
+
+  const location=useLocation();
+  
+  
   return (
     <Layout setUserData={setUserData} setFinancialYear={setFinancialYear}>
       <div className='py-4 font-bold text-text_primary flex justify-start items-center gap-4 mb-4'>
@@ -336,7 +343,7 @@ function Homepage(props) {
             <p>{userData?.getProfile?.institution?.institutionName}</p>
           </div>
           <div className='mb-3'>
-            <p className='text-sm font-normal text-wrap text-justify'>Budget planning and execution system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
+            <p className='text-sm font-normal text-wrap text-justify'>Budget planning and implementation system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
           </div>
           <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
             {QuickLinks.map((item,index)=>{
@@ -352,244 +359,278 @@ function Homepage(props) {
           </div>
         </div>
       </div>
-      
-      <section className='w-full grid grid-cols-1 lg:grid-cols-4 gap-4'>
-        <div className='lg:col-span-3'>
-          <div className='grid lg:grid-cols-3 gap-8'>
-            {cards.map((item,index)=>{
-              return(
-                <div key={index} className='flex justify-between items-center bg-primary2 px-4 py-2 rounded-lg shadow-lg text-text_primary'>
-                  <div>
-                    <h1 className='font-bold text-sm'>{item.label}</h1>
-                    <p className='lg:text-lg text-sm'>{item.amount}</p>
+      <div className='relative min-h-screen'>
+        {myBudgetData.loading?
+        <Loading/>
+        :
+        myBudgetData.success?(
+          <>
+            {
+              filterBudget()[0]?.status.toLowerCase() !=='approved' && (
+                <div className='flex flex-col text-text_primary justify-center items-center absolute h-full left-0 right-0 top-0 z-10 bg-primary bg-opacity-90'>
+                  <GoBlocked size={200} className='mb-2'/>
+                  {
+                    filterBudget()[0]?.status.toLowerCase() ==='pending'?
+                      <label>This budget needs to be approved before it is put into action</label>
+                    :(
+                      filterBudget()[0]?.status.toLowerCase() ==='rejected'?(
+                        <label>This budget has been rejected</label>
+                      ):
+                      <label>This budget has been closed</label>
+                    )
+
+                  }
+                  <Link to={`/my-budgets/${filterBudget()[0]?._id}`} className=' text-xs text-text_primary text-center border-2 border-text_primary border-opacity-40 p-2 lg:w-1/5 w-full mb-4'>View Budget</Link>
+
+                  <Link to={"/budget/requests"} className='delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-xs text-center text-primary p-2 lg:w-1/5 w-full'>
+                    {filterBudget()[0]?.status.toLowerCase() ==='pending'?"Send":"Resend"} budget request
+                  </Link>
+                </div> 
+              )
+            }
+            
+            <section className='w-full grid grid-cols-1 lg:grid-cols-4 gap-4 relative'>
+              
+              <div className='lg:col-span-3'>
+                <div className='grid lg:grid-cols-3 gap-8'>
+                  {cards.map((item,index)=>{
+                    return(
+                      <div key={index} className='flex justify-between items-center bg-primary2 px-4 py-2 rounded-lg shadow-lg text-text_primary'>
+                        <div>
+                          <h1 className='font-bold text-sm'>{item.label}</h1>
+                          <p className='lg:text-lg text-sm'>{item.amount}</p>
+                        </div>
+                        <div className='p-2 lg:w-24 lg:h-24 w-12 h-12 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
+                          {item.icon}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div >
+                  <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
+                    <p>Spending Analysis</p>
                   </div>
-                  <div className='p-2 lg:w-24 lg:h-24 w-12 h-12 rounded-full flex items-center justify-center text-text_primary bg-primary  duration-200 delay-100 cursor-pointer'>
-                    {item.icon}
+                  <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-2'>
+                    <div className='py-2 text-text_primary'>
+                      <h2 className='font-bold lg:text-xl text-md'>{transactions?.success?calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear)):0} RF</h2>
+                      <p className='flex gap-2 text-xs'>Your spending is <span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start items-end`}>{per.percentageChange + "%"} {per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>}</span> compared to last year</p>
+                    </div>
+                    <LineChart data={data} options={options}/>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-
-          <div >
-            <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
-              <p>Spending Analysis</p>
-            </div>
-            <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-2'>
-              <div className='py-2 text-text_primary'>
-                <h2 className='font-bold lg:text-xl text-md'>{transactions?.success?calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear)):0} RF</h2>
-                <p className='flex gap-2 text-xs'>Your spending is <span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start items-end`}>{per.percentageChange + "%"} {per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>}</span> compared to last year</p>
-              </div>
-              <LineChart data={data} options={options}/>
-            </div>
-          </div>
-        </div>
-        
-        <div className='col-span-1 flex flex-col'>
-          <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 lg:h-1/2 h-full overflow-hidden'>
-            <div className='font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-              <p>Latest Transactions</p>
-            </div>
-            {transactions?.loading?(
-                <Loading/>
-              ):(
-                transactions?.success?(
-                  yearlyTransactions?.length<=0?(
-                      <NoDataFound/>
-                  ):(
-                    yearlyTransactions?.slice(0, 5).map((item,index)=>{
-                      return(
-                        <div key={index} className='w-full flex justify-between mt-4 gap-3'>
-                          <div className='flex justify-start gap-3 items-center w-3/5'>
-
-                            <div className='text-text_primary w-full'>
-                              <h2 className='text-xs font-medium  truncate'>{item.transactionDescription}</h2>
-                              <p className='text-xs'>{new Date(item.createdAt).toLocaleDateString()}</p>
-                            </div>
-                          </div>
-                          <div className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'} text-xs`}>
-                            <label>
-                            {item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $
-                            </label>
-                          </div>
-
-                        </div>
-                      )
-                    })
-                  )
-                  
-                ):(
-                  
-                  <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
-                  
-                )
-              )}
-            
-            <div className='lg:absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
-              <Link className='text-text_primary text-sm font-bold border-2 border-primary rounded-lg  w-full p-2 text-center pointer-cursor flex items-center justify-center'>View all</Link>
-            </div>
-            
-          </div>
-
-          <div className='relative flex items-end lg:h-1/2 h-full pt-4'>
-            <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
-              <div className='font-bold text-text_primary w-full'>
-                <p>Spending Category</p>
               </div>
               
-              <div className='w-full'>
-                {transactions?.loading?(
-                  <Loading/>
-                ):(
-                  transactions?.success?(
-                    yearlyTransactions?.length<=0?(
-                        <NoDataFound/>
+              <div className='col-span-1 flex flex-col'>
+                <div className='relative bg-primary2 rounded-lg shadow-lg py-3  px-4 lg:h-1/2 h-full overflow-hidden'>
+                  <div className='font-bold text-text_primary w-full overflow-x-hidden text-sm'>
+                    <p>Latest Transactions</p>
+                  </div>
+                  {transactions?.loading?(
+                      <Loading/>
                     ):(
-                      <>
-                      <div className='py-2 text-text_primary flex justify-between items-center'>
-                        <div>
-                          <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))} RF</h2>
-                          <p className='flex gap-2 text-xs'>Total spendings</p>
-                        </div>
-                        <p className='flex justify-between text-text_primary text-xs p-1'><span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start gap-2 text-sm}`}>{per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>} {per.percentageChange + "%"}</span></p>
-                      </div>
-                        <PieChart
-                          series={[
-                            {
-                              data:calculateTotalsByCategory(transactions?.resp?.data,financialYear),
-                              arcLabelMinAngle: 45,
-                              innerRadius: 20,
-                              outerRadius: 100,
-                              paddingAngle: 5,
-                              cornerRadius: 5,
-                              startAngle: -90,
-                              endAngle: 180,
-                              cx: 120,
-                              cy: 100,
-                              highlightScope: { faded: 'global', highlighted: 'item' },
-                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                            }
-                          ]}
-                          sx={{
-                            [`& .${pieArcLabelClasses.root}`]: {
-                              fill: 'white',
-                              fontWeight: 'regular',
-                              fontSize: 8,
-                              border: 5,
-                            },
-                          }}
-                          width={800}
-                          height={250}
-                          className='w-full'
-                        />
+                      transactions?.success?(
+                        yearlyTransactions?.length<=0?(
+                            <NoDataFound/>
+                        ):(
+                          yearlyTransactions?.slice(0, 5).map((item,index)=>{
+                            return(
+                              <div key={index} className='w-full flex justify-between mt-4 gap-3'>
+                                <div className='flex justify-start gap-3 items-center w-3/5'>
+
+                                  <div className='text-text_primary w-full'>
+                                    <h2 className='text-xs font-medium  truncate'>{item.transactionDescription}</h2>
+                                    <p className='text-xs'>{new Date(item.createdAt).toLocaleDateString()}</p>
+                                  </div>
+                                </div>
+                                <div className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'} text-xs`}>
+                                  <label>
+                                  {item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $
+                                  </label>
+                                </div>
+
+                              </div>
+                            )
+                          })
+                        )
                         
-                      </>
-                    )
+                      ):(
+                        
+                        <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
+                        
+                      )
+                    )}
+                  
+                  <div className='lg:absolute bottom-0 left-0 w-full right-0 flex items-center justify-center py-4 px-4'>
+                    <Link className='text-text_primary text-sm font-bold border-2 border-primary rounded-lg  w-full p-2 text-center pointer-cursor flex items-center justify-center'>View all</Link>
+                  </div>
+                  
+                </div>
+
+                <div className='relative flex items-end lg:h-1/2 h-full pt-4'>
+                  <div className='rounded-lg shadow-lg py-3  px-4 w-full bg-primary2 h-full'>
+                    <div className='font-bold text-text_primary w-full'>
+                      <p>Spending Category</p>
+                    </div>
                     
-                  ):(
-                    
-                    <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
-                    
-                  )
-                )}
+                    <div className='w-full'>
+                      {transactions?.loading?(
+                        <Loading/>
+                      ):(
+                        transactions?.success?(
+                          yearlyTransactions?.length<=0?(
+                              <NoDataFound/>
+                          ):(
+                            <>
+                            <div className='py-2 text-text_primary flex justify-between items-center'>
+                              <div>
+                                <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data,financialYear))} RF</h2>
+                                <p className='flex gap-2 text-xs'>Total spendings</p>
+                              </div>
+                              <p className='flex justify-between text-text_primary text-xs p-1'><span className={`${per.percentageChange <0?"text-success":"text-red"} flex justify-start gap-2 text-sm}`}>{per.percentageChange <0?<FaArrowDownLong size={10}/>:<FaArrowUpLong size={10}/>} {per.percentageChange + "%"}</span></p>
+                            </div>
+                            <PieChart
+                              series={[
+                                {
+                                  data:calculateTotalsByCategory(transactions?.resp?.data,financialYear),
+                                  arcLabelMinAngle: 45,
+                                  innerRadius: 20,
+                                  outerRadius: 80,
+                                  paddingAngle: 5,
+                                  cornerRadius: 5,
+                                  startAngle: -90,
+                                  endAngle: 180,
+                                  cx: 100,
+                                  cy: 80,
+                                  highlightScope: { faded: 'global', highlighted: 'item' },
+                                  faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                                }
+                              ]}
+                              sx={{
+                                [`& .${pieArcLabelClasses.root}`]: {
+                                  fill: 'white',
+                                  fontWeight: 'regular',
+                                  fontSize: 8,
+                                  border: 5,
+                                },
+                              }}
+                              width={800}
+                              height={250}
+                              className='w-full'
+                            />
+                              
+                            </>
+                          )
+                          
+                        ):(
+                          
+                          <Error code={transactions?.error?.code} message={transactions?.error?.message}/>
+                          
+                        )
+                      )}
 
 
+                    </div>
+                  </div>
+                
+                </div>
               </div>
-            </div>
-          
-          </div>
-        </div>
 
-      </section>
+            </section>
 
-      <section className='w-full'>
-        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-          <p>Transaction History</p>
-        </div>
-        
-        <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
-          <div className='flex justify-between items-center'>
-            <div className='flex justify-start gap-2 lg:w-3/5 w-full'>
-              <div className='relative lg:w-3/5 w-full'>
-                <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
-                {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
-              </div>
-              {}
-              <div className='text-primary rounded-lg'>
-                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={()=>setAddTransaction(!addTransaction)}>Add transaction</button>
-              </div>
-            </div>
-           
-
-            <div className='w-28 relative group flex justify-end gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
-              <label>Latest</label>
-              <p><RiFilter3Line size={25}/></p>
-              <div className='bg-primary2 shadow-lg absolute top-7 w-full right-0 hidden group-hover:block py-2'>
-                <ul className='list-none text-text_primary -ml-6 text-xs'>
-                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
-                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
-                  <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Oldest</li>
-                </ul>  
+            <section className='w-full'>
+              <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
+                <p>Transaction History</p>
               </div>
               
-            </div>
-          </div>
-          <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
-            <thead className='bg-primary font-bold'>
-                <tr>
-                    <th>Transaction name</th>
-                    <th>Budget</th>
-                    <th>Date</th>
-                    <th>Transaction Type</th>
-                    <th>Amount Paid</th>
-                </tr>
-            </thead>
-             <tbody>
-              {transactions?.loading?(
-                  <tr>
-                    <td colSpan={5} className='text-center'><Loading/></td>
-                  </tr>
-              ):(
-                transactions?.success?(
-                  filteredTransactions()?.length<=0?(
-                    <tr>
-                      <td colSpan={5} className='text-center'><NoDataFound/></td>
-                    </tr>
-                  ):(
-                    pagination(filteredTransactions,10).length>0 && pagination(filteredTransactions,10)[currentPage].map((item,index)=>{
-                      return(
-                        <tr key={index}>
-                          <td className=''>{item.category}</td>
-                          <td>FYI {item.budget.fyi}</td>
-                          <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                          <td><span className={`p-1 ${item.type.toLowerCase()=='expense'?'text-red border-red':' border-success text-success'} rounded-lg`}>{item.type}</span></td>
-                          <td className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'}`}>{item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $</td>                
+              <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
+                <div className='lg:flex justify-between items-center'>
+                  <div className='lg:flex justify-start gap-2 lg:w-3/5 w-full'>
+                    <div className='relative lg:w-3/5 w-full  lg:mb-0 mb-4'>
+                      <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
+                      {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
+                    </div>
+                    <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
+                      <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={()=>{navigate('/#add-transaction')}}>Add transaction</button>
+                    </div>
+                  </div>
+                
+
+                  <div className='lg:w-28 w-full relative group flex lg:justify-end justify-between gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
+                    <label>Latest</label>
+                    <p><RiFilter3Line size={25}/></p>
+                    <div className='bg-primary2 shadow-lg absolute top-7 w-full right-0 hidden group-hover:block py-2'>
+                      <ul className='list-none text-text_primary -ml-6 text-xs'>
+                        <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
+                        <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
+                        <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Oldest</li>
+                      </ul>  
+                    </div>
+                    
+                  </div>
+                </div>
+                <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
+                  <thead className='bg-primary font-bold'>
+                      <tr>
+                          <th>Transaction name</th>
+                          <th>Budget</th>
+                          <th>Date</th>
+                          <th>Transaction Type</th>
+                          <th>Amount Paid</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {transactions?.loading?(
+                        <tr>
+                          <td colSpan={5} className='text-center'><Loading/></td>
+                        </tr>
+                    ):(
+                      transactions?.success?(
+                        filteredTransactions()?.length<=0?(
+                          <tr>
+                            <td colSpan={5} className='text-center'><NoDataFound/></td>
+                          </tr>
+                        ):(
+                          pagination(filteredTransactions,10).length>0 && pagination(filteredTransactions,10)[currentPage].map((item,index)=>{
+                            return(
+                              <tr key={index}>
+                                <td className=''>{item.category}</td>
+                                <td>FYI {item.budget.fyi}</td>
+                                <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                                <td><span className={`p-1 ${item.type.toLowerCase()=='expense'?'text-red border-red':' border-success text-success'} rounded-lg`}>{item.type}</span></td>
+                                <td className={`${item.type.toLowerCase()=='expense'?'text-red':'text-success'}`}>{item.type.toLowerCase()=='expense'?"-":"+"}{item.amount} $</td>                
+                              </tr>
+                            )
+                          })
+                        )
+                        
+                      ):(
+                        <tr>
+                          <td colSpan={5} className='text-center'><Error code={transactions?.error?.code} message={transactions?.error?.message}/></td>
                         </tr>
                       )
-                    })
-                  )
-                  
-                ):(
-                  <tr>
-                    <td colSpan={5} className='text-center'><Error code={transactions?.error?.code} message={transactions?.error?.message}/></td>
-                  </tr>
-                )
-              )}
-            </tbody> 
-          </table>
+                    )}
+                  </tbody> 
+                </table>
 
-          <Pagination
-            length={filteredTransactions()?.length}
-            postsPerPage={20}
-            handlePagination={handlePagination}
-            currentPage={currentPage}
-          />
-        </div>
+                <Pagination
+                  length={filteredTransactions()?.length}
+                  postsPerPage={20}
+                  handlePagination={handlePagination}
+                  currentPage={currentPage}
+                />
+              </div>
 
-        
-      </section>
+              
+            </section>
+          </>
+        ):(
+          <Error code={myBudgetData?.error?.code} message={myBudgetData?.error?.message}/>
+        )}
+      </div>
 
-      {addTransaction && <AddTransaction/>}
+      {location.hash.includes("add-transaction") && <AddTransaction budget={myBudgetData.success && filterBudget()[0]} institution={myBudgetData.success && filterBudget()[0]?.institution}/>}
       
     </Layout>
   )

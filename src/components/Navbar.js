@@ -11,7 +11,7 @@ import { getMyBudgets } from '../redux/Actions/BudgetActions';
 const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
     const myBudgetData=props?.data?.budgets;
-    const [academicYear,setAcademiYears]=useState([]);
+    const [academicYear,setAcademiYears]=useState(getAcademicYears(myBudgetData));
     
 
     useEffect(()=>{

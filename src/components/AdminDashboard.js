@@ -16,7 +16,6 @@ import { getMyBudgets } from '../redux/Actions/BudgetActions';
 
 const AdminDashboard = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false);
-    const [academicYear,setAcademiYears]=useState(getAcademicYears());
     const [showMenu,setShowMenu]=useState(false);
 
     const navigate=useNavigate();
