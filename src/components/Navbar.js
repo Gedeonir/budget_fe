@@ -11,12 +11,20 @@ import { getMyBudgets } from '../redux/Actions/BudgetActions';
 const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
     const myBudgetData=props?.data?.budgets;
-    const [academicYear,setAcademiYears]=useState(getAcademicYears(myBudgetData));
+    const [academicYear,setAcademicYears]=useState(null);
+    
+    console.log(academicYear,"academic Year");
     
 
     useEffect(()=>{
-        localStorage.setItem('financialYear', academicYear[0]);
-    },[])
+        const fetchAcademicYears = async () => {
+            const years = await getAcademicYears(myBudgetData);
+            setAcademicYears(years[0]);
+        };
+
+        fetchAcademicYears();
+        localStorage.setItem('financialYear', academicYear);
+    },[myBudgetData])
 
     const selectedYear=localStorage.getItem('financialYear');
     const location=useLocation();    
