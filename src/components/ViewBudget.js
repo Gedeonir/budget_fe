@@ -64,13 +64,14 @@ const ViewBudget = (props) => {
                                     <label className='font-bold'>Total Budget:</label>
                                     <p>{props?.data?.oneBudget?.resp?.data?.amount}$</p>
                                 </div>
-
-                                <Link to={"/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
-                                    <div className='group-hover:bg-list_hover p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100'>
-                                        <IoWallet size={30}/>
-                                    </div>
-                                    <label className='group-hover:text-list_hover text-secondary cursor-pointer'>My budgets</label>  
-                                </Link>
+                                {!location.pathname.toLowerCase()?.includes("dashboard") &&
+                                    <Link to={"/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
+                                        <div className='group-hover:bg-list_hover p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100'>
+                                            <IoWallet size={30}/>
+                                        </div>
+                                        <label className='group-hover:text-list_hover text-secondary cursor-pointer'>My budgets</label>  
+                                    </Link>
+                                }
                                 
                             </div>
                         </div>
@@ -79,21 +80,27 @@ const ViewBudget = (props) => {
 
 
                     <div className=''>
-                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
-                            <div className='w-full text-text_primary'>
+                        <section className={`relative py-2 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
+                            <div className='w-full text-text_primary text-sm'>
+                                <h1 className='py-2 font-bold'>Budget Owner</h1>
+                                <p className='text-sm'>{props?.data?.oneBudget?.resp?.data?.institution?.institutionName}</p>
+                            </div>
+                        </section>
+                        <section className={`relative py-2 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
+                            <div className='w-full text-text_primary text-sm'>
                                 <h1 className='py-2 font-bold'>Description</h1>
                                 <p className='text-sm'>{props?.data?.oneBudget?.resp?.data?.description}</p>
                             </div>
                         </section>
-                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg  text-text_primary `}>
-                            <div className='font-bold py-2 lg:flex justify-between items-start'>
+                        <section className={`relative py-2 px-4 mb-4 bg-primary2 shadow-lg rounded-lg  text-text_primary `}>
+                            <div className='font-bold py-2 lg:flex justify-between items-start text-sm'>
                                 <h1>Financial Year<span className='text-sm font-normal'>(FYI)</span></h1>
                             </div>
                             <label className='text-sm'>{props?.data?.oneBudget?.resp?.data?.fyi}</label>
                         </section>
                         <section className={`relative py-4 px-4 bg-primary2 shadow-lg rounded-lg`}>
 
-                            <div className='font-bold text-text_primary py-2 flex justify-between items-start'>
+                            <div className='font-bold text-text_primary py-2 flex justify-between items-start text-sm'>
                                 <h1>Budget percentage allocated to each expenditure</h1>
                             </div>
                             <div className='max-h-72 overflow-y-auto'>
@@ -128,9 +135,11 @@ const ViewBudget = (props) => {
                                     </tbody>
                                 </table>    
                             </div>
-                            <Link to={"/budget/requests"} className='delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-xs text-center text-primary p-2 lg:w-1/5 w-full'>
-                                {props?.data?.oneBudget?.resp?.data?.status.toLowerCase() ==='pending'?"Send":"Resend"} budget request
-                            </Link>
+                            {!location.pathname.toLowerCase()?.includes("dashboard") &&
+                                <Link to={"/budget/requests"} className='delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-xs text-center text-primary p-2 lg:w-1/5 w-full'>
+                                    {props?.data?.oneBudget?.resp?.data?.status.toLowerCase() ==='pending'?"Send":"Resend"} budget request
+                                </Link>
+                            }
                             {/* <div>
                                 {error.errorType ==='accept' && <label className={`text-[#FBA801] text-xs`}>{error.errorMsg}</label>}
                                 <div className='flex justify-start gap-2 items-start mb-2'>

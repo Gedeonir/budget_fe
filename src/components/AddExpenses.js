@@ -49,11 +49,11 @@ const AddExpenses = ({setOpenModal,setExpenses,total,expenses,recalculatePercent
     <div className='w-full absolute left-0 inset-y-0 h-full bg-primary bg-opacity-50 flex lg:items-center lg:justify-center items-center'>
         <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-2/4 w-full lg:px-4 px-2 py-4'>
             <div className="mb-2">
-                <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new institution</h1>
+                <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new expense</h1>
             </div>
 
             <div className='w-full mb-2 text-text_primary'>
-                <label>Income category</label>
+                <label>Expense category</label>
                 <select onChange={handleChange} name='expense' placeholder='Income Category' className='border w-full px-4 py-2 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
                     <option value={""}>--Select Category--</option>
                     {filteredExpenses.map((item,index)=>{

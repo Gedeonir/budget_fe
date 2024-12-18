@@ -37,10 +37,8 @@ const SignIn = () => {
                 "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
                 }
             });
-            const {data}=getProfile;
-            console.log(data);
-            
-            if(data.getProfile?.role==="admin")
+            const {data}=getProfile;            
+            if(data.getProfile?.institution?.institutionName?.toLowerCase()==="Ministry of Finance and Economic Planning".toLowerCase())
                 navigate("/dashboard");
             else
                 navigate("../");

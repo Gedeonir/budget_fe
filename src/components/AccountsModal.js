@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { handleLogout } from '../utils/handleLogout';
 
 const AccountsModal = (props) => {
 
@@ -12,6 +11,11 @@ const AccountsModal = (props) => {
 
     const handleNavigate=()=>{   
         navigate("/plan-budget")
+    }
+
+    const handleLogout=()=>{
+        sessionStorage.removeItem('userToken');
+        navigate("/signin")
     }
     
 
@@ -48,8 +52,7 @@ const AccountsModal = (props) => {
                 </li>
 
                 <li className={`${location?.pathname?.includes("dashboard")?'hidden':'block'} text-red font-bold hover:text-list_hover cursor-pointer delay-100 duration-500`}>
-                    <button className='border-none bg-transparent cursor-pointer font-bold hover:opacity-90 text-red text-xs' onClick={()=>{handleLogout(); navigate("/")
-                    }}>Logout</button>
+                    <button className='border-none bg-transparent cursor-pointer font-bold hover:opacity-90 text-red text-xs' onClick={()=>{handleLogout()}}>Logout</button>
                 </li>
             </ul>
 

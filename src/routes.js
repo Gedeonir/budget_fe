@@ -23,6 +23,7 @@ import NewRequest from "./pages/Users/NewRequest";
 import ViewRequest from "./pages/Users/ViewRequest";
 import ViewRequestAdmin from "./pages/Admin/ViewRequestAdmin";
 import BudgetDetails from "./pages/Users/BudgetDetails";
+import ViewBudgetDetails from "./pages/Admin/ViewBudgetDetails";
 
 
 const AppRoutes = (prop) => {
@@ -80,10 +81,9 @@ const AppRoutes = (prop) => {
         
         <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="dashboard/requests" element={<Requests/>}/>
+        <Route path="/dashboard/all-budgets/:id" element={<ViewBudgetDetails/>}/>
         <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
         <Route path="dashboard/forecast-and-analysis" element={<Forecast/>}></Route>
-        <Route path="dashboard/institutions" element={<Institutions/>}/>
-        <Route path="dashboard/officials" element={<Officials/>}/>
         <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
         <Route path="/dashboard/budget/requests/:id" element={<ViewRequestAdmin/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>

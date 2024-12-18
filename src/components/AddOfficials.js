@@ -39,25 +39,20 @@ const AddOfficials = (props) => {
     console.log(formData.password);
 
     const positions=[
-        "Minister","State Minister","Chief Technical Advisor","Permanent Secretary",
-        "Head of Department of Planning, Monitoring & Evaluation, and Health Financing",
-        "Single Project Implementation Unit (SPIU) Coordinator",
-        "Director General of Corporate Services",
-        "Legal Affairs  Specialist",
         "Budget Officer",
         "Budget Monitoring Officer"
     ]
     
   return (
     <div className='lg:w-11/12 w-full absolute left-0 inset-y-0 max-h-screen flex lg:items-start lg:justify-center items-center'>
-        <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-2/4 w-full lg:px-4 px-2 py-4'>
+        <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-3/4 w-full lg:px-4 px-2 py-4'>
             <div className="mb-2">
                 <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Add new Member</h1>
             </div>
             <label className='text-success text-sm' >{props?.data?.newUser?.success && 'New user added'}</label>
             <label className='text-red text-sm' >{props?.data?.newUser?.error && 'Adding user Failed'}</label>
 
-            <form method='POST' className='text-text_primary' onSubmit={(e)=>handleRegister(e)}>
+            <form method='POST' className='text-text_primary lg:grid grid-cols-2 gap-2' onSubmit={(e)=>handleRegister(e)}>
                 <div className='w-full mb-2'>
                     <label>Member Title</label>
                     <select name='title' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={handleChange} required>
@@ -106,7 +101,7 @@ const AddOfficials = (props) => {
                     
                 </div>
 
-                <div className='flex justify-between gap-4'>
+                <div className='flex justify-between gap-4 col-span-2'>
                     <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>props.setAddOfficialsModal(false)}>Cancel</button>
                     <button type='submit' size='sm' className={`text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.newUser?.loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.newUser?.loading? true : false}>
                         {props?.data?.newUser?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Save'}

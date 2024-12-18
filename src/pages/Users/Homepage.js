@@ -487,7 +487,7 @@ function Homepage(props) {
 
             <section className='w-full'>
               <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                <p>Transaction History</p>
+                <p>My transaction History</p>
               </div>
               
               <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>

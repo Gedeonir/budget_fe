@@ -40,6 +40,8 @@ const BudgetPlanningForm = (props) => {
         return savedExpenses ? JSON.parse(savedExpenses) : [];
     });
 
+    
+
     const [total,setTotal]=useState(0)    
 
     const getTotalBudget=()=>{
@@ -50,7 +52,7 @@ const BudgetPlanningForm = (props) => {
         const totalAmount = expenses.reduce((total, obj) => total + obj.amountToSpent, 0);
       
         expenses.forEach(obj => {
-          obj.percentage = ((obj.amountToSpent / totalAmount) * 100).toFixed(6);
+          obj.percentage = ((obj.amountToSpent / totalAmount) * 100).toFixed(2);
         });
     }
     
@@ -125,6 +127,7 @@ const BudgetPlanningForm = (props) => {
                 fyi.map(item=>{
                     const data={
                         expenses:expenses,
+                        revenues:[],
                         amount:total,
                         fyi:item,
                         institution:props.userData?.getProfile?.institution?._id,

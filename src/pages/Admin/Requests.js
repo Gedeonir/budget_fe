@@ -18,7 +18,7 @@ const Requests = (props) => {
     const location=useLocation();
     const [section,setSection]=useState("All");
     const [currentPage,setCurrentPage]=useState(0);
-
+    const [loading,setLoading]=useState(false)
     const handlePagination = (pageNumber) => {
         setCurrentPage (pageNumber);
     };
@@ -28,7 +28,7 @@ const Requests = (props) => {
 
 
   return (
-    <AdminDashboard setUserData={setUserData}>
+    <AdminDashboard setLoading={setLoading} setUserData={setUserData}>
         <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
             <p>Budget Requests</p>
         </div>

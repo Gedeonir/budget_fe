@@ -110,8 +110,8 @@ const AddTransaction = (props) => {
             onChange={(e)=>setFormData({...formData,transactionDescription:e.target.value})}></textarea>
           </div>
 
-          <div className='flex justify-between gap-4 col-span-1'>
-            <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>navigate("/")}>Cancel</button>
+          <div className='flex justify-between gap-4 col-span-2'>
+            <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={()=>navigate(-1)}>Cancel</button>
             <button type='submit' size='sm' className={`text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.addTransaction?.loading? 'cursor-not-allowed ':'cursor-pointer'}`} disabled={props?.data?.addTransaction?.loading? true : false}>
               {props?.data?.addTransaction?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/><span> Submitting....</span></p>:'Submit transaction'}
             </button>

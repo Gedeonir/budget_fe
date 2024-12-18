@@ -22,6 +22,7 @@ const Officials = (props) => {
     const [AddOfficialsModal, setAddOfficialsModal] = useState(false);
     const [reload,setReload]=useState(false);
     const [currentPage,setCurrentPage]=useState(0);
+    const [loading,setLoading]=useState(false)
     const [Delete,setDelete]=useState({
         id:"",
         open:false
@@ -61,37 +62,35 @@ const Officials = (props) => {
     
 
   return (
-    <AdminDashboard setUserData={setUserData}>
+    <div>
         <div className='py-4 font-bold text-text_primary'>
             <p>Government Officials</p>
         </div>
+        <div className='min-h-72 relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full'>
+            <div className='lg:flex justify-between mb-2 items-center '>
+                <div className='text-sm text-text_primary w-full flex justify-between mb-2'>
+                    <label>{!filteredUsers()?.length?0:filteredUsers()?.length} Officials</label>
 
-        {users?.loading?(
-            <Loading/>
-        )
-        :
-        (users?.success?(
-            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 max-h-screen h-full'>
-                <div className='lg:flex justify-between mb-2 items-center '>
-                    <div className='text-sm text-text_primary w-full flex justify-between mb-2'>
-                        <label>{filteredUsers().length} Officials</label>
-
-                        <div className='flex items-center justify-end'>
-                            <div className='mx-4 p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddOfficialsModal(!AddOfficialsModal)}>
-                                <p><MdDomainAdd size={20}/></p>
-                            </div>   
-                        </div>  
-                    </div>
-
-                    <div className='relative lg:w-2/5 w-full mb-2'>
-                        <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
-                        {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
-                    </div>
-                    
-                    
+                    <div className='flex items-center justify-end'>
+                        <div className='mx-4 p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={()=>setAddOfficialsModal(!AddOfficialsModal)}>
+                            <p><MdDomainAdd size={20}/></p>
+                        </div>   
+                    </div>  
                 </div>
 
-                {filteredUsers().length <=0?(
+                <div className='relative lg:w-2/5 w-full mb-2'>
+                    <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
+                    {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
+                </div>
+                
+                
+            </div>
+            {users?.loading?(
+                <Loading/>
+            )
+            :
+            (users?.success?(
+                filteredUsers().length <=0?(
                     <NoDataFound/>
                 )
                 :
@@ -119,19 +118,21 @@ const Officials = (props) => {
                             handlePagination={handlePagination}
                             currentPage={currentPage}
                         />
-                  </>
-                )}       
-                {Delete.open && <DeleteConfirm handleDelete={handleDelete} Delete={Delete} item={"user"} setDelete={setDelete}/>}                
+                </>
+                )    
+                
+            )
+            :
+            (
+                <Error code={users?.error?.code} message={users?.error?.message}/>
+            )
+            )}
 
-                {AddOfficialsModal && <AddOfficials setReload={setReload} setAddOfficialsModal={setAddOfficialsModal}/>}
-            </div>
-        )
-        :
-        (
-            <Error code={users?.error?.code} message={users?.error?.message}/>
-        )
-        )}
-    </AdminDashboard>
+            {Delete.open && <DeleteConfirm handleDelete={handleDelete} Delete={Delete} item={"user"} setDelete={setDelete}/>}                
+
+            {AddOfficialsModal && <AddOfficials setReload={setReload} setAddOfficialsModal={setAddOfficialsModal}/>}
+        </div>
+    </div>
   )
 }
 

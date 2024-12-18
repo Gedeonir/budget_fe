@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Logo from "../assets/Logo.PNG"
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {IoIosNotificationsOutline} from "react-icons/io"
 import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'
@@ -12,8 +12,6 @@ const Navbar = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false)
     const myBudgetData=props?.data?.budgets;
     const [academicYear,setAcademicYears]=useState(null);
-    
-    console.log(academicYear,"academic Year");
     
 
     useEffect(()=>{

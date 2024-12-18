@@ -1,22 +1,22 @@
 import React,{useEffect, useState} from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Logo from "../assets/Logo.PNG"
 import {IoIosNotificationsOutline} from "react-icons/io"
-import { IoSearchOutline } from "react-icons/io5";
 import AccountsModal from './AccountsModal'
 import axios from 'axios';
 import Sidebar from './Sidebar';
-import { CiMenuFries } from "react-icons/ci";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import getAcademicYears from '../utils/AcademicYears';
 import { connect } from 'react-redux';
 import { getMyBudgets } from '../redux/Actions/BudgetActions';
+import PasswordChangeOnFirstLoginModal from './PasswordChangeOnFirstLoginModal';
 
 
 const AdminDashboard = (props) => {
     const [openAccountModal,setOpenAccountModal]=useState(false);
     const [showMenu,setShowMenu]=useState(false);
+    const [succes,setSuccess]=useState(false)
 
     const navigate=useNavigate();
     const [userData,setUserData]=useState([]);
@@ -25,6 +25,7 @@ const AdminDashboard = (props) => {
   
 
     const verifyUser=async()=>{
+        props.setLoading(true)
         try{
           const getProfile=await axios.get(`${process.env.BACKEND_URL}/users/one/about`,
           {
@@ -36,13 +37,16 @@ const AdminDashboard = (props) => {
           const {data}=getProfile;
           props?.setUserData(data); //passing data to Homepage
           setUserData(data);
-          if(data?.getProfile?.role !=="admin"){
+          setSuccess(true)
+          if(data?.getProfile?.institution?.institutionName?.toLowerCase()!=="Ministry of Finance and Economic Planning".toLowerCase()){
             navigate("/signin");
           }
         }catch(error){
             navigate("/signin",{state:{data:"Not Authorized or token expired, Please Login again"}});
             sessionStorage.removeItem('userToken'); 
         }
+
+        props.setLoading(false)
     }
 
 
@@ -56,7 +60,7 @@ const AdminDashboard = (props) => {
 
   return (
     <div className='min-h-screen max-h-screen flex justify-start w-full overflow-hidden'>
-        <Sidebar showMenu={showMenu}/>
+        <Sidebar showMenu={showMenu} userData={userData}/>
 
         <div className={`relative w-full min-h-screen max-h-screen bg-primary ${props.openModal?'overflow-y-hidden':'overflow-y-auto'}`}>
             <header className='drop-shadow-sm bg-primary w-full py-2 px-4 flex justify-between items-center sticky z-20 top-0'>
@@ -64,15 +68,17 @@ const AdminDashboard = (props) => {
                     <img src={Logo} className='w-full h-full object-cover'/>
                 </div>
                 <div className='flex relative items-center justify-center gap-2 py-2 px-2 rounded-lg'>
-                    <form className='justify-start gap-1 flex'>
-                        <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
-                            {getAcademicYears(myBudgetData)?.map((item)=>{
-                                return(
-                                    <option key={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
-                                )
-                            })}
-                        </select>
-                    </form>
+                    {userData?.getProfile?.position?.toLowerCase() ==='budget monitoring officer' &&
+                        <form className='justify-start gap-1 flex'>
+                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                                {getAcademicYears(myBudgetData)?.map((item)=>{
+                                    return(
+                                        <option key={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
+                                    )
+                                })}
+                            </select>
+                        </form>
+                    }
 
                     <IoIosNotificationsOutline size={25} className='cursor-pointer text-text_primary hover:text-list_hover delay-100 duration-500'/>
                     
@@ -90,9 +96,14 @@ const AdminDashboard = (props) => {
 
                     
             </header>
-            <section className='py-2 px-4  relative'>
-                {props.children}
-            </section>
+            {succes && !userData?.getProfile?.passwordChanged?(
+                <PasswordChangeOnFirstLoginModal />
+            ):(
+                <section className='py-2 px-4  relative'>
+                    {props.children}
+                </section>
+            )}
+           
 
             {showMenu && <Sidebar/>}
         </div>
