@@ -7,7 +7,7 @@ import BarCharts from '../../components/BarCharts';
 import { IoCashSharp, IoSearchOutline, IoWallet } from "react-icons/io5";
 import AdminDashboard from '../../components/AdminDashboard';
 import { connect } from 'react-redux';
-import { allTransactions, getMyBudgets, getRequests } from '../../redux/Actions/BudgetActions';
+import { allTransactions, getMyBudgets, getRequests, viewCategories } from '../../redux/Actions/BudgetActions';
 import Loading from '../../components/Loading';
 import Error from '../../components/Error';
 import NoDataFound from '../../components/NoDataFound';
@@ -23,22 +23,18 @@ import { AiFillDelete } from 'react-icons/ai';
 import Pagination from '../../components/Pagination';
 import { RiFilter3Line } from 'react-icons/ri';
 import AddTransaction from '../../components/AddTransaction';
+import { pagination } from '../../utils/paginationHandler';
+import AddExpenseOrIncomeCategory from '../../components/AddExpenseOrIncomeCategory';
+import CategoriesModal from '../../components/CategoriesModal';
 
-const pagination=(list,items)=>{
-  const pages=[];
 
-  for (let i = 0; i < list?.length; i += items) {
-      const item = list?.slice(i, i + items);
-      pages.push(item);
-  }
-
-  return pages;
-}
 
 function Dashboard(props) {
   const [userData,setUserData]=useState([]);
   const [loading,setLoading]=useState(false)
   const [ searchWord,setSearchWord]=useState("")
+  const [searchBudget,setSearchBudget]=useState("")
+  const [searchCategories,setSearchCategories]=useState("")
   const [currentPage,setCurrentPage]=useState(0)
   const hour=new Date().getHours()
 
@@ -102,6 +98,8 @@ function Dashboard(props) {
   const [cards,setCards]=useState([])
   const myBudgetData=props?.data?.budgets;
   const allRequests=props?.data?.allRequest;
+  const categories=props?.data?.categories;
+
 
   useEffect(()=>{
     localStorage.setItem('financialYear', financialYear);
@@ -109,6 +107,7 @@ function Dashboard(props) {
     props.allTransactions();
     props.getMyBudgets();
     props.getRequests();
+    props.viewCategories();
 
     if (myBudgetData.success && allRequests.success) {
       setCards([]);
@@ -147,7 +146,7 @@ function Dashboard(props) {
         setCards((prev)=>[...prev,card]);
       })
     }
-  },[financialYear,myBudgetData?.success,allRequests.success])
+  },[financialYear,myBudgetData?.success,allRequests.success,categories?.success])
   
 
   const filteredTransactions=()=>{
@@ -159,7 +158,7 @@ function Dashboard(props) {
       && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()))
   }
 
-  const handleSearchBudget= myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(searchWord.toLowerCase()) || item.institution.institutionName.toLowerCase().includes(searchWord.toLowerCase()));
+  const handleSearchBudget=()=>{return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(searchBudget.toLowerCase()) || item.institution.institutionName.toLowerCase().includes(searchBudget.toLowerCase()))};
   
   
   const groupedTransactions = groupTransactionsByDate(filteredTransactions());
@@ -167,7 +166,7 @@ function Dashboard(props) {
   const filterBudget=()=>{
     return myBudgetData?.resp?.data?.filter((item)=>item.fyi.toLowerCase().includes(financialYear));
   }
-
+  
   const [total,setTotal]=useState(0)
 
   const calculateTotalAmount = () => {
@@ -205,6 +204,13 @@ function Dashboard(props) {
   }  
 
   const navigate=useNavigate();
+
+  const myFilteredCategories=()=>{
+    return categories?.resp?.data?.filter((item)=>item?.category?.toLowerCase().includes(searchCategories.toLowerCase()) 
+      && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
+    )
+  }  
+
 
 
   return (
@@ -449,40 +455,55 @@ function Dashboard(props) {
               })}
             </div>
 
-            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-8 px-2 py-4 h-full'>
+            <section className='w-full mb-4 py-4'>
+              <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
+                <p>My income/expense categories</p>
+              </div>
+              <CategoriesModal userData={userData}/>
 
+            </section>
+
+            <div className='relative w-full gap-2 bg-primary2 shadow-lg rounded-lg lg:px-4 px-2 py-4 h-full'>
+              <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
+                <p>Budgets</p>
+              </div>
               <div className='lg:flex justify-between mb-2 items-center '>
-                  <div className='text-sm text-text_primary w-full flex justify-between'>
-                      <label>{myBudgetData?.resp?.data?.length} total budgets</label>
+                <div className='relative lg:w-2/5 w-full'>
+                  <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchBudget(e.target.value)}/>
+                  {!searchBudget && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
+                </div>
+               
+                <div className='text-sm text-text_primary lg:w-1/5 w-full flex justify-end'>
+                    <label>{myBudgetData?.resp?.data?.length} total budgets</label>
 
-                      <div className='flex items-center justify-end mx-4'>
-                          <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100'>
-                              <p><MdDomainAdd size={20}/></p>
-                          </div>
+                    {/* <div className='flex items-center justify-end mx-4'>
+                        <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100'>
+                        <p><MdDomainAdd size={20}/></p>
+                        </div>
 
-                          
-                      </div>  
-                  </div>
+                        
+                    </div>   */}
+                </div>
 
-                  <div className='relative lg:w-2/5 w-full'>
-                      <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e)=>setSearchWord(e.target.value)}/>
-                      {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
-                  </div>
+                  
                   
                   
               </div>
+
+             
               {myBudgetData?.loading?(
                   <Loading/>
               )
               :
               (myBudgetData?.success?(
                  
-                handleSearchBudget?.length <=0?(
+                handleSearchBudget()?.length <=0?(
                     <NoDataFound/>
                 )
                 :
                 (
                 <>
+                
                 <div className='gap-4 w-full overflow-x-auto'>
                     <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>
                         <thead className='bg-primary'>
@@ -534,10 +555,10 @@ function Dashboard(props) {
                 </div>
 
                 <Pagination
-                    length={handleSearchBudget.length}
-                    postsPerPage={10}
-                    handlePagination={handlePagination}
-                    currentPage={currentPage}
+                    length={handleSearchBudget()?.length}
+                    postsperpage={10}
+                    handlepagination={handlePagination}
+                    currentpage={currentPage}
                 />
                 </>
                 )
@@ -555,23 +576,23 @@ function Dashboard(props) {
                 <p>My transaction History</p>
               </div>
               
-              <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
+              <div className={`w-full bg-primary2 rounded-lg shadow-lg px-4 py-4 relative ${location.hash.includes("add-transaction") && "min-h-screen"}`}>
                 <div className='lg:flex justify-between items-center'>
                   <div className='lg:flex justify-start gap-2 lg:w-3/5 w-full'>
                     <div className='relative lg:w-3/5 w-full  lg:mb-0 mb-4'>
-                      <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
-                      {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
+                      <input value={searchWord} onChange={(e)=>setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50'/>
+                      {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2'/>}
                     </div>
                     <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
-                      <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={()=>{navigate('/dashboard/#add-transaction')}}>Add transaction</button>
+                      <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={()=>{navigate('/dashboard/#add-transaction')}}>Add transaction</button>
                     </div>
                   </div>
                 
 
                   <div className='lg:w-28 w-full relative group flex lg:justify-end justify-between gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
-                    <label>Latest</label>
-                    <p><RiFilter3Line size={25}/></p>
-                    <div className='bg-primary2 shadow-lg absolute top-7 w-full right-0 hidden group-hover:block py-2'>
+                    <label className='text-xs'>Latest</label>
+                    <p><RiFilter3Line size={20}/></p>
+                    <div className='bg-primary2 shadow-lg absolute top-5 w-full right-0 hidden group-hover:block py-2'>
                       <ul className='list-none text-text_primary -ml-6 text-xs'>
                         <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
                         <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
@@ -603,7 +624,7 @@ function Dashboard(props) {
                             <td colSpan={5} className='text-center'><NoDataFound/></td>
                           </tr>
                         ):(
-                          pagination(filteredTransactions,10).length>0 && pagination(filteredTransactions,10)[currentPage].map((item,index)=>{
+                          pagination(filteredTransactionsBo,10)?.length>0 && pagination(filteredTransactionsBo,10)[currentPage]?.map((item,index)=>{
                             return(
                               <tr key={index}>
                                 <td className=''>{item.category}</td>
@@ -627,10 +648,12 @@ function Dashboard(props) {
 
                 <Pagination
                   length={filteredTransactionsBo()?.length}
-                  postsPerPage={20}
-                  handlePagination={handlePagination}
-                  currentPage={currentPage}
+                  postsperpage={20}
+                  handlepagination={handlePagination}
+                  currentpage={currentPage}
                 />
+
+                {location.hash.includes("add-transaction") && <AddTransaction userData={userData} budget={location.pathname.includes("dashboard")?"":myBudgetData.success && filterBudget()[0]} institution={userData?.getProfile?.institution}/>}
               </div>
 
               
@@ -638,10 +661,7 @@ function Dashboard(props) {
             </>
           )
         )
-      }
-
-      {location.hash.includes("add-transaction") && <AddTransaction budget={myBudgetData.success && filterBudget()[0]} institution={myBudgetData.success && filterBudget()[0]?.institution}/>}
-      
+      }      
     </AdminDashboard>
   )
 }
@@ -650,4 +670,4 @@ const mapState=(data)=>({
   data:data
 })
 
-export default connect(mapState,{allTransactions,getMyBudgets,getRequests})(Dashboard)
+export default connect(mapState,{allTransactions,getMyBudgets,getRequests,viewCategories})(Dashboard)

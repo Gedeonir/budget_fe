@@ -99,9 +99,9 @@ const RequestsList = (props) => {
 
                         <Pagination
                             length={allRequests?.resp?.data?.length}
-                            postsPerPage={10}
-                            handlePagination={handlePagination}
-                            currentPage={currentPage}
+                            postsperpage={10}
+                            handlepagination={handlePagination}
+                            currentpage={currentPage}
                         />
                     </div>
 

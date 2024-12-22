@@ -1,9 +1,10 @@
 
 import { combineReducers } from 'redux';
 import reducer from './Reducers/counterReducer';
-import { addBudgets, addReviewer, fetchMyBudgets, fetchRequests, getRequest, newRequest, removeReviewer,addComment, sendReview, changeStatus, approveBudget, getBudget, getBudgetReducer, transactionsReducer, addTransaction } from './Reducers/BudgetReducer';
+import { addBudgets, addReviewer, fetchMyBudgets, fetchRequests, getRequest, newRequest, removeReviewer,addComment, sendReview, changeStatus, approveBudget, getBudget, getBudgetReducer, transactionsReducer, addTransaction, viewCategories, addCategory } from './Reducers/BudgetReducer';
 import { addInstitution, deleteInstitution, fetchInstitution, fetchOne, updateInstitution } from './Reducers/InstReducer';
 import { changePassword, deleteUser, fetchUsers, newUsers } from './Reducers/usersReducer';
+import { categories } from '../components/AddExpenses';
 
 const rootReducer = combineReducers({
     counter: reducer,
@@ -33,7 +34,10 @@ const rootReducer = combineReducers({
     approveBudget:approveBudget,
 
     allTransactions:transactionsReducer,
-    addTransaction:addTransaction
+    addTransaction:addTransaction,
+
+    categories:viewCategories,
+    addCategory:addCategory
     
 });
 

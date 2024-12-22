@@ -10,38 +10,7 @@ import AddIncomeStatement from '../../components/AddIncomeStatement';
 
 
 
-const recentIncomes = [
-   {
-    "income":"Government budget allocation",
-    "amount":100000,
-    "percentage":78
-   },
-   {
-    "income":"Government budget allocation",
-    "amount":100000,
-    "percentage":17
-   },
-   {
-    "income":"External Aid and Donor funding",
-    "amount":100000,
-    "percentage":19
-   },
-   {
-    "income":"Government budget allocation",
-    "amount":100000,
-    "percentage":100
-   },
-   {
-    "income":"Taxes and Levies",
-    "amount":100000,
-    "percentage":67
-   },
-   {
-    "income":"Government budget allocation",
-    "amount":100000,
-    "percentage":10
-   },
-  ];
+const incomes = ["Government budget allocation","External Aid and Donor funding","Taxes and Levies"];
 
   const incomeCollected = [
       {

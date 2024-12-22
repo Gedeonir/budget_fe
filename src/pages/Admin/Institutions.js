@@ -108,9 +108,9 @@ const Institutions = (props) => {
 
                         <Pagination
                             length={institution?.resp?.data?.getInstitutions?.length}
-                            postsPerPage={10}
-                            handlePagination={handlePagination}
-                            currentPage={currentPage}
+                            postsperpage={10}
+                            handlepagination={handlePagination}
+                            currentpage={currentPage}
                         />
                     </>
                 )

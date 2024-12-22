@@ -374,3 +374,55 @@ export const addTransaction=(state=initialState,action)=>{
             return state
     }
 }
+
+export const viewCategories=(state=initialState,action)=>{
+    switch(action.type){
+        case types.GET_ALL_CATEGORY_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.GET_ALL_CATEGORY_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.GET_ALL_CATEGORY_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}
+
+export const addCategory=(state=initialState,action)=>{
+    switch(action.type){
+        case types.ADD_CATEGORY_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.ADD_CATEGORY_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.ADD_CATEGORY_FAIL:
+            return{
+                ...state,
+                loading:false,
+                success:false,
+                error:action.payload
+            }
+        default:
+            return state
+    }
+}

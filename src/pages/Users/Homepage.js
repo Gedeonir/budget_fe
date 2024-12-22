@@ -13,7 +13,7 @@ import Pagination from '../../components/Pagination';
 import { IoSearchOutline } from "react-icons/io5";
 import { RiFilter3Line } from "react-icons/ri";
 import { connect } from 'react-redux';
-import { allTransactions, getMyBudgets } from '../../redux/Actions/BudgetActions';
+import { allTransactions, getMyBudgets, viewCategories } from '../../redux/Actions/BudgetActions';
 import AddTransaction from '../../components/AddTransaction';
 import Loading from '../../components/Loading';
 import NoDataFound from '../../components/NoDataFound';
@@ -76,11 +76,14 @@ function Homepage(props) {
     const year = localStorage?.getItem('financialYear');
     return year ? year : " ";
   })
+
+  
   
 
   useEffect(()=>{
     props.getMyBudgets()
     localStorage.setItem('financialYear', financialYear);
+    props.viewCategories()
 
     if (myBudgetData.success) {
       setCards([]);
@@ -299,6 +302,8 @@ function Homepage(props) {
   const per=calculateFYIPercentageChange(transactions,financialYear)
 
   const location=useLocation();
+
+
   
   
   return (
@@ -316,10 +321,10 @@ function Homepage(props) {
                 <div className='flex flex-col text-text_primary justify-center items-center absolute h-full left-0 right-0 top-0 z-10 bg-primary bg-opacity-90'>
                   <GoBlocked size={200} className='mb-2'/>
                   {
-                    filterBudget()[0]?.status.toLowerCase() ==='pending'?
+                    filterBudget()[0]?.status?.toLowerCase() ==='pending'?
                       <label>This budget needs to be approved before it is put into action</label>
                     :(
-                      filterBudget()[0]?.status.toLowerCase() ==='rejected'?(
+                      filterBudget()[0]?.status?.toLowerCase() ==='rejected'?(
                         <label>This budget has been rejected</label>
                       ):
                       <label>This budget has been closed</label>
@@ -562,9 +567,9 @@ function Homepage(props) {
 
                 <Pagination
                   length={filteredTransactions()?.length}
-                  postsPerPage={20}
-                  handlePagination={handlePagination}
-                  currentPage={currentPage}
+                  postsperpage={20}
+                  handlepagination={handlePagination}
+                  currentpage={currentPage}
                 />
               </div>
 
@@ -586,4 +591,4 @@ const mapState=(data)=>({
   data:data
 })
 
-export default connect(mapState,{getMyBudgets,allTransactions}) (Homepage)
+export default connect(mapState,{getMyBudgets,allTransactions,viewCategories}) (Homepage)

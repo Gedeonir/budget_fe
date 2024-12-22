@@ -11,7 +11,7 @@ const QuickLinks=[
   {
     "Icon":<RiAddCircleFill size={20}/>,
     "label":"New budget",
-    "to":"/plan-budget"
+    "to":location.pathname.includes("dashboard")?"/dashboard/plan-budget":"/plan-budget"
   },
 //   {
 //     "Icon":<MdPrivacyTip size={20}/>,
@@ -47,9 +47,9 @@ const Banner = (props) => {
           <div className='mb-3'>
             <p className='text-sm font-normal text-wrap text-justify'>Budget planning and implementation system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
           </div>
-          {!location.pathname.includes("dashboard") &&
+          {!location.pathname.includes("dashboard") ?
             <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
-                {QuickLinks.map((item,index)=>{
+              {QuickLinks.map((item,index)=>{
                 return(
                     <div key={index} className='group flex justify-start items-center gap-2 text-sm' onClick={()=>navigate(item.to)}>
                     <div className='my-2 group-hover:bg-list_hover mb-2 lg:mx-auto p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
@@ -58,8 +58,20 @@ const Banner = (props) => {
                     <div className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</div>  
                     </div>
                 )
-                })}
+              })}
             </div>
+            :
+            QuickLinks.slice(0,1).map((item,index)=>{
+              return(
+                  <div key={index} className='group flex justify-start items-center gap-2 text-sm' onClick={()=>navigate(item.to)}>
+                  <div className='my-2 group-hover:bg-list_hover mb-2 p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100 cursor-pointer'>
+                      {item.Icon}
+                  </div>
+                  <div className='text-xs group-hover:text-list_hover text-secondary '>{item.label}</div>  
+                  </div>
+              )
+            })
+
           }
         </div>
       </div>  )

@@ -114,9 +114,9 @@ const Officials = (props) => {
 
                         <Pagination
                             length={users?.resp?.data?.getUsers?.length}
-                            postsPerPage={10}
-                            handlePagination={handlePagination}
-                            currentPage={currentPage}
+                            postsperpage={10}
+                            handlepagination={handlePagination}
+                            currentpage={currentPage}
                         />
                 </>
                 )    

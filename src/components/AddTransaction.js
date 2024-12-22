@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { connect } from 'react-redux';
-import { recordTransaction } from '../redux/Actions/BudgetActions';
+import { getMyBudgets, recordTransaction } from '../redux/Actions/BudgetActions';
 import { categories } from './AddExpenses';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 const AddTransaction = (props) => {
@@ -35,8 +35,9 @@ const AddTransaction = (props) => {
   };
 
   const navigate=useNavigate()
-  console.log(props);
-    
+  const incomes = ["Government budget allocation","External Aid and Donor funding","Taxes and Levies"];
+  
+  const filterBudget=props?.data?.budgets?.resp?.data?.filter(item=>item?.institution?.institutionName?.toLowerCase().includes(props?.userData?.getProfile?.institution?.institutionName?.toLowerCase()))
   
 
   return (
@@ -53,7 +54,7 @@ const AddTransaction = (props) => {
             <select name='transactionType' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required 
             onChange={(e)=>setFormData({...formData,type:e.target.value})}>
                 <option value={""}>--Choose transaction type--</option>
-                <option value="income">Income</option>
+                {location.pathname.includes("dashboard") && <option value="income">Income</option>}
                 <option value="expense">Expense</option>
             </select>
           </div>
@@ -62,11 +63,30 @@ const AddTransaction = (props) => {
             <label>Transaction category</label>
             <select onChange={(e)=>setFormData({...formData,category:e.target.value})} name='expense' placeholder='Income Category' className='border w-full px-4 py-2 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
               <option value={""}>--Select Category--</option>
-              {categories.map((item,index)=>{
+              {formData.type==='expense'&& (
+                !location.pathname.includes("dashboard")?
+                categories.map((item,index)=>{
                   return(
                     <option key={index} value={item}>{item}</option>
                   )
-              })}
+                })
+                :
+                (
+                [].map((item,index)=>{
+                  return(
+                    <option key={index} value={item}>{item}</option>
+                  )
+                })
+                )
+              )}
+
+              {formData.type==='income' &&
+                incomes.map((item,index)=>{
+                  return(
+                    <option key={index} value={item}>{item}</option>
+                  )
+                })
+              }
             </select>
         </div>
 
@@ -99,8 +119,20 @@ const AddTransaction = (props) => {
               <input type="text" ref={institutionName} defaultValue={props?.institution?.institutionName} name='institution' className="mb-2 text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled/>
             </div>
             <div className='w-full mb-1'>
-              <label>Budget</label>
-              <input type="text" ref={budget} defaultValue={props?.budget?.fyi && props?.budget?.fyi + " Budget"} name='budget' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled/>          
+              {location.pathname.includes("dashboard")?(
+                <select name='budget' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required 
+                onChange={(e)=>setFormData({...formData,budget:e.target.value})}>
+                  <option value={""}>--Choose budget--</option>
+                  {filterBudget?.map((item)=>(
+                    <option value={item._id}>{item.fyi + "Budget"}</option>
+                  ))}
+                </select>
+              ):(
+                <>
+                  <label>Budget</label>
+                  <input type="text" ref={budget} defaultValue={props?.budget?.fyi && props?.budget?.fyi + " Budget"} name='budget' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled/>          
+                </>
+              )}
             </div>
           </div>
 
@@ -129,4 +161,4 @@ const maspState=(data)=>({
   data:data
 })
 
-export default connect(maspState,{recordTransaction})(AddTransaction)
+export default connect(maspState,{recordTransaction,getMyBudgets})(AddTransaction)

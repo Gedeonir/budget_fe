@@ -353,4 +353,47 @@ export const recordTransaction=(formData)=>async(dispatch)=>{
             type:types.ADD_TRANSACTION_FAIL,payload:error
         })
     }
-}   
+}
+
+export const addCategory=(formData)=>async(dispatch)=>{
+    try {
+        dispatch({type:types.ADD_CATEGORY_LOADING})
+
+        const res=await axios.post(`${process.env.BACKEND_URL}/budget/categories/new/${formData.institution}`,formData,
+            {
+                headers:{
+                "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+
+        );
+        dispatch(
+            {
+                type:types.ADD_CATEGORY_SUCCESS,payload:res
+            }
+        )
+    } catch (error) {
+        dispatch({type:types.ADD_CATEGORY_FAIL,payload:error})
+    }
+}
+
+export const viewCategories=()=>async(dispatch)=>{
+    try {
+        dispatch({type:types.GET_ALL_CATEGORY_LOADING})
+
+        const res=await axios.get(`${process.env.BACKEND_URL}/budget/categories/all`,
+            {
+                headers:{
+                "Authorization":`Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+
+        );
+        dispatch({
+            type:types.GET_ALL_CATEGORY_SUCCESS,payload:res
+        })
+    } catch (error) {
+        dispatch({type:types.GET_ALL_CATEGORY_FAIL,payload:error})
+    }
+}
+
