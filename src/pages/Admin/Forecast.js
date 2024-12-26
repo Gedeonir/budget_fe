@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 const Forecast = (props) => {
     const[type,setType]=useState('income');
+    const [loading,setLoading]=useState(false);
     const options = {
         scales: {
           x: {
@@ -176,12 +177,12 @@ const Forecast = (props) => {
     // Example usage
     
     const chartData = generateChartDataByFiscalYear(transactions);
-      
+    
 
 
 
   return (
-    <AdminDashboard setUserData={setUserData} setFinancialYear={setFinancialYear}>
+    <AdminDashboard setLoading={setLoading} setUserData={setUserData} setFinancialYear={setFinancialYear}>
         <div className='grid lg:grid-cols-3 gap-3 w-full p-2'>
             <div className=''>
                 <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>

@@ -36,8 +36,6 @@ const AddOfficials = (props) => {
 
     }
 
-    console.log(formData.password);
-
     const positions=[
         "Budget Officer",
         "Budget Monitoring Officer"

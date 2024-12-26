@@ -22,7 +22,7 @@ const Plan_new_budget = () => {
 
     return (
         <Layout setUserData={setUserData}>
-            <Banner institution={userData?.getProfile?.institution?.institutionName}/>
+            <Banner institution={userData}/>
 
             <BudgetPlanningForm userData={userData}/>
         </Layout>

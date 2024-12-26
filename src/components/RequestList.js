@@ -25,7 +25,6 @@ const RequestsList = (props) => {
 
     const allRequests=props?.data?.allRequest;
     const [section,setSection]=useState("");
-    console.log(allRequests);
     
 
     const filteredRequests=()=>{
@@ -56,7 +55,7 @@ const RequestsList = (props) => {
                     {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2'/>}
                 </div>
 
-                {!location.pathname.includes("dashboard") &&
+                {props?.userData?.getProfile?.position.toLowerCase() === "budget officer" &&
                     <Link to={"new"} className={`mb-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-1/5`}>
                         New request
                     </Link>

@@ -49,6 +49,9 @@ const BudgetPlanningForm = (props) => {
     const [total, setTotal] = useState(0)
     const [totalIncome, setTotalIncome] = useState(0);
 
+    const [startDate,setStartDate]=useState(new Date().toISOString().split('T')[0]);
+    const [endDate,setEndDate]=useState(new Date().toISOString().split('T')[0])
+
     const getTotalBudget = () => {
         setTotal(expenses.reduce((sum, item) => parseInt(sum + item.amountToSpent, 10), 0))
     }
@@ -160,7 +163,9 @@ const BudgetPlanningForm = (props) => {
                         fyi: item,
                         institution: props.userData?.getProfile?.institution?._id,
                         description: formData.description,
-                        user: props.userData?.getProfile?._id
+                        user: props.userData?.getProfile?._id,
+                        startDate:startDate,
+                        endDate:endDate
                     }
                     props.addBudget(data);
                     localStorage.setItem('expenses', []);

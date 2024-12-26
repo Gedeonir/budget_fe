@@ -25,6 +25,8 @@ import ViewRequestAdmin from "./pages/Admin/ViewRequestAdmin";
 import BudgetDetails from "./pages/Users/BudgetDetails";
 import ViewBudgetDetails from "./pages/Admin/ViewBudgetDetails";
 import PlanBudget from "./pages/Admin/PlanBudget";
+import Reports from "./pages/Admin/Reports";
+import AdminBudgets from "./pages/Admin/AdminBudgets";
 
 
 const AppRoutes = (prop) => {
@@ -88,6 +90,10 @@ const AppRoutes = (prop) => {
         <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
         <Route path="/dashboard/budget/requests/:id" element={<ViewRequestAdmin/>}/>
         <Route path="/dashboard/plan-budget" element={<PlanBudget/>}/>
+        <Route path="/dashboard/my-budgets" element={<AdminBudgets/>}/>
+        <Route path="/dashboard/reports" element={<Reports/>}/>
+        <Route path="/report-and-analytics" element={<Reports/>}/>
+
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
     </Routes>

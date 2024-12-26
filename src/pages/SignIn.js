@@ -54,7 +54,7 @@ const SignIn = () => {
     <div className='bg-primary min-h-screen max-h-screen overflow-hidden flex items-center justify-center px-8'>
         <div className='lg:w-2/5 w-full bg-primary2 h-full rounded-lg drop-shadow-sm shadow-lg p-4'>
             <div className="mb-2">
-                <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Log into your BPE account</h1>
+                <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Log into your BPI account</h1>
             </div>
 
             <form onSubmit={(event)=>handleLogin(event)}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
 import Request from '../../components/Request'
 import { connect } from 'react-redux';
@@ -7,8 +7,11 @@ import { getRequest } from '../../redux/Actions/BudgetActions';
 
 const ViewRequestAdmin = (props) => {
     const [userData,setUserData]=useState([]);
-
+    const [loading,setLoading]=useState(false);
     const request=props?.data?.oneRequest;
+
+    console.log(request);
+    
 
     const filterReviewers=request?.resp?.data?.reviewers?.filter((reviewer)=>
       reviewer?.user?.role !=='admin'
@@ -16,13 +19,10 @@ const ViewRequestAdmin = (props) => {
       && !request?.resp?.data?.reviewers?.some(item=> item.reviewerStatus.toLowerCase() ==='request for change' || item.reviewerStatus.toLowerCase() === 'rejected') 
     );
 
-    console.log(request?.resp?.data?.reviewers?.some(item=> item.reviewerStatus.toLowerCase() ==='request for change'));
     
-    
-    console.log(filterReviewers,"request");
     
     return (
-      <AdminDashboard setUserData={setUserData}>
+      <AdminDashboard setLoading={setLoading} setUserData={setUserData}>
         <Request userData={userData} filterReviewers={filterReviewers}/>
       </AdminDashboard>
     )

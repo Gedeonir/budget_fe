@@ -10,7 +10,7 @@ const BudgetRequest = (props) => {
     
   return (
     <Layout setUserData={setUserData}>
-        <Banner institution={userData?.getProfile?.institution?.institutionName}/>
+        <Banner institution={userData}/>
 
         <div className='py-4 font-bold text-text_primary text-sm flex justify-start gap-4'>
             <Link to={"/my-budgets"} className={`${location.pathname.includes("my-budgets") && 'text-secondary border-b-2 pb-2'}`}>My budgets</Link>
