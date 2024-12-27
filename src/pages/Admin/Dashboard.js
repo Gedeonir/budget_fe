@@ -147,7 +147,7 @@ function Dashboard(props) {
       && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()))
   }
 
-  const handleSearchBudget = () => { return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(searchBudget.toLowerCase()) || item.institution.institutionName.toLowerCase().includes(searchBudget.toLowerCase())) };
+  const handleSearchBudget = () => { return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(searchBudget.toLowerCase()) || item.institution?.institutionName?.toLowerCase().includes(searchBudget.toLowerCase())) };
 
 
   const groupedTransactions = groupTransactionsByDate(filteredTransactions());
@@ -340,8 +340,8 @@ function Dashboard(props) {
                                       <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                                     </div>
                                     <div>
-                                      <p className="font-regular text-black text-xs lg:text-sm">{item.institution.institutionName}</p>
-                                      <p className="text-xs text-gray-600">{item.institution.acronym}</p>
+                                      <p className="font-regular text-black text-xs lg:text-sm">{item?.institution?.institutionName}</p>
+                                      <p className="text-xs text-gray-600">{item?.institution?.acronym}</p>
                                     </div>
                                   </div>
                                 </td>
@@ -509,7 +509,7 @@ function Dashboard(props) {
                                           <div className='w-4 h-4 hidden lg:block'>
                                             <img src={GovernmentLogo} className='w-full h-full object-cover' />
                                           </div>
-                                          <p className='p-1'>{item.institution.institutionName}</p>
+                                          <p className='p-1'>{item?.institution?.institutionName}</p>
                                         </td>
                                         <td className='text-xs'>{item.amount} $</td>
                                         <td className='text-xs'>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>
@@ -521,7 +521,7 @@ function Dashboard(props) {
                                           </div>
 
                                         </td>
-                                        {item.institution._id === userData?.getProfile?.institution?._id &&
+                                        {item?.institution?._id === userData?.getProfile?.institution?._id &&
                                           <td className='flex justify-start gap-3 text-xs'>
                                             <div className='group relative'>
                                               <AiFillDelete size={15} className='cursor-pointer  duration-300 delay-200' />
