@@ -84,11 +84,11 @@ function Homepage(props) {
 
 
   const filterBudget = () => {
-    return myBudgetData?.resp?.data?.filter((item) => item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()));
+    return myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()));
   }
 
   const approvedBudget = () => {
-    return myBudgetData?.resp?.data?.filter((item) => item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()
+    return myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()
     && item?.status?.toLowerCase() === 'approved'));
   }
   
