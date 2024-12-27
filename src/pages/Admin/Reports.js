@@ -1,42 +1,45 @@
 import React from 'react';
 import axios from 'axios';
+export const handleDownload = async (start,end,inst) => {
+  try {    
+    // Define request body
+    const requestBody = {
+      startDate: start,
+      endDate: end,
+      inst:inst?.getProfile?.institution?._id
+    };
 
-const Reports = () => {
-  const handleDownload = async () => {
-    try {
-      // Define request body
-      const requestBody = {
-        startDate: '2024-01-01',
-        endDate: '2024-12-31',
-      };
+    // Make API call
+    const response = await axios.post(`${process.env.BACKEND_URL}/budget/reports/budget/pdf`, requestBody, {
+      responseType: 'blob', // Important to get binary data (PDF)
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('userToken')}`,
+      },
+    });  
 
-      // Make API call
-      const response = await axios.post(`${process.env.BACKEND_URL}/budget/reports/budget/pdf`, requestBody, {
-        responseType: 'blob', // Important to get binary data (PDF)
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    // Create a blob from the response
+    const blob = new Blob([response.data], { type: 'application/pdf' });
 
-      console.log(response);
-      
-
-      // Create a blob from the response
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-
-      // Create a link to download the PDF
+    if (blob.size > 0) {
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = 'budget-overview.pdf'; // Default filename
+      link.download = 'transactions_history.pdf';
+      document.body.appendChild(link); // Append link to the DOM
       link.click();
-
-      // Clean up the URL object
+      document.body.removeChild(link); // Clean up the DOM
       window.URL.revokeObjectURL(link.href);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-      alert('Failed to download the PDF. Please try again.');
+    } else {
+      console.error('Failed to create valid PDF Blob');
     }
-  };
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    alert('Failed to download the PDF. Please try again.');
+  }
+};
+
+const Reports = () => {
+  
 
   return (
     <div>

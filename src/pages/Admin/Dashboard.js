@@ -26,6 +26,7 @@ import AddTransaction from '../../components/AddTransaction';
 import { pagination } from '../../utils/paginationHandler';
 import AddExpenseOrIncomeCategory from '../../components/AddExpenseOrIncomeCategory';
 import CategoriesModal from '../../components/CategoriesModal';
+import Transactions from '../../components/Transactions';
 
 
 
@@ -555,94 +556,8 @@ function Dashboard(props) {
                       )}
                   </div>
 
+                  <Transactions userData={userData} />
 
-                  <section className='w-full'>
-                    <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                      <p>My transaction History</p>
-                    </div>
-
-                    <div className={`w-full bg-primary2 rounded-lg shadow-lg px-4 py-4 relative ${location.hash.includes("add-transaction") && "min-h-screen"}`}>
-                      <div className='lg:flex justify-between items-center'>
-                        <div className='lg:flex justify-start gap-2 lg:w-3/5 w-full'>
-                          <div className='relative lg:w-3/5 w-full  lg:mb-0 mb-4'>
-                            <input value={searchWord} onChange={(e) => setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
-                            {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2' />}
-                          </div>
-                          <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
-                            <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('/dashboard/#add-transaction') }}>Add transaction</button>
-                          </div>
-                        </div>
-
-
-                        <div className='lg:w-28 w-full relative group flex lg:justify-end justify-between gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
-                          <label className='text-xs'>Latest</label>
-                          <p><RiFilter3Line size={20} /></p>
-                          <div className='bg-primary2 shadow-lg absolute top-5 w-full right-0 hidden group-hover:block py-2'>
-                            <ul className='list-none text-text_primary -ml-6 text-xs'>
-                              <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
-                              <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
-                              <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Oldest</li>
-                            </ul>
-                          </div>
-
-                        </div>
-                      </div>
-                      <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
-                        <thead className='bg-primary font-bold'>
-                          <tr>
-                            <th>Transaction name</th>
-                            <th>Budget</th>
-                            <th>Date</th>
-                            <th>Transaction Type</th>
-                            <th>Amount Paid</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {transactions?.loading ? (
-                            <tr>
-                              <td colSpan={5} className='text-center'><Loading /></td>
-                            </tr>
-                          ) : (
-                            transactions?.success ? (
-                              filteredTransactionsBo()?.length <= 0 ? (
-                                <tr>
-                                  <td colSpan={5} className='text-center'><NoDataFound /></td>
-                                </tr>
-                              ) : (
-                                pagination(filteredTransactionsBo, 10)?.length > 0 && pagination(filteredTransactionsBo, 10)[currentPage]?.map((item, index) => {
-                                  return (
-                                    <tr key={index}>
-                                      <td className=''>{item.category}</td>
-                                      <td>FYI {item.budget.fyi}</td>
-                                      <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                      <td><span className={`p-1 ${item.type.toLowerCase() == 'expense' ? 'text-red border-red' : ' border-success text-success'} rounded-lg`}>{item.type}</span></td>
-                                      <td className={`${item.type.toLowerCase() == 'expense' ? 'text-red' : 'text-success'}`}>{item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} $</td>
-                                    </tr>
-                                  )
-                                })
-                              )
-
-                            ) : (
-                              <tr>
-                                <td colSpan={5} className='text-center'><Error code={transactions?.error?.code} message={transactions?.error?.message} /></td>
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-
-                      <Pagination
-                        length={filteredTransactionsBo()?.length}
-                        postsperpage={20}
-                        handlepagination={handlePagination}
-                        currentpage={currentPage}
-                      />
-
-                      {location.hash.includes("add-transaction") && <AddTransaction userData={userData} budget={location.pathname.includes("dashboard") ? "" : myBudgetData.success && filterBudget()[0]} institution={userData?.getProfile?.institution} />}
-                    </div>
-
-
-                  </section>
                 </>
               )
           )

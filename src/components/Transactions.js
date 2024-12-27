@@ -10,7 +10,7 @@ import Loading from './Loading';
 import NoDataFound from './NoDataFound';
 import Error from './Error';
 import { pagination } from '../utils/paginationHandler';
-
+import { handleDownload } from '../pages/Admin/Reports';
 const Transactions = (props) => {
     const [searchWord, setSearchWord] = useState("");
     const navigate = useNavigate()
@@ -26,15 +26,29 @@ const Transactions = (props) => {
     }, [])
 
     const filteredTransactionsBo = () => {
-        return transactions?.resp?.data?.filter((item) => item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
-            && item?.institution?.institutionName?.toLowerCase().includes(props.userData?.getProfile?.institution?.institutionName?.toLowerCase()))
+        return transactions?.resp?.data?.filter((item) => {
+            const itemDate = new Date(item.createdAt)
+
+            return item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
+                && item?.institution?.institutionName?.toLowerCase().includes(props.userData?.getProfile?.institution?.institutionName?.toLowerCase())
+                && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
+        });
+    }
+
+    const [dateData, setDateData] = useState({
+        startDate: "",
+        endDate: ""
+    })
+
+    const handleDatesChange = (e) => {
+        setDateData({ ...dateData, [e.target.name]: e.target.value })
     }
 
 
     return (
         <section className='w-full'>
             <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                <p>My transaction History</p>
+                <p>Transaction History</p>
             </div>
 
             <div className={`w-full bg-primary2 rounded-lg shadow-lg px-4 py-4 relative ${location.hash.includes("add-transaction") && "min-h-screen"}`}>
@@ -46,7 +60,7 @@ const Transactions = (props) => {
                         </div>
                         {props?.userData?.getProfile?.position?.toLowerCase() !== "budget officer" &&
                             <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
-                                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('/dashboard/#add-transaction') }}>Add transaction</button>
+                                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('/#add-transaction') }}>Add transaction</button>
                             </div>
                         }
                     </div>
@@ -66,7 +80,27 @@ const Transactions = (props) => {
 
                     </div>
                 </div>
-                <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
+
+                <div className='w-full my-4 lg:flex justify-between py-2'>
+                    <div className='lg:w-1/4 w-full flex justify-start gap-2 items-center'>
+                        <div className='text-xs text-text_primary w-full'>
+                            <label>From</label>
+                            <input type='date' onChange={handleDatesChange} name='startDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
+                        </div>
+
+                        <div className='text-xs text-text_primary w-full'>
+                            <label>To</label>
+                            <input type='date' min={dateData.startDate} onChange={handleDatesChange} name='endDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
+                        </div>
+
+
+                    </div>
+
+                    <div className='text-primary rounded-lg lg:w-28 w-full'>
+                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, props?.userData) }}>Export to pdf</button>
+                    </div>
+                </div>
+                <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>
                     <thead className='bg-primary font-bold'>
                         <tr>
                             <th>Transaction name</th>

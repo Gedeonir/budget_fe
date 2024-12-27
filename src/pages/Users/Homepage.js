@@ -28,6 +28,7 @@ import { MdBlock, MdOutlineCallReceived } from 'react-icons/md';
 import { TiTick } from 'react-icons/ti';
 import CategoriesModal from '../../components/CategoriesModal';
 import Transactions from '../../components/Transactions';
+import { handleDownload } from '../Admin/Reports';
 
 function Homepage(props) {
   const [userData, setUserData] = useState([]);
@@ -73,10 +74,7 @@ function Homepage(props) {
 
 
   const [cards, setCards] = useState([])
-  const [dateData,setDateData]=useState({
-    startDate:"",
-    endDate:""
-  })
+  
 
 
   const [financialYear, setFinancialYear] = useState(() => {
@@ -88,6 +86,12 @@ function Homepage(props) {
   const filterBudget = () => {
     return myBudgetData?.resp?.data?.filter((item) => item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()));
   }
+
+  const approvedBudget = () => {
+    return myBudgetData?.resp?.data?.filter((item) => item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()
+    && item?.status?.toLowerCase() === 'approved'));
+  }
+  
 
   useEffect(() => {
     props.getMyBudgets()
@@ -109,12 +113,12 @@ function Homepage(props) {
           "icon": <MdOutlineCallReceived size={20} />,
         },
         {
-          "label": "Request Approved",
+          "label": "Budget Approved",
           "amount": 300000,
           "icon": <TiTick size={20} />,
         },
         {
-          "label": "Request Declined",
+          "label": "Budget Declined",
           "amount": 300000,
           "icon": <MdBlock size={20} />,
         }
@@ -124,7 +128,11 @@ function Homepage(props) {
       data?.map((item, index) => {
         const card = {
           "label": item.label,
-          "amount": item.label === 'Budgets' ? filterBudget().length : item.label === 'Request sent' ? "0" : 0,
+          "amount": item.label === 'Budgets' ?( filterBudget()?.length):(
+            item.label === 'Request sent' ? "0":
+            item.label === 'Budget Approved' ? approvedBudget()?.length:
+            item.label === 'Budget Declined' && "0"
+          ),
           "icon": item.icon
         }
 
@@ -142,13 +150,13 @@ function Homepage(props) {
   const [searchWord, setSearchWord] = useState("");
 
   const filteredTransactions = () => {
-    return transactions?.resp?.data?.filter((item) =>{
-      const itemDate=new Date(item.createdAt)
-      
+    return transactions?.resp?.data?.filter((item) => {
+      const itemDate = new Date(item.createdAt)
+
       return item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
-      && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
-      && item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase())
-      &&((dateData.endDate !== "" && dateData.startDate !== "")?itemDate>=new Date(dateData.startDate) && itemDate<=new Date(dateData.endDate):true)
+        && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
+        && item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase())
+        && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
     });
   }
 
@@ -317,14 +325,11 @@ function Homepage(props) {
 
   const location = useLocation();
 
-  
 
-  const handleDatesChange=(e)=>{
-    setDateData({...dateData,[e.target.name]:e.target.value})
-  }
 
-  console.log(dateData);
-  
+ 
+
+
 
 
 
@@ -514,107 +519,7 @@ function Homepage(props) {
 
                 </section>
 
-                <section className='w-full'>
-                  <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                    <p>Transaction History</p>
-                  </div>
-
-                  <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-4'>
-                    <div className='lg:flex justify-between items-center'>
-                      <div className='lg:flex justify-start gap-2 lg:w-3/5 w-full'>
-                        <div className='relative lg:w-3/5 w-full  lg:mb-0 mb-4'>
-                          <input value={searchWord} onChange={(e) => setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
-                          {!searchWord && <IoSearchOutline size={25} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2' />}
-                        </div>
-                        {userData?.getProfile?.position?.toLowerCase() === "budget officer" &&
-                          <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
-                            <button className='text-sm bg-secondary rounded-lg w-full px-4 py-3' onClick={() => { navigate('/#add-transaction') }}>Add transaction</button>
-                          </div>
-                        }
-                      </div>
-
-
-                      <div className='lg:w-28 w-full relative group flex lg:justify-end justify-between gap-4 rounded-lg text-text_primary text-center cursor-pointer hover:text-list_hover duration-200 delay-100'>
-                        <label>Latest</label>
-                        <p><RiFilter3Line size={25} /></p>
-                        <div className='bg-primary2 shadow-lg absolute top-7 w-full right-0 hidden group-hover:block py-2'>
-                          <ul className='list-none text-text_primary -ml-6 text-xs'>
-                            <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer bg-primary'>Latest</li>
-                            <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Alphabet(A-Z)</li>
-                            <li className='p-2 hover:text-list_hover duration-500 delay-100 cursor-pointer'>Oldest</li>
-                          </ul>
-                        </div>
-
-                      </div>
-                    </div>
-
-                    <div className='w-full my-4 flex justify-between py-2 px-2'>
-                      <div className='w-1/5 flex justify-start gap-2'>
-                        <div className='text-xs text-text_primary w-full'>
-                          <label>From</label>
-                          <input type='date' onChange={handleDatesChange} name='startDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
-                        </div>
-
-                        <div className='text-xs text-text_primary w-full'>
-                          <label>To</label>
-                          <input type='date' min={dateData.startDate} onChange={handleDatesChange} name='endDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
-                        </div>
-                      </div>
-                    </div>
-                    <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4 '>
-                      <thead className='bg-primary font-bold'>
-                        <tr>
-                          <th>Transaction name</th>
-                          <th>Budget</th>
-                          <th>Date</th>
-                          <th>Transaction Type</th>
-                          <th>Amount Paid</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {transactions?.loading ? (
-                          <tr>
-                            <td colSpan={5} className='text-center'><Loading /></td>
-                          </tr>
-                        ) : (
-                          transactions?.success ? (
-                            filteredTransactions()?.length <= 0 ? (
-                              <tr>
-                                <td colSpan={5} className='text-center'><NoDataFound /></td>
-                              </tr>
-                            ) : (
-                              pagination(filteredTransactions, 10).length > 0 && pagination(filteredTransactions, 10)[currentPage].map((item, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td className=''>{item.category}</td>
-                                    <td>FYI {item.budget.fyi}</td>
-                                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                                    <td><span className={`p-1 ${item.type.toLowerCase() == 'expense' ? 'text-red border-red' : ' border-success text-success'} rounded-lg`}>{item.type}</span></td>
-                                    <td className={`${item.type.toLowerCase() == 'expense' ? 'text-red' : 'text-success'}`}>{item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} $</td>
-                                  </tr>
-                                )
-                              })
-                            )
-
-                          ) : (
-                            <tr>
-                              <td colSpan={5} className='text-center'><Error code={transactions?.error?.code} message={transactions?.error?.message} /></td>
-                            </tr>
-                          )
-                        )}
-                      </tbody>
-                    </table>
-
-                    <Pagination
-                      length={filteredTransactions()?.length}
-                      postsperpage={20}
-                      handlepagination={handlePagination}
-                      currentpage={currentPage}
-                    />
-                  </div>
-
-
-                </section>
+                <Transactions userData={userData} />
               </>
             ) : (
               <Error code={myBudgetData?.error?.code} message={myBudgetData?.error?.message} />
