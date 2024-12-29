@@ -109,7 +109,7 @@ export const updateUser = (id, formData) => async (dispatch) => {
             type: types.UPDATE_USER_LOADING
         })
 
-        const res = await axios.put(`${process.env.BACKEND_URL}/users/${id}`, formData,
+        const res = await axios.patch(`${process.env.BACKEND_URL}/users/${id}`, formData,
             {
                 headers: {
                     "Authorization": `Bearer ${sessionStorage.getItem('userToken')}`

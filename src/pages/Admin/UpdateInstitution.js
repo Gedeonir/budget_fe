@@ -86,8 +86,8 @@ const UpdateInstitution = (props) => {
     }
   }, [instData, props?.data?.oneInst?.success])
 
-  const navigate=useNavigate();
-  
+  const navigate = useNavigate();
+
 
   const handleUpload = (e) => {
     props.uploadInstImage({ picture: images[0]?.src, institution: params?.id });
@@ -101,7 +101,7 @@ const UpdateInstitution = (props) => {
         <div>
           <div className='w-full relative bg-primary2 rounded-lg shadow-lg py-4 px-4 lg:h-56'>
             <div className='w-full lg:h-52 group relative cursor-pointer mb-4 '>
-              <img src={images.length === 0 ? formData?.profilePicture !=="" ? formData?.profilePicture : GovernmentLogo : images[0].src} className='w-full h-full object-cover' />
+              <img src={images.length === 0 ? formData?.profilePicture !== "" ? formData?.profilePicture : GovernmentLogo : images[0].src} className='w-full h-full object-cover' />
             </div>
 
             <DropImage onDrop={onDrop} accept={"image/*"} />
@@ -129,48 +129,52 @@ const UpdateInstitution = (props) => {
           <div className="mb-2">
             <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Update institution</h1>
           </div>
+          {props?.data?.updateInst?.success ?
+            <label className='text-success text-xs'>{'Saved'}</label>
+            :
+            <label className='text-red text-xs'>{props?.data?.updateInst?.error && (props?.data?.updateInst?.error?.response?.data?.message || props?.data?.updateInst?.error?.message)}</label>
+          }
 
-          <div className='text-success text-sm py-4' >{props?.data?.updateInst?.success && 'Institution Updated'}</div>
           {props?.data?.oneInst?.loading ?
-          <Loading />
-          :
-          props?.data?.oneInst?.success ?(
-<form className='text-text_primary grid lg:grid-cols-2 gap-4' onSubmit={(e) => handleUpdate(e)}>
-            <div className='w-full mb-2'>
-              <label>Institution Name</label>
-              <input onChange={handleChange} value={formData.institutionName || ""} type="text" name='institutionName' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Name" required />
-            </div>
+            <Loading />
+            :
+            props?.data?.oneInst?.success ? (
+              <form className='text-text_primary grid lg:grid-cols-2 gap-4' onSubmit={(e) => handleUpdate(e)}>
+                <div className='w-full mb-2'>
+                  <label>Institution Name</label>
+                  <input onChange={handleChange} value={formData.institutionName || ""} type="text" name='institutionName' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Name" required />
+                </div>
 
-            <div className='w-full mb-2'>
-              <label>Institution Acronym</label>
-              <input onChange={handleChange} value={formData.acronym || ""} type="text" name='acronym' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="InstitutionAcronym" required />
-            </div>
+                <div className='w-full mb-2'>
+                  <label>Institution Acronym</label>
+                  <input onChange={handleChange} value={formData.acronym || ""} type="text" name='acronym' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="InstitutionAcronym" required />
+                </div>
 
-            <div className='w-full mb-2'>
-              <label>Institution Email</label>
-              <input onChange={handleChange} value={formData.email || ""} type="email" name='email' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Email" required />
-            </div>
+                <div className='w-full mb-2'>
+                  <label>Institution Email</label>
+                  <input onChange={handleChange} value={formData.email || ""} type="email" name='email' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="Institution Email" required />
+                </div>
 
-            <div className='w-full mb-2'>
-              <label>Institution Contact</label>
-              <input onChange={handleChange} value={formData.mobile || ""} type="number" name='mobile' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="InstitutionContact" required />
-            </div>
+                <div className='w-full mb-2'>
+                  <label>Institution Contact</label>
+                  <input onChange={handleChange} value={formData.mobile || ""} type="number" name='mobile' className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" placeholder="InstitutionContact" required />
+                </div>
 
-            <div className='flex justify-between gap-4'>
-              <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={() => { navigate(-1) }}>Go back</button>
-              <button type='submit' size='sm' className={`bg-secondary text-center text-xs text-primary p-2 w-full ${props?.data?.updateInst?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.updateInst?.loading ? true : false}>
-                {props?.data?.updateInst?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Save'}
-              </button>
-            </div>
+                <div className='flex justify-between gap-4'>
+                  <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={() => { navigate(-1) }}>Go back</button>
+                  <button type='submit' size='sm' className={`bg-secondary text-center text-xs text-primary p-2 w-full ${props?.data?.updateInst?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.updateInst?.loading ? true : false}>
+                    {props?.data?.updateInst?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Save'}
+                  </button>
+                </div>
 
 
-          </form>
-          )
-          :
-          (
-            <Error message={props?.data?.getUser?.error && (props?.data?.getUser?.error?.response?.data?.message || props?.data?.getUser?.error?.message)} />
-          )}
-          
+              </form>
+            )
+              :
+              (
+                <Error message={props?.data?.getUser?.error && (props?.data?.getUser?.error?.response?.data?.message || props?.data?.getUser?.error?.message)} />
+              )}
+
 
         </div>
 
@@ -184,4 +188,4 @@ const mapState = (data) => ({
   data: data
 })
 
-export default connect(mapState, { fetchOne, updateInstitution,uploadInstImage })(UpdateInstitution)
+export default connect(mapState, { fetchOne, updateInstitution, uploadInstImage })(UpdateInstitution)

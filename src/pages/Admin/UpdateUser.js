@@ -83,7 +83,7 @@ const UpdateUser = (props) => {
         if (params?.id) {
             handleGetUser();
         }
-    },[params?.id])
+    }, [params?.id])
 
     useEffect(() => {
 
@@ -100,7 +100,7 @@ const UpdateUser = (props) => {
                 profilePicture: user?.profilePicture || ""
             });
         }
-    }, [user,props?.data?.getUser?.success])
+    }, [user, props?.data?.getUser?.success])
 
 
     const positions = [
@@ -151,7 +151,11 @@ const UpdateUser = (props) => {
                         <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Update official</h1>
                     </div>
 
-                    <div className='text-success text-sm py-4' >{props?.data?.updateUser?.success && 'Institution Updated'}</div>
+                    {props?.data?.updateUser?.success ?
+                        <label className='text-success text-xs'>{'Saved'}</label>
+                        :
+                        <label className='text-red text-xs'>{props?.data?.updateUser?.error && (props?.data?.updateUser?.error?.response?.data?.message || props?.data?.updateUser?.error?.message)}</label>
+                    }
                     {props?.data?.getUser?.loading ?
                         <Loading />
                         :
@@ -207,8 +211,8 @@ const UpdateUser = (props) => {
 
                                 <div className='flex justify-between gap-4 col-span-2'>
                                     <button type='reset' size="sm" className=' text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2' onClick={() => { navigate(-1) }}>Go back</button>
-                                    <button type='submit' size='sm' className={`text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.newUser?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.newUser?.loading ? true : false}>
-                                        {props?.data?.newUser?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Save'}
+                                    <button type='submit' size='sm' className={`text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.updateUser?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.updateUser?.loading ? true : false}>
+                                        {props?.data?.updateUser?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Save'}
                                     </button>
                                 </div>
                             </form>
