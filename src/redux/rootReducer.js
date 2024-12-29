@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import reducer from './Reducers/counterReducer';
 import { addBudgets, addReviewer, fetchMyBudgets, fetchRequests, getRequest, newRequest, removeReviewer,addComment, sendReview, changeStatus, approveBudget, getBudget, getBudgetReducer, transactionsReducer, addTransaction, viewCategories, addCategory } from './Reducers/BudgetReducer';
 import { addInstitution, deleteInstitution, fetchInstitution, fetchOne, updateInstitution } from './Reducers/InstReducer';
-import { changePassword, deleteUser, fetchUsers, newUsers } from './Reducers/usersReducer';
+import { changePassword, deleteUser, fetchUsers, getUser, newUsers, updatePic, updateUser } from './Reducers/usersReducer';
 import { categories } from '../components/AddExpenses';
 
 const rootReducer = combineReducers({
@@ -22,6 +22,9 @@ const rootReducer = combineReducers({
     newUser:newUsers,
     removeUser:deleteUser,
     changePassword:changePassword,
+    updateUser:updateUser,
+    getUser:getUser,
+    updatePic:updatePic,
 
     newRequest:newRequest,
     allRequest:fetchRequests,

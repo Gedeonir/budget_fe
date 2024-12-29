@@ -14,6 +14,7 @@ import Error from '../../components/Error';
 import { pagination } from '../../utils/paginationHandler';
 import DeleteConfirm from '../../components/DeleteConfirm';
 import { useNavigate } from 'react-router-dom';
+import GovernmentLogo from '../../assets/Govt.png';
 
 const Institutions = (props) => {
     const [currentPage,setCurrentPage]=useState(0);
@@ -102,7 +103,14 @@ const Institutions = (props) => {
                     <>
                         <div className='grid lg:grid-cols-5 grid-cols-1 gap-4'>
                             {pagination(filteredInst,10).length>0 && pagination(filteredInst,10)[currentPage].map((item,index)=>(
-                                <Card key={index} email={item.email} name={item.institutionName} id={item._id} editHandler={handleOpenEdit} deleteHandler={handleOpenDelete}/>
+                                <Card 
+                                key={index}
+                                img={item.profilePicture?item.profilePicture:GovernmentLogo}  
+                                email={item.email} 
+                                name={item.institutionName} 
+                                id={item._id} 
+                                editHandler={handleOpenEdit} 
+                                deleteHandler={handleOpenDelete}/>
                             ))}
                         </div>
 

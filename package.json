@@ -41,6 +41,7 @@
     "babel-polyfill": "^6.26.0",
     "chart.js": "^4.4.3",
     "crypto-js": "^4.1.1",
+    "cuid": "^3.0.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "file-loader": "^6.2.0",

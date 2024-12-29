@@ -73,7 +73,7 @@ const Sidebar = (props) => {
             </div>
             <ul className='my-4 w-full list-none items-start border-b pb-2 border-text_primary border-opacity-40'>
                 <li className={`w-full py-1 my-2 px-2 rounded-l-full text-text_primary ${location.pathname === `/dashboard` && 'bg-primary'} flex justify-start hover:text-secondary duration-200 delay-100`}>
-                    <GoHome size={20} />,
+                    <GoHome size={20} />
                     <Link to={"/dashboard"} className='py-0.5 mx-2 text-sm'>Dashboard</Link>
                 </li>
 

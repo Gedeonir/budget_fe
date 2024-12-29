@@ -104,7 +104,7 @@ const Officials = (props) => {
                             {pagination(filteredUsers,10).length>0 && pagination(filteredUsers,10)[currentPage].map((item,index)=>(
                                 <Card 
                                     key={index} 
-                                    img={"https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png"} 
+                                    img={item.profilePicture?item.profilePicture:"https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png"} 
                                     name={item.fullNames} 
                                     email={item.email} 
                                     inst={item?.institution?.institutionName}

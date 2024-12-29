@@ -112,3 +112,101 @@ export const changePassword=(state=initialState,action)=>{
             return state
     }
 }
+
+export const updateUser=(state=initialState,action)=>{
+    switch(action.type){
+        case types.UPDATE_USER_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.UPDATE_USER_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.UPDATE_USER_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
+export const getUser=(state=initialState,action)=>{
+    switch(action.type){
+        case types.GET_ONE_USER_LOADING:
+            return{
+                ...state,
+                loading:true,
+
+            }
+        case types.GET_ONE_USER_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.GET_ONE_USER_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}
+
+export const updatePic=(state=initialState,action)=>{
+    switch(action.type){
+        case types.UPLOAD_IMAGE_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.UPLOAD_IMAGE_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.UPLOAD_IMAGE_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+            case types.UPLOAD_INST_IMAGE_LOADING:
+            return{
+                ...state,
+                loading:true
+            }
+        case types.UPLOAD_INST_IMAGE_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                resp:action.payload,
+                success:true
+            }
+        case types.UPLOAD_INST_IMAGE_FAIL:
+            return{
+                ...state,
+                loading:false,
+                error:action.payload,
+                success:false
+            }
+        default:
+            return state
+    }
+}

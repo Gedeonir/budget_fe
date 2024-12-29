@@ -131,3 +131,24 @@ export const fetchOne=(id)=>async(dispatch)=>{
     }
 }
 
+export const uploadInstImage = (formData) => async (dispatch) => {
+    try {
+        dispatch({
+            type: types.UPLOAD_INST_IMAGE_LOADING
+        })
+
+        const res = await axios.patch(`${process.env.BACKEND_URL}/institutions/upload_profile_picture/upload`, formData,
+            {
+                headers: {
+                    "Authorization": `Bearer ${sessionStorage.getItem('userToken')}`
+                }
+            }
+        )
+
+        dispatch({ type: types.UPLOAD_INST_IMAGE_SUCCESS, payload: res })
+    } catch (error) {
+        dispatch({
+            type: types.UPLOAD_INST_IMAGE_FAIL, payload: error
+        })
+    }
+}

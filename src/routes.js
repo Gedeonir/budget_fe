@@ -27,6 +27,7 @@ import ViewBudgetDetails from "./pages/Admin/ViewBudgetDetails";
 import PlanBudget from "./pages/Admin/PlanBudget";
 import Reports from "./pages/Admin/Reports";
 import AdminBudgets from "./pages/Admin/AdminBudgets";
+import UpdateUser from "./pages/Admin/UpdateUser";
 
 
 const AppRoutes = (prop) => {
@@ -88,6 +89,8 @@ const AppRoutes = (prop) => {
         <Route path="dashboard/incomes/" element={<IncomeStatements/>}/>
         <Route path="dashboard/forecast-and-analysis" element={<Forecast/>}></Route>
         <Route path="dashboard/institutions/:id" element={<UpdateInstitution/>}/>
+        <Route path="dashboard/user/:id" element={<UpdateUser/>}/>
+
         <Route path="/dashboard/budget/requests/:id" element={<ViewRequestAdmin/>}/>
         <Route path="/dashboard/plan-budget" element={<PlanBudget/>}/>
         <Route path="/dashboard/my-budgets" element={<AdminBudgets/>}/>
