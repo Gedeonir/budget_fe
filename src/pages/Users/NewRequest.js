@@ -32,7 +32,7 @@ const NewRequest = (props) => {
     
     
     const filteredBudget=()=>{
-        return myBudgetData?.resp?.data?.filter((item)=>item.institution.institutionName.toLowerCase().includes(userData?.getProfile?.institution?.institutionName.toLowerCase()) 
+        return myBudgetData?.resp?.data?.filter((item)=>item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()) 
         && !budgetIds?.includes(item._id)
     );
     }    

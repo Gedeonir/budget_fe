@@ -49,8 +49,8 @@ const BudgetPlanningForm = (props) => {
     const [total, setTotal] = useState(0)
     const [totalIncome, setTotalIncome] = useState(0);
 
-    const [startDate,setStartDate]=useState(new Date().toISOString().split('T')[0]);
-    const [endDate,setEndDate]=useState(new Date().toISOString().split('T')[0])
+    const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+    const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
 
     const getTotalBudget = () => {
         setTotal(expenses.reduce((sum, item) => parseInt(sum + item.amountToSpent, 10), 0))
@@ -85,6 +85,10 @@ const BudgetPlanningForm = (props) => {
         }
         props.getMyBudgets();
         props.viewCategories();
+
+        if (props?.data?.addBudget?.success) {
+            navigate("/my-budgets")
+        }
     }, [expenses, income, props?.data?.budgets?.success, categories.success])
 
     const deleteExpense = (indexToDelete) => {
@@ -164,8 +168,8 @@ const BudgetPlanningForm = (props) => {
                         institution: props.userData?.getProfile?.institution?._id,
                         description: formData.description,
                         user: props.userData?.getProfile?._id,
-                        startDate:startDate,
-                        endDate:endDate
+                        startDate: startDate,
+                        endDate: endDate
                     }
                     props.addBudget(data);
                     localStorage.setItem('expenses', []);
@@ -207,8 +211,14 @@ const BudgetPlanningForm = (props) => {
 
                     </div>
                 </div>
-                <label className='text-success text-sm' >{props?.data?.addBudget?.success && 'Budget saved successfully'}</label>
-                <label className='text-red text-sm' >{props?.data?.addBudget?.error && props?.data?.addBudget?.error?.message}</label>
+                {props?.data?.addBudget?.success ? (
+                    <label className='text-success text-sm' >{props?.data?.addBudget?.success && 'Budget saved successfully'}</label>
+                )
+                    :
+                    (
+                        <label className='text-red text-sm' >{props?.data?.addBudget?.error && (props?.data?.addBudget?.error?.response?.data?.message||props?.data?.addBudget?.error?.message)}</label>
+
+                    )}
 
             </div>
 
