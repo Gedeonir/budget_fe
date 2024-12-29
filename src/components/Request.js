@@ -438,7 +438,7 @@ const Request = (props) => {
                                                     <tr>
                                                         <th className='w-2'>#</th>
                                                         <th>Expense Category</th>
-                                                        <th>Planned Amount in USD</th>
+                                                        <th>Planned Amount in RF</th>
                                                         <th>Percentage (%)</th>
                                                     </tr>
                                                 </thead>

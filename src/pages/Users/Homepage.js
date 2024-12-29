@@ -531,7 +531,7 @@ function Homepage(props) {
           <>
             <section className='w-full mb-4 py-4'>
               <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                <p>My income/expense categories</p>
+                <p>My expense categories</p>
               </div>
               <CategoriesModal userData={userData} />
 

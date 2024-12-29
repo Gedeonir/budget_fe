@@ -29,7 +29,7 @@ const Budgets = (props) => {
 
     const filteredBudget = () => {
         return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(searchWord.toLowerCase())
-            && item.institution.institutionName.toLowerCase().includes(props?.userData?.getProfile?.institution?.institutionName.toLowerCase())
+            && item?.institution?.institutionName?.toLowerCase().includes(props?.userData?.getProfile?.institution?.institutionName?.toLowerCase())
         );
     }
 
@@ -96,7 +96,7 @@ const Budgets = (props) => {
                                                                 <div className='w-4 h-4 hidden lg:block'>
                                                                     <img src={GovernmentLogo} className='w-full h-full object-cover' />
                                                                 </div>
-                                                                <p className='p-1'>{item.institution.institutionName}</p>
+                                                                <p className='p-1'>{item?.institution?.institutionName}</p>
                                                             </td>
                                                             <td>{item.amount} $</td>
                                                             <td>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>

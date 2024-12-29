@@ -177,7 +177,7 @@ const BudgetPlanningForm = (props) => {
     }
 
 
-    const fyiItems = props?.data?.budgets?.success && props?.data?.budgets?.resp?.data?.filter(item => item.institution._id === props?.userData?.getProfile?.institution?._id)?.map(obj => obj.fyi);
+    const fyiItems = props?.data?.budgets?.success && props?.data?.budgets?.resp?.data?.filter(item => item?.institution?._id === props?.userData?.getProfile?.institution?._id)?.map(obj => obj.fyi);
 
     const filteredFyi = academicYear?.filter(year => !fyiItems?.includes(year));
     const [categoryType, setCategoryType] = useState("");
