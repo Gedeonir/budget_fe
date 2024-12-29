@@ -148,7 +148,7 @@ const UpdateUser = (props) => {
 
                 <div className='lg:col-span-3 bg-primary2 rounded-lg shadow-lg py-4 px-4 relative'>
                     <div className="mb-2">
-                        <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Update institution</h1>
+                        <h1 className='grid text-text_primary text-lg mb-2 font-bold'>Update official</h1>
                     </div>
 
                     <div className='text-success text-sm py-4' >{props?.data?.updateUser?.success && 'Institution Updated'}</div>
@@ -156,7 +156,7 @@ const UpdateUser = (props) => {
                         <Loading />
                         :
                         props?.data?.getUser?.success ? (
-                            <form method='POST' className='text-text_primary lg:grid grid-cols-2 gap-2' onSubmit={(e) => handleRegister(e)}>
+                            <form method='POST' className='text-text_primary lg:grid grid-cols-2 gap-2' onSubmit={(e) => handleUpdate(e)}>
                                 <div className='w-full mb-2'>
                                     <label>Member Title</label>
                                     <select name='title' value={formData.title} className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={handleChange} required>
