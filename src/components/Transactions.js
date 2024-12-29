@@ -44,6 +44,8 @@ const Transactions = (props) => {
         setDateData({ ...dateData, [e.target.name]: e.target.value })
     }
 
+    const [docType, setDocType] = useState('pdf')
+
 
     return (
         <section className='w-full'>
@@ -96,8 +98,13 @@ const Transactions = (props) => {
 
                     </div>
 
-                    <div className='text-primary rounded-lg lg:w-28 w-full'>
-                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, props?.userData) }}>Export to pdf</button>
+                    <div className='text-primary rounded-lg flex justify-end gap-2 lg:w-1/4 w-full'>
+                        <select size={'sm'} name='title' value={docType} className='border w-full h-8 px-2 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={(e) => { setDocType(e.target.value) }} required>
+                            <option value={"pdf"}>PDF</option>
+                            <option value={"excel"}>Excel</option>
+
+                        </select>
+                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, props?.userData, docType) }}>Export</button>
                     </div>
                 </div>
                 <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>

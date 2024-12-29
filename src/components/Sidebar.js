@@ -34,24 +34,24 @@ const boLinks = [
 
 
 const sideBarMenu2 = [
-    {
-        "menuItem": "Settings",
-        "menuIcon": <IoSettingsOutline size={20} />,
-        "menuLeadTo": "/dashboard/settings"
-    },
-    {
-        "menuItem": "Help & Support",
-        "menuIcon": <IoIosHelpCircleOutline size={20} />,
-        "menuLeadTo": "/dashboard/help_and_support"
-    }
+    // {
+    //     "menuItem": "Settings",
+    //     "menuIcon": <IoSettingsOutline size={20} />,
+    //     "menuLeadTo": "/dashboard/settings"
+    // },
+    // {
+    //     "menuItem": "Help & Support",
+    //     "menuIcon": <IoIosHelpCircleOutline size={20} />,
+    //     "menuLeadTo": "/dashboard/help_and_support"
+    // }
 ]
 
 const bmoLinks = [
-    {
-        "menuItem": "Reports",
-        "menuIcon": <TbReportAnalytics size={20} />,
-        "menuLeadTo": "/dashboard/reports"
-    },
+    // {
+    //     "menuItem": "Reports",
+    //     "menuIcon": <TbReportAnalytics size={20} />,
+    //     "menuLeadTo": "/dashboard/reports"
+    // },
     {
         "menuItem": "Forecast & Analysis",
         "menuIcon": <IoAnalytics size={20} />,

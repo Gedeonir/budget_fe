@@ -67,7 +67,7 @@ const CategoriesModal = (props) => {
                     <tr>
                         <th>Category name</th>
                         <th>Category type</th>
-                        <th>Action</th>
+                        {/* <th>Action</th> */}
                     </tr>
                 </thead>
                 <tbody>

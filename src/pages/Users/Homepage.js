@@ -30,6 +30,50 @@ import CategoriesModal from '../../components/CategoriesModal';
 import Transactions from '../../components/Transactions';
 import { handleDownload } from '../Admin/Reports';
 
+export const calculateFYIPercentageChange = (transactions, currentFYI,type) => {
+  // Parse the current fiscal year (e.g., "2024-25")
+  const [currentStartYear, currentEndYear] = currentFYI.split('-').map(Number);
+
+  // Calculate the previous fiscal year (e.g., "2023-24")
+  const previousFYI = `${currentStartYear - 1}-${currentEndYear - 1}`;
+
+  // Filter transactions for the current and previous fiscal years
+  const currentFYITransactions = transactions?.resp?.data?.filter((transaction) =>
+    transaction.budget.fyi === currentFYI && transaction.type.toLowerCase() === type
+  );
+
+  const previousFYITransactions = transactions?.resp?.data?.filter((transaction) =>
+    transaction.budget.fyi === previousFYI && transaction.type.toLowerCase() === type
+  );
+
+  // Sum the amounts for the current and previous fiscal years
+  const currentTotal = currentFYITransactions?.reduce(
+    (sum, transaction) => sum + parseFloat(transaction.amount),
+    0
+  );
+
+  const previousTotal = previousFYITransactions?.reduce(
+    (sum, transaction) => sum + parseFloat(transaction.amount),
+    0
+  );
+
+  // Calculate the percentage change
+  let percentageChange = 0;
+  if (previousTotal > 0) {
+    percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
+  } else if (currentTotal > 0) {
+    percentageChange = 100; // No previous data, consider it a 100% increase
+  }
+
+  return {
+    currentFYI,
+    previousFYI,
+    currentTotal: currentTotal?.toFixed(2),
+    previousTotal: previousTotal?.toFixed(2),
+    percentageChange: percentageChange?.toFixed(2),
+  };
+};
+
 function Homepage(props) {
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
@@ -276,52 +320,8 @@ function Homepage(props) {
   }
 
 
-  const calculateFYIPercentageChange = (transactions, currentFYI) => {
-    // Parse the current fiscal year (e.g., "2024-25")
-    const [currentStartYear, currentEndYear] = currentFYI.split('-').map(Number);
+  const per = calculateFYIPercentageChange(transactions, financialYear,'expense')
 
-    // Calculate the previous fiscal year (e.g., "2023-24")
-    const previousFYI = `${currentStartYear - 1}-${currentEndYear - 1}`;
-
-    // Filter transactions for the current and previous fiscal years
-    const currentFYITransactions = transactions?.resp?.data?.filter((transaction) =>
-      transaction.budget.fyi === currentFYI && transaction.type.toLowerCase() === "expense"
-    );
-
-    const previousFYITransactions = transactions?.resp?.data?.filter((transaction) =>
-      transaction.budget.fyi === previousFYI && transaction.type.toLowerCase() === "expense"
-    );
-
-    // Sum the amounts for the current and previous fiscal years
-    const currentTotal = currentFYITransactions?.reduce(
-      (sum, transaction) => sum + parseFloat(transaction.amount),
-      0
-    );
-
-    const previousTotal = previousFYITransactions?.reduce(
-      (sum, transaction) => sum + parseFloat(transaction.amount),
-      0
-    );
-
-    // Calculate the percentage change
-    let percentageChange = 0;
-    if (previousTotal > 0) {
-      percentageChange = ((currentTotal - previousTotal) / previousTotal) * 100;
-    } else if (currentTotal > 0) {
-      percentageChange = 100; // No previous data, consider it a 100% increase
-    }
-
-    return {
-      currentFYI,
-      previousFYI,
-      currentTotal: currentTotal?.toFixed(2),
-      previousTotal: previousTotal?.toFixed(2),
-      percentageChange: percentageChange?.toFixed(2),
-    };
-  };
-
-
-  const per = calculateFYIPercentageChange(transactions, financialYear)
 
   const location = useLocation();
 

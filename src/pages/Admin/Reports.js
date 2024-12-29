@@ -1,12 +1,12 @@
-import React from 'react';
 import axios from 'axios';
-export const handleDownload = async (start,end,inst) => {
+export const handleDownload = async (start,end,inst,docType) => {
   try {    
     // Define request body
     const requestBody = {
       startDate: start,
       endDate: end,
-      inst:inst?.getProfile?.institution?._id
+      inst:inst?.getProfile?.institution?._id,
+      docType:docType
     };
 
     // Make API call
@@ -19,12 +19,12 @@ export const handleDownload = async (start,end,inst) => {
     });  
 
     // Create a blob from the response
-    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const blob = new Blob([response.data], { type: docType?.toLowerCase() === 'pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
     if (blob.size > 0) {
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = 'transactions_history.pdf';
+      link.download = docType?.toLowerCase() === 'pdf'?'transactions_history.pdf':'transactions_history.xlsx';
       document.body.appendChild(link); // Append link to the DOM
       link.click();
       document.body.removeChild(link); // Clean up the DOM
@@ -38,14 +38,3 @@ export const handleDownload = async (start,end,inst) => {
   }
 };
 
-const Reports = () => {
-  
-
-  return (
-    <div>
-      <button onClick={handleDownload}>Download Budget PDF</button>
-    </div>
-  );
-};
-
-export default Reports;

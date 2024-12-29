@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaArrowTrendDown } from "react-icons/fa6";
+import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 import { MdCurrencyExchange, MdDomainAdd, MdEditNote } from "react-icons/md";
 import BarCharts from '../../components/BarCharts';
 import { IoCashSharp, IoSearchOutline, IoWallet } from "react-icons/io5";
@@ -27,7 +27,8 @@ import { pagination } from '../../utils/paginationHandler';
 import AddExpenseOrIncomeCategory from '../../components/AddExpenseOrIncomeCategory';
 import CategoriesModal from '../../components/CategoriesModal';
 import Transactions from '../../components/Transactions';
-
+import { calculateFYIPercentageChange } from '../Users/Homepage';
+import { handleDownload } from './Reports';
 
 
 function Dashboard(props) {
@@ -37,7 +38,10 @@ function Dashboard(props) {
   const [searchBudget, setSearchBudget] = useState("")
   const [searchCategories, setSearchCategories] = useState("")
   const [currentPage, setCurrentPage] = useState(0)
-  const hour = new Date().getHours()
+  const [dateData, setDateData] = useState({
+    startDate: "",
+    endDate: ""
+  })
 
   const handlePagination = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -139,7 +143,12 @@ function Dashboard(props) {
 
 
   const filteredTransactions = () => {
-    return transactions?.resp?.data?.filter((item) => item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase()));
+    return transactions?.resp?.data?.filter((item) => {
+      const itemDate = new Date(item.createdAt)
+      return item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase())
+        && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
+    }
+    );
   }
 
   const filteredTransactionsBo = () => {
@@ -193,7 +202,14 @@ function Dashboard(props) {
   }
 
   const navigate = useNavigate();
+  const per = calculateFYIPercentageChange(transactions, financialYear, "expense")
+  const peri = calculateFYIPercentageChange(transactions, financialYear, 'income')
 
+  const handleDatesChange = (e) => {
+    setDateData({ ...dateData, [e.target.name]: e.target.value })
+  }
+
+  const [docType, setDocType] = useState('pdf')
 
 
 
@@ -239,7 +255,7 @@ function Dashboard(props) {
                           </div>
 
                           <hr className='text-primary' />
-                          <p className='flex justify-between text-text_primary text-[10px]'><span className='text-red flex justify-start gap-2 text-[10px]'><FaArrowTrendDown size={10} /> 5%</span>Last year: 500000</p>
+                          <p className='flex justify-between text-text_primary text-[10px]'><span className={`${peri?.percentageChange < 0 ? "text-success" : "text-red"} text-red flex justify-start gap-2 text-[10px]`}>{peri.percentageChange + "%"} {peri.percentageChange < 0 ? <FaArrowTrendDown size={10} /> : <FaArrowTrendUp size={10} />}</span>Last year: {peri.previousTotal}</p>
                         </div>
 
                         <div className='h-16 p-2 w-full rounded-lg  bg-primary2 shadow-lg drop-shadow-md'>
@@ -250,7 +266,7 @@ function Dashboard(props) {
                           </div>
 
                           <hr className='text-primary' />
-                          <p className='flex justify-between text-text_primary  text-[10px]'><span className='text-success flex justify-start gap-2'><FaArrowTrendDown size={10} /> 5%</span>Last year: 300000</p>
+                          <p className='flex justify-between text-text_primary text-[10px]'><span className={`${per?.percentageChange < 0 ? "text-success" : "text-red"} text-red flex justify-start gap-2 text-[10px]`}>{per.percentageChange + "%"} {per.percentageChange < 0 ? <FaArrowTrendDown size={10} /> : <FaArrowTrendUp size={10} />}</span>Last year: {per.previousTotal}</p>
                         </div>
                       </div>
                     </div>
@@ -277,6 +293,7 @@ function Dashboard(props) {
                     <div className='p-4 text-sm font-bold text-text_primary'>
                       Recent transactions
                     </div>
+
                     <div className='h-full overflow-y-auto px-4 '>
                       {transactions?.loading ? (
                         <Loading />
@@ -369,7 +386,31 @@ function Dashboard(props) {
                 <div className='h-92 w-full lg:grid grid-cols-3 gap-4'>
                   <div className='col-span-3 my-4 bg-primary2 text-text_primary py-4 rounded-lg shadow-lg drop-shadow-lg'>
                     <div className='text-lg px-4 font-bold  mb-4 sticky top-0 z-20'>
-                      Recent transactions
+                      Transactions history
+                    </div>
+                    <div className='w-full my-4 lg:flex justify-between py-2 px-4'>
+                      <div className='lg:w-1/4 w-full flex justify-start gap-2 items-center'>
+                        <div className='text-xs text-text_primary w-full'>
+                          <label>From</label>
+                          <input type='date' onChange={handleDatesChange} name='startDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
+                        </div>
+
+                        <div className='text-xs text-text_primary w-full'>
+                          <label>To</label>
+                          <input type='date' min={dateData.startDate} onChange={handleDatesChange} name='endDate' className='py-2 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
+                        </div>
+
+
+                      </div>
+
+                      <div className='text-primary rounded-lg flex justify-end gap-2 lg:w-1/4 w-full'>
+                        <select size={'sm'} name='title' value={docType} className='border w-full h-8 px-2 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={(e) => { setDocType(e.target.value) }} required>
+                          <option value={"pdf"}>PDF</option>
+                          <option value={"excel"}>Excel</option>
+
+                        </select>
+                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, "", docType) }}>Export</button>
+                      </div>
                     </div>
                     <div className='max-h-96 overflow-y-auto'>
                       {transactions?.loading ? (
@@ -394,6 +435,9 @@ function Dashboard(props) {
                                         </div>
                                         <p className='p-1 text-sm'>{item?.institution?.institutionName}</p>
                                       </div>
+                                      <div className='w-full text-sm'>
+                                        <p>{item?.budget?.fyi} budget</p>
+                                      </div>
                                       <div className={`bg-primary text-sm opacity-50 w-24 ${item.type.toLowerCase() == 'income' ? 'text-success' : 'text-red'}  p-1 rounded-lg`}>
                                         <p>{item.type}</p>
                                       </div>
@@ -402,8 +446,6 @@ function Dashboard(props) {
                                       </div>
                                     </div>
                                   ))}
-
-
                                 </div>
                               )
                             })
@@ -415,7 +457,9 @@ function Dashboard(props) {
 
                         )
                       )}
+
                     </div>
+
                   </div>
                 </div>
               </div>

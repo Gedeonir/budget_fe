@@ -69,6 +69,13 @@ const UpdateInstitution = (props) => {
   }
 
   useEffect(() => {
+    if (userData.length > 0 && userData?.getProfile?.position?.toLowerCase() !== 'administrator') {
+      handleLogout()
+      navigate("/signin")
+    }
+  }, [userData])
+
+  useEffect(() => {
     if (params?.id)
       handleGetInstitution();
   }, [params?.id])

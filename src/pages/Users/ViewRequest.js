@@ -8,6 +8,7 @@ import Banner from '../../components/Banner';
 const ViewRequest = (props) => {
     const [userData,setUserData]=useState([]);
     const location = useLocation();
+    
 
   return (
     <Layout setUserData={setUserData}>

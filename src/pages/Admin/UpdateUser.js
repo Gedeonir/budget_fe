@@ -114,6 +114,13 @@ const UpdateUser = (props) => {
         props.uploadImage({ picture: images[0]?.src });
     }
 
+    useEffect(() => {
+        if (userData.length > 0 && userData?.getProfile?.position?.toLowerCase() !== 'administrator') {
+            handleLogout()
+            navigate("/signin")
+        }
+    }, [userData])
+
 
     return (
         <AdminDashboard setLoading={setLoading} setUserData={setUserData}>
