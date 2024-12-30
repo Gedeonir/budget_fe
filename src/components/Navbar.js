@@ -14,19 +14,6 @@ const Navbar = (props) => {
     const [academicYear,setAcademicYears]=useState(null);
     
 
-    useEffect(()=>{
-        props?.getMyBudgets();
-        const fetchAcademicYears = async () => {
-            const years = await getAcademicYears(myBudgetData);
-            setAcademicYears(years[0]);
-        };
-        if(!localStorage.getItem('financialYear')){
-            fetchAcademicYears();
-            localStorage.setItem('financialYear', academicYear);
-        }
-       
-    },[academicYear,myBudgetData])
-
     const selectedYear=localStorage.getItem('financialYear');
     const location=useLocation();    
 
@@ -94,6 +81,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{
-    getMyBudgets
-})(Navbar)
+export default connect(mapState,{})(Navbar)
