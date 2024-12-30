@@ -17,18 +17,6 @@ const Banner = (props) => {
       "label": "New budget",
       "to": location.pathname.includes("dashboard") ? "/dashboard/plan-budget" : "/plan-budget"
     },
-    //   {
-    //     "Icon":<MdPrivacyTip size={20}/>,
-    //     "label":"Privacy & Policy",
-    //   },
-    //   {
-    //     "Icon":<FaQuestionCircle size={20}/>,
-    //     "label":"FAQ",
-    //   },
-    //   {
-    //     "Icon":<IoIosPeople size={20}/>,
-    //     "label":"HR team",
-    //   },
     {
       "Icon": <IoWallet size={20} />,
       "label": "My budgets",
@@ -49,7 +37,7 @@ const Banner = (props) => {
         <div className='mb-3'>
           <p className='text-sm font-normal text-wrap text-justify'>Budget planning and implementation system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
         </div>
-        {props?.institution?.getProfile?.position?.toLowerCase() === 'budget officer' && (
+        {!location.pathname.includes("dashboard") && (
           <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
             {QuickLinks.map((item, index) => {
               return (

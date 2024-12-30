@@ -103,6 +103,9 @@ function BarCharts(props) {
         const filteredTransactions=()=>{
             return transactions?.filter((item)=>item.budget.fyi.toLowerCase().includes(props.financialYear));
         }
+
+        let totalExpense=0;
+        let totalIncome=0;
       
         filteredTransactions()?.forEach(transaction => {
           // Parse the month from the transaction date
@@ -113,8 +116,10 @@ function BarCharts(props) {
           const amount = parseFloat(transaction.amount); // Ensure the amount is a number          
           if (transaction.type.toLowerCase() === 'income') {
             monthlyData[monthIndex].income += amount;
+            totalIncome+=amount
           } else if (transaction.type.toLowerCase() === 'expense') {
             monthlyData[monthIndex].expenses += amount;
+            totalExpense+=amount
           }
         });
       
@@ -122,8 +127,8 @@ function BarCharts(props) {
         monthlyData.forEach(month => {
           const total = month.income + month.expenses;
           if (total > 0) {
-            month.expensesPercentage = ((month.expenses / total) * 100).toFixed(0) + "%";
-            month.incomePercentage = ((month.income / total) * 100).toFixed(0) + "%";
+            month.expensesPercentage = ((month.expenses / totalExpense) * 100).toFixed(2) + "%";
+            month.incomePercentage = ((month.income / totalIncome) * 100).toFixed(2) + "%";
           }
           // Format amounts as strings for consistency
           month.income = month.income.toFixed(2);

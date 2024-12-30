@@ -62,6 +62,8 @@ const AddExpenses = ({ setOpenModal, setExpenses, total,totalincome, expenses,in
             alert("All fields are required");
         } else {
             const amount = totalincome + parseInt(incomeData.amountToCollect, 10);
+            console.log(totalincome,"total income");
+            
             const percentage = Math.floor((incomeData.amountToCollect / amount) * 100);
             const values = {
                 income: incomeData.income,

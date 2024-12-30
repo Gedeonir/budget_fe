@@ -9,8 +9,6 @@ const ViewRequestAdmin = (props) => {
     const [userData,setUserData]=useState([]);
     const [loading,setLoading]=useState(false);
     const request=props?.data?.oneRequest;
-
-    console.log(request);
     
 
     const filterReviewers=request?.resp?.data?.reviewers?.filter((reviewer)=>

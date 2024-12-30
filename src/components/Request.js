@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import { connect } from 'react-redux';
 import { useParams,Link,useLocation } from 'react-router-dom'
-import { addComment, addReviewer, changeStatus, getRequest, removeReviewer, sendReview } from '../redux/Actions/BudgetActions';
+import { addComment, addReviewer, approveBudget, changeStatus, getRequest, removeReviewer, sendReview } from '../redux/Actions/BudgetActions';
 import Loading from './Loading';
 import Error from './Error';
 import { RiAddCircleFill } from "react-icons/ri";
@@ -17,6 +17,7 @@ import { MdOutlineBlock } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import DeleteConfirm from './DeleteConfirm';
 import { IoMdLock } from "react-icons/io";
+import { data } from 'autoprefixer';
 
 
 const Request = (props) => {
@@ -173,7 +174,7 @@ const Request = (props) => {
 
     const [approveModal,openApproveModal]=useState({
         open:false,
-        status:"Approve budget"
+        status:"approved"
     });
 
     const filterReviewers=Request?.resp?.data?.reviewers?.filter((reviewer)=>
@@ -181,7 +182,27 @@ const Request = (props) => {
         && reviewer?.reviewerStatus?.toLowerCase() ==="approved"
         && !Request?.resp?.data?.reviewers?.some(item=> item.reviewerStatus.toLowerCase() ==='request for change' || item.reviewerStatus.toLowerCase() === 'rejected') 
     );
+
+    const handleApproveBudget=async(id,request)=>{
+        try{
+            await props.approveBudget(id,{status:approveModal.status});
+            await props.changeStatus(request,{status:approveModal.status});
+
+            props.addComment(params.id,{comment:{
+                user:props?.userData?.getProfile?._id,
+                message:approveModal.status+" budget",
+                category:approveModal.status,
+            }})
+            setDelete({id:"",open:false,action:""})
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
+    console.log(props?.data?.approveBudget);
     
+                
     
   return (
     <div>
@@ -209,7 +230,7 @@ const Request = (props) => {
                     <section className={`grid ${section.toLowerCase()=="" &&'lg:grid-cols-5'} gap-2 w-full items-start`}>
 
                         <div className='lg:col-span-4 w-full gap-2 bg-primary2 shadow-lg rounded-lg px-2 py-2 h-full relative'>
-                            {Delete.open && <DeleteConfirm handleDelete={Delete.action==="approve"?handleApproveBudget:handleCloseRequest} action={Delete.action==="approve"?"approve this budget request":"cancel this budget request"} Delete={Delete} setDelete={setDelete}/>}
+                            {Delete.open && <DeleteConfirm handleDelete={handleCloseRequest} action={Delete.action==="approve"?"approve this budget request":"cancel this budget request"} Delete={Delete} setDelete={setDelete}/>}
 
                             {section.toLowerCase()==""?(
                                 <>
@@ -277,21 +298,21 @@ const Request = (props) => {
                                             ))}
 
                                             <div className='w-full border-primary rounded-b-lg mb-4 border'>
-                                                <div className="border-b border-primary py-2 px-2 text-xs bg-text_primary bg-opacity-10">
+                                                {/* <div className="border-b border-primary py-2 px-2 text-xs bg-text_primary bg-opacity-10">
                                                     <label>Checking approval status</label>
                                                 </div>
                                                 <div className='py-4 px-2 text-xs flex justify-start items-center gap-2'>
                                                     {filterReviewers && filterReviewers?.length < 2?<MdOutlineBlock size={10} className={`text-red`}/>:<IoMdCheckmarkCircleOutline size={10} className={`text-success`}/>                                                }
                                                     <label>{!filterReviewers && filterReviewers?.length < 2?"Maximum approval check passed(3/3 of required)":`Maximum approval check failed(${filterReviewers?.length}/3 of required)`}</label>
-                                                </div>
+                                                </div> */}
 
                                                 <div className="border-b border-primary py-2 px-2 text-xs bg-text_primary bg-opacity-10">
-                                                    <label className=''>{filterReviewers && filterReviewers?.length < 2?"This budget can not be approved.":"This budget can be approved"}</label>
+                                                    {/* <label className=''>{filterReviewers && filterReviewers?.length < 2?"This budget can not be approved.":"This budget can be approved"}</label> */}
                                                     <div className='flex justify-start gap-0 lg:w-48 mt-2 relative'>
                                                         {Request?.resp?.data?.requestedBy?._id !== props?.userData?.getProfile?._id &&
                                                             <>
-                                                                <button onClick={(e)=>handleOpenDelete(e)} type="reset" name='approve' className={`w-3/4 border bg-secondary hover:bg-opacity-80 delay-100 duration-500 text-xs  text-center text-primary font-bold p-2 ${props?.data?.approveBudget?.loading || filterReviewers && filterReviewers?.length < 2? 'cursor-not-allowed':'cursor-pointer'}`} disabled={props?.data?.approveBudget?.loading || filterReviewers && filterReviewers?.length < 2? true : false}>
-                                                                    {props?.data?.approveBudget?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:approveModal.status}
+                                                                <button onClick={()=>handleApproveBudget(Request?.resp?.data?.budget?._id,Request?.resp?.data?._id)}  type="reset" name='approve' className={`w-3/4 border bg-secondary hover:bg-opacity-80 delay-100 duration-500 text-xs  text-center text-primary font-bold p-2 ${props?.data?.approveBudget?.loading? 'cursor-not-allowed':'cursor-pointer'}`} disabled={props?.data?.approveBudget?.loading? true : false}>
+                                                                    {props?.data?.approveBudget?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:approveModal.status === "approved"?"Approve budget":"Reject budget"}
                                                                 </button> 
                                                                 <div onClick={()=>openApproveModal({...approveModal,open:!approveModal.open})} className='bg-secondary text-primary2 flex justify-center items-center w-1/4 border hover:bg-opacity-80 cursor-pointer'>
                                                                     <IoMdArrowDropdown size={15}/>
@@ -302,12 +323,12 @@ const Request = (props) => {
 
                                                         {approveModal.open &&
                                                             <div className='lg:w-52 absolute top-8 bg-primary py-4 px-2 z-20 shadow-lg rounded-lg'>
-                                                                <div  className='py-2 border-b border-primary2 cursor-pointer hover:opacity-80 delay-100 duration-500' onClick={()=>openApproveModal({status:"Approve budget",open:false})}>
+                                                                <div  className='py-2 border-b border-primary2 cursor-pointer hover:opacity-80 delay-100 duration-500' onClick={()=>openApproveModal({status:"approved",open:false})}>
                                                                     <label className='font-bold'>Approve budget</label>
                                                                     <p className='text-xs font-light'>Once budget is approved it can start to be used</p>
                                                                 </div>
 
-                                                                <div className='py-2 border-b border-primary2 cursor-pointer hover:opacity-80 delay-100 duration-500' onClick={()=>openApproveModal({status:"Reject budget",open:false})}>
+                                                                <div className='py-2 border-b border-primary2 cursor-pointer hover:opacity-80 delay-100 duration-500' onClick={()=>openApproveModal({status:"rejected",open:false})}>
                                                                     <label className='font-bold'>Reject budget</label>
                                                                     <p className='text-xs font-light'>Once budget is rejected it can not be used</p>
                                                                 </div>
@@ -555,7 +576,7 @@ const Request = (props) => {
                                         
                                     </div>
                                 </div>
-                                {props?.userData?.getProfile?.role==='admin' && Request?.resp?.data?.status !=='closed' && (
+                                {/* {props?.userData?.getProfile?.role==='admin' && Request?.resp?.data?.status !=='closed' && (
 
                                     <form className='bg-primary2  w-full py-4 px-2 text-sm text-text_primary col-span-4'>
                                         <label>Decision</label>
@@ -571,7 +592,7 @@ const Request = (props) => {
                                         </button>
 
                                     </form>
-                                )}
+                                )} */}
 
                             </div>
                             
@@ -595,4 +616,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{getRequest,getAllUsers,addReviewer,removeReviewer,addComment,sendReview,changeStatus})(Request)
+export default connect(mapState,{getRequest,getAllUsers,addReviewer,removeReviewer,addComment,sendReview,changeStatus,approveBudget})(Request)

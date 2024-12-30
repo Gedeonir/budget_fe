@@ -2,7 +2,7 @@ import React from 'react'
 import { getMyBudgets } from '../redux/Actions/BudgetActions'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Pagination from './Pagination'
 import Loading from './Loading'
 import NoDataFound from './NoDataFound'
@@ -32,8 +32,7 @@ const Budgets = (props) => {
             && item?.institution?.institutionName?.toLowerCase().includes(props?.userData?.getProfile?.institution?.institutionName?.toLowerCase())
         );
     }
-
-    console.log(myBudgetData);
+    const navigate=useNavigate();
 
 
 
@@ -53,21 +52,14 @@ const Budgets = (props) => {
                                     <input type='search' placeholder='Search' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' onChange={(e) => setSearchWord(e.target.value)} />
                                     {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-2 top-2' />}
                                 </div>
-                                <div className='text-sm text-text_primary w-full flex justify-end items-center'>
+                                <div className='text-sm text-text_primary w-full flex justify-end items-center gap-4'>
                                     <label>{filteredBudget()?.length} total budgets</label>
-
-                                    <div className='flex items-center justify-end mx-4'>
-                                        <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100'>
-                                            <p><MdDomainAdd size={20} /></p>
-                                        </div>
-
-
-                                    </div>
+                                    <button type='submit' size='sm' className={`${location?.pathname?.includes("dashboard/manage") ? 'block' : 'hidden'} my-2 delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-sm text-center text-primary font-bold p-2 w-1/4`}
+                                        onClick={() => navigate(`/dashboard/plan-budget`)}
+                                    >
+                                        Plan new budget
+                                    </button>
                                 </div>
-
-
-
-
                             </div>
                             {filteredBudget()?.length <= 0 ? (
                                 <NoDataFound />
@@ -91,7 +83,7 @@ const Budgets = (props) => {
                                                     {pagination(filteredBudget, 10).length > 0 && pagination(filteredBudget, 10)[currentPage].map((item, index) => (
 
                                                         <tr key={index}>
-                                                            <td><Link to={`/my-budgets/${item._id}`} className='text-secondary p-1'>FYI {item.fyi} Budget</Link></td>
+                                                            <td><Link to={location.pathname.includes("dashboard") ? `/dashboard/all-budgets/${item._id}` : `/my-budgets/${item._id}`} className='text-secondary p-1'>FYI {item.fyi} Budget</Link></td>
                                                             <td className='flex w-full justify-start gap-2 cursor-pointer items-center'>
                                                                 <div className='w-4 h-4 hidden lg:block'>
                                                                     <img src={GovernmentLogo} className='w-full h-full object-cover' />

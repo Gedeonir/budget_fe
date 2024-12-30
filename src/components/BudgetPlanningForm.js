@@ -57,14 +57,14 @@ const BudgetPlanningForm = (props) => {
     }
 
     const getTotalIncomes = () => {
-        setTotalIncome(income.reduce((sum, item) => parseInt(sum + item.amountToSpent, 10), 0))
+        setTotalIncome(income.reduce((sum, item) => parseInt(sum + item.amountToCollect, 10), 0))
     }
 
     function recalculatePercentages(expenses) {
-        const totalAmount = expenses.reduce((total, obj) => total + obj.amountToSpent, 0);
+        const totalAmount = expenses.reduce((total, obj) => total + (obj.amountToSpent || obj.amountToCollect), 0);
 
         expenses.forEach(obj => {
-            obj.percentage = ((obj.amountToSpent / totalAmount) * 100).toFixed(2);
+            obj.percentage = (((obj.amountToSpent || obj.amountToCollect) / totalAmount) * 100).toFixed(2);
         });
     }
 
@@ -185,6 +185,7 @@ const BudgetPlanningForm = (props) => {
 
     const filteredFyi = academicYear?.filter(year => !fyiItems?.includes(year));
     const [categoryType, setCategoryType] = useState("");
+    
 
 
 
@@ -202,7 +203,7 @@ const BudgetPlanningForm = (props) => {
                             <p>{total} RF</p>
                         </div>
 
-                        <Link to={"/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
+                        <Link to={location.pathname.includes("dashboard") ? "/dashboard/my-budgets" : "/my-budgets"} className='group flex justify-start items-center gap-2 cursor-pointer'>
                             <div className='group-hover:bg-list_hover p-2 w-8 h-8 rounded-full border flex items-center justify-center text-primary2 bg-secondary  duration-200 delay-100'>
                                 <IoWallet size={30} />
                             </div>
@@ -325,8 +326,8 @@ const BudgetPlanningForm = (props) => {
                                             (income.map((item, index) => (
                                                 <tr key={index} className='relative group cursor-pointer lg:text-lg text-xs'>
                                                     <td className='w-2'>{index + 1}</td>
-                                                    <td>{item.expense}</td>
-                                                    <td>{item.amountToSpent}</td>
+                                                    <td>{item.income}</td>
+                                                    <td>{item.amountToCollect}</td>
                                                     <td>
                                                         {item.percentage}%
                                                         <div className='absolute top-0 right-0 z-10 w-2/5 px-2 py-2 justify-end items-end bg-gradient-to-l from-primary to-transparent text-text_primary hidden group-hover:flex gap-4'>

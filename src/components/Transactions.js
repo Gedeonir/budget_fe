@@ -60,7 +60,7 @@ const Transactions = (props) => {
                             <input value={searchWord} onChange={(e) => setSearchWord(e.target.value)} type='search' placeholder='Search request' className='py-1 px-2 border-2 outline-none border-primary w-full rounded-lg placeholder:text-text_primary placeholder:text-opacity-50' />
                             {!searchWord && <IoSearchOutline size={20} className='cursor-pointer font-normal text-text_primary hover:text-list_hover delay-100 duration-500 absolute right-4 top-2' />}
                         </div>
-                        {props?.userData?.getProfile?.position?.toLowerCase() !== "budget officer" &&
+                        {props?.userData?.getProfile?.position?.toLowerCase() === "budget officer" &&
                             <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
                                 <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('/#add-transaction') }}>Add transaction</button>
                             </div>

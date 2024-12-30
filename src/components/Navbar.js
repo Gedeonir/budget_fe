@@ -15,14 +15,17 @@ const Navbar = (props) => {
     
 
     useEffect(()=>{
+        props?.getMyBudgets();
         const fetchAcademicYears = async () => {
             const years = await getAcademicYears(myBudgetData);
             setAcademicYears(years[0]);
         };
-
-        fetchAcademicYears();
-        localStorage.setItem('financialYear', academicYear);
-    },[myBudgetData])
+        if(!localStorage.getItem('financialYear')){
+            fetchAcademicYears();
+            localStorage.setItem('financialYear', academicYear);
+        }
+       
+    },[academicYear,myBudgetData])
 
     const selectedYear=localStorage.getItem('financialYear');
     const location=useLocation();    
@@ -64,7 +67,7 @@ const Navbar = (props) => {
                 <div className='flex items-center justify-center gap-2'>
                     {location.pathname =='/' && props?.profile?.position?.toLowerCase()==="budget monitoring officer" &&
                         <form className='justify-start gap-1 flex'>
-                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} value={selectedYear} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                                 {getAcademicYears(myBudgetData)?.map((item)=>{
                                     return(
                                         <option key={item} value={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>

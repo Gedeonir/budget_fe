@@ -1,7 +1,8 @@
 function getAcademicYears(data){
     let lastrange = [];
-    data?.resp?.data?.map((item)=>{        
-        lastrange.push(item.fyi);
+    data?.resp?.data?.map((item)=>{
+        if(!lastrange.includes(item.fyi))        
+            lastrange.push(item.fyi);
     })
     return lastrange;
 }

@@ -98,7 +98,7 @@ const ViewBudget = (props) => {
                             </div>
                             <label className='text-sm'>{props?.data?.oneBudget?.resp?.data?.fyi}</label>
                         </section>
-                        <section className={`relative py-4 px-4 bg-primary2 shadow-lg rounded-lg`}>
+                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
 
                             <div className='font-bold text-text_primary py-2 flex justify-between items-start text-sm'>
                                 <h1>Budget percentage allocated to each expenditure</h1>
@@ -109,7 +109,7 @@ const ViewBudget = (props) => {
                                         <tr>
                                             <th className='w-2'>#</th>
                                             <th>Expense Category</th>
-                                            <th>Planned Amount in USD</th>
+                                            <th>Planned Amount in RF</th>
                                             <th>Percentage (%)</th>
                                         </tr>
                                     </thead>
@@ -164,6 +164,47 @@ const ViewBudget = (props) => {
                             </div>
                             {openModal && <AddExpenses recalculatePercentages={recalculatePercentages} expenses={expenses} total={total} setOpenModal={setOpenModal} setExpenses={setExpenses}/>} */}
                             
+                        </section>
+
+                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
+
+                            <div className='font-bold text-text_primary py-2 flex justify-between items-start text-sm'>
+                                <h1>Projected incomes</h1>
+                            </div>
+                            <div className='max-h-72 overflow-y-auto'>
+                                <table border={10} cellSpacing={0} cellPadding={10} className='mb-8 lg:text-sm text-xs w-full py-2 text-text_primary text-left'>
+                                    <thead className='font-bold lg:text-sm text-xs'>
+                                        <tr>
+                                            <th className='w-2'>#</th>
+                                            <th>Income Category</th>
+                                            <th>Planned Amount in RF</th>
+                                            <th>Percentage (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {props?.data?.oneBudget?.resp?.data?.expenditures?.length <=0? <tr><td colSpan={4} className='text-center py-4 text-xs'>No data Found</td></tr>
+                                    :
+                                    (props?.data?.oneBudget?.resp?.data?.revenues?.map((item,index)=>(
+                                        <tr key={index} className='relative group cursor-pointer lg:text-sm text-xs'>
+                                            <td className='w-2'>{index+1}</td>
+                                            <td>{item.income}</td>
+                                            <td>{item.amountToCollect}</td>
+                                            <td>
+                                                {item.percentage}%
+                                            </td>
+
+                                            
+                                        </tr>
+                                    )))}
+                                    
+                                    </tbody>
+                                </table>    
+                            </div>
+                            {!location.pathname.toLowerCase()?.includes("dashboard") &&
+                                <Link to={"/budget/requests"} className='delay-100 duration-200 hover:bg-opacity-70 bg-secondary text-xs text-center text-primary p-2 lg:w-1/5 w-full'>
+                                    {props?.data?.oneBudget?.resp?.data?.status.toLowerCase() ==='pending'?"Send":"Resend"} budget request
+                                </Link>
+                            }                            
                         </section>
                     </div>
 

@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { handleLogout } from '../utils/handleLogout';
 import { IoWallet } from "react-icons/io5";
 import { TbReportAnalytics } from 'react-icons/tb';
+import { FaFileContract } from "react-icons/fa6";
 
 
 const boLinks = [
@@ -17,6 +18,11 @@ const boLinks = [
         "menuItem": "Budget Requests",
         "menuIcon": <AiOutlinePullRequest size={20} />,
         "menuLeadTo": "/dashboard/requests/"
+    },
+    {
+        "menuItem": "Manage my budgets",
+        "menuIcon": <FaFileContract size={20} />,
+        "menuLeadTo": "/dashboard/manage/my-budgets"
     },
     // // {
     // //     "menuItem":"Incomes/Revenues",

@@ -132,7 +132,10 @@ function Dashboard(props) {
       data?.map((item) => {
         const card = {
           "label": item.label,
-          "amount": item.label === 'Budgets' ? myBudgetData?.resp?.data?.length : item.label === 'Request Received' ? allRequests?.resp?.data?.length : 0,
+          "amount": item.label === 'Budgets' ? myBudgetData?.resp?.data?.length : 
+          item.label === 'Request Received' ? allRequests?.resp?.data?.length : 
+          item.label === 'Request Declined' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'rejected').length : 
+          item.label === 'Request Approved' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'approved').length : 0,
           "icon": item.icon
         }
 
@@ -163,7 +166,7 @@ function Dashboard(props) {
 
   const filterBudget = () => {
     return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(financialYear));
-  }
+  }  
 
   const [total, setTotal] = useState(0)
 
@@ -364,7 +367,7 @@ function Dashboard(props) {
                                 </td>
                                 <td className="px-4 py-3 text-xs lg:text-sm border">{item.amount} RF</td>
                                 <td className="px-4 py-3 text-xs lg:text-sm border">
-                                  <span className="px-2 py-1 leading-tight text-green-700 bg-green-100 rounded-sm">{(item.amount / calculateTotalAmount()) * 100}%</span>
+                                  <span className="px-2 py-1 leading-tight text-green-700 bg-green-100 rounded-sm">{((item.amount / calculateTotalAmount()) * 100).toFixed(2)}%</span>
                                 </td>
                               </tr>
                             ))

@@ -6,6 +6,7 @@ import LineChart from '../../components/LineChart';
 import { allTransactions, getMyBudgets } from '../../redux/Actions/BudgetActions';
 import { connect } from 'react-redux';
 import { handleLogout } from '../../utils/handleLogout';
+import ForecastData from '../forecast/ForecastData';
 
 const Forecast = (props) => {
   const [type, setType] = useState('income');
@@ -202,22 +203,22 @@ const Forecast = (props) => {
           <div className='flex justify-between mb-4'>
             <div className='text-text_primary'>
               <label className='text-sm my-2'>Income collected</label>
-              <p className='text-lg font-bold'>{calculateIncome()}</p>
+              <p className='text-lg font-bold'>RF {calculateIncome()}</p>
             </div>
             <div className='text-text_primary'>
               <label className='text-sm my-2'>Income Expected</label>
-              <p className='text-lg font-bold'>{calculateExpectedIncome()}</p>
+              <p className='text-lg font-bold'>RF {calculateExpectedIncome()}</p>
             </div>
           </div>
 
           <div className='flex justify-between mb-4'>
             <div className='text-text_primary'>
               <label className='text-sm my-2'>Budget spent</label>
-              <p className='text-lg font-bold'>{calculateExpense()}</p>
+              <p className='text-lg font-bold'>RF {calculateExpense()}</p>
             </div>
             <div className='text-text_primary'>
               <label className='text-sm my-2'>Expense Expected</label>
-              <p className='text-lg font-bold'>{calculateExpectedExpenses()}</p>
+              <p className='text-lg font-bold'>RF {calculateExpectedExpenses()}</p>
             </div>
           </div>
         </div>
@@ -231,7 +232,7 @@ const Forecast = (props) => {
           </div>
           <div>
             <p className='text-sm text-text_primary'>You are about to reach your budget limit</p>
-            <Link to={"#"} className='text-secondary font-bold '>View details</Link>
+            {/* <Link to={"#"} className='text-secondary font-bold '>View details</Link> */}
           </div>
           <div className='flex justify-start gap-4 mt-3'>
             <div className='w-2 h-2 bg-text_primary rounded-full bg-opacity-40' />
@@ -249,10 +250,10 @@ const Forecast = (props) => {
             <label className='text-md my-2 text-text_primary'>Income account</label>
 
             <div className='w-full h-4 bg-success rounded-sm bg-opacity-10'>
-              <div className='w-1/2 h-full bg-success rounded-sm' />
+              <div className='h-full bg-success rounded-sm' style={{ width: `${(calculateIncome() / calculateExpectedIncome()) * 100}%` }}/>
             </div>
 
-            <label className='text-xs my-2 text-text_primary'>Your income is going good!</label>
+            {/* <label className='text-xs my-2 text-text_primary'>Your income is going good!</label> */}
 
           </div>
 
@@ -260,10 +261,10 @@ const Forecast = (props) => {
             <label className='text-md my-2 text-text_primary'>Expensess account</label>
 
             <div className='w-full h-4 bg-red rounded-sm bg-opacity-10'>
-              <div className='w-1/2 h-full bg-red rounded-sm' />
+              <div className='h-full bg-red rounded-sm' style={{ width: `${(calculateExpense() / calculateExpectedExpenses()) * 100}%` }} onClick={() => { if (calculateExpense() > calculateExpectedExpenses()) { alert("You are about to over spend your budget")} }}/>
             </div>
 
-            <label className='text-xs my-2 text-text_primary'>Your income is going good!</label>
+            {/* <label className='text-xs my-2 text-text_primary'>Your income is going good!</label> */}
 
           </div>
         </div>
@@ -271,20 +272,7 @@ const Forecast = (props) => {
       </div>
 
       <section className='w-full px-2'>
-        <div className='flex justify-between items-center'>
-          <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden'>
-            <p>Budget Flow Chart</p>
-          </div>
-
-          <form className='justify-start gap-1 hidden lg:flex'>
-            <select className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={(e) => setType(e.target.value)}>
-              <option value={"income"}>Income</option>
-              <option value={"expense"}>Expenses</option>
-            </select>
-          </form>
-        </div>
-
-        <LineChart options={options} data={chartData} />
+        <ForecastData/>
 
       </section>
     </AdminDashboard>

@@ -46,7 +46,7 @@ const RequestsList = (props) => {
                     </li>
                     <li onClick={()=>setSection("open")} className={`${section.toLowerCase()=="pending"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Open</li>
                     <li onClick={()=>setSection("approved")} className={`${section.toLowerCase()=="approved"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Approved</li>
-                    <li onClick={()=>setSection("declined")} className={`${section.toLowerCase()=="declined"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Declined</li>
+                    <li onClick={()=>setSection("rejected")} className={`${section.toLowerCase()=="rejected"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Declined</li>
                     <li onClick={()=>setSection("closed")} className={`${section.toLowerCase()=="closed"?'text-secondary':'text-text_primary'} cursor-pointer hover:text-secondary transition-all duration-300 delay-100`}>Closed</li>
 
                 </ul>

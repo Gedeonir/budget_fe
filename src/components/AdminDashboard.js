@@ -70,7 +70,7 @@ const AdminDashboard = (props) => {
                 <div className='flex relative items-center justify-center gap-2 py-2 px-2 rounded-lg'>
                     {userData?.getProfile?.position?.toLowerCase() ==='budget monitoring officer' &&
                         <form className='justify-start gap-1 flex'>
-                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                            <select onChange={(e)=>props.setFinancialYear(e.target.value)} value={selectedYear} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
                                 {getAcademicYears(myBudgetData)?.map((item)=>{
                                     return(
                                         <option key={item} className={`${item === selectedYear && 'bg-primary font-bold'}`}>{item}</option>
