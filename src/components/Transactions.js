@@ -47,6 +47,9 @@ const Transactions = (props) => {
 
     const [docType, setDocType] = useState('pdf')
 
+    console.log(filteredTransactionsBo(), "filtered transactions");
+    
+
 
     return (
         <section className='w-full'>
@@ -105,7 +108,7 @@ const Transactions = (props) => {
                             <option value={"excel"}>Excel</option>
 
                         </select>
-                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType,filteredTransactionsBo()) }}>Export</button>
+                        <button className={`${filteredTransactionsBo()?.length <= 0 ? 'cursor-not-allowed bg-opacity-20' : 'cursor-pointer'} text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8`} disabled={filteredTransactionsBo()?.length <= 0} onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType,filteredTransactionsBo()) }}>Export</button>
                     </div>
                 </div>
                 <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>
