@@ -90,7 +90,7 @@ const Budgets = (props) => {
                                                                 </div>
                                                                 <p className='p-1'>{item?.institution?.institutionName}</p>
                                                             </td>
-                                                            <td>{item.amount} $</td>
+                                                            <td>{item.amount} RF</td>
                                                             <td>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>
                                                             <td>
                                                                 <div className={`${item.status.toLowerCase() === "approved" ? "text-success" : item.status.toLowerCase() === "rejected" ? "text-red" : item.status.toLowerCase() === "under review" ? "text-[#FBA801]" : "text-text_primary"} opacity-50} font-bold px-1 text-xs py-1 rounded-lg mx-auto`}>

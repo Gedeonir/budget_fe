@@ -36,10 +36,6 @@ const Officials = (props) => {
 
     useEffect(()=>{
         props.getAllUsers()
-
-        if(props?.data?.newUser?.success){
-            setAddOfficialsModal(false)
-        }
     },[userData,props?.data?.newUser?.success])
 
     const users=props?.data?.users;

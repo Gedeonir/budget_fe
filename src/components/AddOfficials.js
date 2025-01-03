@@ -41,6 +41,12 @@ const AddOfficials = (props) => {
         "Budget Monitoring Officer"
     ]
 
+    useEffect(() => {
+        if (props?.data?.newUser?.success) {
+            props.setAddOfficialsModal(false);
+        }
+    }, [props?.data?.newUser?.success])
+
     return (
         <div className='lg:w-11/12 w-full absolute left-0 inset-y-0 max-h-screen flex lg:items-start lg:justify-center items-center'>
             <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-3/4 w-full lg:px-4 px-2 py-4'>

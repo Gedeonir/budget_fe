@@ -37,7 +37,7 @@ const Banner = (props) => {
         <div className='mb-3'>
           <p className='text-sm font-normal text-wrap text-justify'>Budget planning and implementation system is computerized system that helps government institutions to plan their budget and monitor the budget execution </p>
         </div>
-        {!location.pathname.includes("dashboard") && (
+        {!location.pathname.includes("dashboard") && props?.institution?.getProfile?.position?.toLowerCase() === "budget officer" &&(
           <div className='lg:flex grid grid-cols-3 justify-start items-center lg:gap-4 flex-wrap'>
             {QuickLinks.map((item, index) => {
               return (

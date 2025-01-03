@@ -29,8 +29,9 @@ import { TiTick } from 'react-icons/ti';
 import CategoriesModal from '../../components/CategoriesModal';
 import Transactions from '../../components/Transactions';
 import { handleDownload } from '../Admin/Reports';
+import { platforms } from './webUsageStats';
 
-export const calculateFYIPercentageChange = (transactions, currentFYI,type) => {
+export const calculateFYIPercentageChange = (transactions, currentFYI, type) => {
   // Parse the current fiscal year (e.g., "2024-25")
   const [currentStartYear, currentEndYear] = currentFYI.split('-').map(Number);
 
@@ -118,7 +119,7 @@ function Homepage(props) {
 
 
   const [cards, setCards] = useState([])
-  
+
 
 
   const [financialYear, setFinancialYear] = useState(() => {
@@ -131,11 +132,11 @@ function Homepage(props) {
     return myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()));
   }
 
-  const approvedBudget = () => {
+  const approvedBudget = (status) => {
     return myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()
-    && item?.status?.toLowerCase() === 'approved'));
+      && item?.status?.toLowerCase() === status));
   }
-  
+
 
   useEffect(() => {
     props.getMyBudgets()
@@ -172,10 +173,10 @@ function Homepage(props) {
       data?.map((item, index) => {
         const card = {
           "label": item.label,
-          "amount": item.label === 'Budgets' ?( filterBudget()?.length):(
-            item.label === 'Request sent' ? "0":
-            item.label === 'Budget Approved' ? approvedBudget()?.length:
-            item.label === 'Budget Declined' && "0"
+          "amount": item.label === 'Budgets' ? (filterBudget()?.length) : (
+            item.label === 'Request sent' ? "0" :
+              item.label === 'Budget Approved' ? approvedBudget('approved')?.length :
+                item.label === 'Budget Declined' && approvedBudget('rejected')?.length
           ),
           "icon": item.icon
         }
@@ -195,12 +196,9 @@ function Homepage(props) {
 
   const filteredTransactions = () => {
     return transactions?.resp?.data?.filter((item) => {
-      const itemDate = new Date(item.createdAt)
-
       return item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
         && item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
         && item?.budget?.fyi?.toLowerCase().includes(financialYear.toLowerCase())
-        && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
     });
   }
 
@@ -214,10 +212,6 @@ function Homepage(props) {
     return total.toFixed(5);
   }
 
-  const yearlyTransactions = transactions?.resp?.data?.filter((transaction) => {
-    const transactionYear = transaction?.budget?.fyi;
-    return transactionYear === financialYear
-  });
 
   function generateChartDataByMonth(transactions) {
     // Initialize the result object
@@ -260,7 +254,7 @@ function Homepage(props) {
     );
 
     // Filter transactions by financial year (if required)
-    const filteredTransactions = transactions?.resp?.data?.filter(item =>
+    const filteredTransactions = transactions?.filter(item =>
       item.budget.fyi.toLowerCase().includes(financialYear)
     );
 
@@ -296,7 +290,7 @@ function Homepage(props) {
   }
 
 
-  const data = generateChartDataByMonth(transactions);
+  const data = generateChartDataByMonth(filteredTransactions());
 
   const calculateExpense = () => {
     let totalExpense = 0;
@@ -320,14 +314,13 @@ function Homepage(props) {
   }
 
 
-  const per = calculateFYIPercentageChange(transactions, financialYear,'expense')
+  const per = calculateFYIPercentageChange(transactions, financialYear, 'expense')
 
 
   const location = useLocation();
 
 
 
- 
 
 
 
@@ -394,7 +387,7 @@ function Homepage(props) {
                       </div>
                       <div className='w-full bg-primary2 rounded-lg shadow-lg px-4 py-2'>
                         <div className='py-2 text-text_primary'>
-                          <h2 className='font-bold lg:text-xl text-md'>{transactions?.success ? calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data, financialYear)) : 0} RF</h2>
+                          <h2 className='font-bold lg:text-xl text-md'>{transactions?.success ? calculateTotalSpendin(calculateTotalsByCategory(filteredTransactions(), financialYear)) : 0} RF</h2>
                           <p className='flex gap-2 text-xs'>Your spending is <span className={`${per.percentageChange < 0 ? "text-success" : "text-red"} flex justify-start items-end`}>{per.percentageChange + "%"} {per.percentageChange < 0 ? <FaArrowDownLong size={10} /> : <FaArrowUpLong size={10} />}</span> compared to last year</p>
                         </div>
                         <LineChart data={data} options={options} />
@@ -411,10 +404,10 @@ function Homepage(props) {
                         <Loading />
                       ) : (
                         transactions?.success ? (
-                          yearlyTransactions?.length <= 0 ? (
+                          filteredTransactions()?.length <= 0 ? (
                             <NoDataFound />
                           ) : (
-                            yearlyTransactions?.slice(0, 5).map((item, index) => {
+                            filteredTransactions()?.slice(0, 5).map((item, index) => {
                               return (
                                 <div key={index} className='w-full flex justify-between mt-4 gap-3'>
                                   <div className='flex justify-start gap-3 items-center w-3/5'>
@@ -459,46 +452,45 @@ function Homepage(props) {
                             <Loading />
                           ) : (
                             transactions?.success ? (
-                              yearlyTransactions?.length <= 0 ? (
+                              filteredTransactions()?.length <= 0 ? (
                                 <NoDataFound />
                               ) : (
                                 <>
                                   <div className='py-2 text-text_primary flex justify-between items-center'>
                                     <div>
-                                      <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(transactions?.resp?.data, financialYear))} RF</h2>
+                                      <h2 className='font-bold lg:text-xl text-md'>{calculateTotalSpendin(calculateTotalsByCategory(filteredTransactions(), financialYear))} RF</h2>
                                       <p className='flex gap-2 text-xs'>Total spendings</p>
                                     </div>
                                     <p className='flex justify-between text-text_primary text-xs p-1'><span className={`${per.percentageChange < 0 ? "text-success" : "text-red"} flex justify-start gap-2 text-sm}`}>{per.percentageChange < 0 ? <FaArrowDownLong size={10} /> : <FaArrowUpLong size={10} />} {per.percentageChange + "%"}</span></p>
                                   </div>
-                                  <PieChart
-                                    series={[
-                                      {
-                                        data: calculateTotalsByCategory(transactions?.resp?.data, financialYear),
-                                        arcLabelMinAngle: 45,
-                                        innerRadius: 20,
-                                        outerRadius: 80,
-                                        paddingAngle: 5,
-                                        cornerRadius: 5,
-                                        startAngle: -90,
-                                        endAngle: 180,
-                                        cx: 100,
-                                        cy: 80,
-                                        highlightScope: { faded: 'global', highlighted: 'item' },
-                                        faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                                      }
-                                    ]}
-                                    sx={{
-                                      [`& .${pieArcLabelClasses.root}`]: {
-                                        fill: 'white',
-                                        fontWeight: 'regular',
-                                        fontSize: 8,
-                                        border: 5,
-                                      },
-                                    }}
-                                    width={800}
-                                    height={250}
-                                    className='w-full'
-                                  />
+
+                                  <div className='flex justify-center items-center'>
+                                    <PieChart
+                                      series={[
+                                        {
+                                          data: calculateTotalsByCategory(filteredTransactions(), financialYear),
+                                          arcLabelMinAngle: 45,
+                                          innerRadius: 20,
+                                          outerRadius: 80,
+                                          paddingAngle: 5,
+                                          cornerRadius: 5,
+                                          startAngle: -90,
+                                          endAngle: 180,
+                                          cx: 100,
+                                          cy: 80,
+                                          highlightScope: { faded: 'global', highlighted: 'item' },
+                                          faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                                          arcLabel: null,
+
+                                        }
+                                      ]}
+                                      {...pieParams}
+                                      width={200}
+                                      height={200}
+
+                                    />
+                                  </div>
+
 
                                 </>
                               )
@@ -518,8 +510,7 @@ function Homepage(props) {
                   </div>
 
                 </section>
-
-                <Transactions userData={userData} />
+                <Transactions userData={userData} financialYear={financialYear} />
               </>
             ) : (
               <Error code={myBudgetData?.error?.code} message={myBudgetData?.error?.message} />
@@ -547,6 +538,12 @@ function Homepage(props) {
     </Layout>
   )
 }
+
+const pieParams = {
+  height: 200,
+  margin: { right: 5 },
+  slotProps: { legend: { hidden: true } },
+};
 
 const mapState = (data) => ({
   data: data

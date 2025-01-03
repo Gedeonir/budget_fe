@@ -97,7 +97,6 @@ const AppRoutes = (prop) => {
         <Route path="/dashboard/plan-budget" element={<PlanBudget/>}/>
         <Route path="/dashboard/my-budgets" element={<AdminBudgets/>}/>
         <Route path="forecast" element={<Forecast/>}/>
-        {/* <Route path="/report-and-analytics" element={<Reports/>}/> */}
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>

@@ -185,6 +185,16 @@ const BudgetPlanningForm = (props) => {
 
     const filteredFyi = academicYear?.filter(year => !fyiItems?.includes(year));
     const [categoryType, setCategoryType] = useState("");
+
+      useEffect(() => {
+        if (props?.data?.addBudget?.success) {
+            if(location.pathname.includes("dashboard")){
+                navigate('/dashboard/manage/my-budgets')
+            }else{
+                navigate('/my-budgets')
+            }
+        }
+      }, [props?.data?.addBudget?.success])
     
 
 

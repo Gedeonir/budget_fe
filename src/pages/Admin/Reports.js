@@ -1,13 +1,17 @@
+import { data } from 'autoprefixer';
 import axios from 'axios';
-export const handleDownload = async (start,end,inst,docType) => {
+export const handleDownload = async (start,end,docType,data) => {
   try {    
     // Define request body
     const requestBody = {
       startDate: start,
       endDate: end,
-      inst:inst?.getProfile?.institution?._id,
-      docType:docType
+      docType:docType,
+      data:data
     };
+
+    console.log(data);
+    
 
     // Make API call
     const response = await axios.post(`${process.env.BACKEND_URL}/budget/reports/budget/pdf`, requestBody, {

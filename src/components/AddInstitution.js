@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import { connect } from 'react-redux';
 import { addInstitution, fetchInst } from '../redux/Actions/InstitutionActions';
@@ -24,9 +24,13 @@ const AddInstitution = (props) => {
     const handleAdd=(e)=>{
         e.preventDefault();
         props.addInstitution(formData)
-        props.setAddInstitutionModal(false)
-        
     }
+
+    useEffect(()=>{
+        if(props?.data?.addInst?.success){
+            props.setAddInstitutionModal(false);
+        }
+    },[props?.data?.addInst?.success])
 
     
   return (

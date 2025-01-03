@@ -23,13 +23,14 @@ const Transactions = (props) => {
     const transactions = props.data.allTransactions;
     useEffect(() => {
         props.allTransactions()
-    }, [])
+    }, [props?.data?.addTransaction?.success])
 
     const filteredTransactionsBo = () => {
         return transactions?.resp?.data?.filter((item) => {
             const itemDate = new Date(item.createdAt)
 
             return item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
+                && (props.userData?.getProfile?.position?.toLowerCase() === "budget monitoring officer" ? item?.budget?.fyi?.toLowerCase().includes(props.financialYear.toLowerCase()):true)
                 && item?.institution?.institutionName?.toLowerCase().includes(props.userData?.getProfile?.institution?.institutionName?.toLowerCase())
                 && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
         });
@@ -62,7 +63,7 @@ const Transactions = (props) => {
                         </div>
                         {props?.userData?.getProfile?.position?.toLowerCase() === "budget officer" &&
                             <div className='text-primary rounded-lg lg:mb-0 mb-4 '>
-                                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('/#add-transaction') }}>Add transaction</button>
+                                <button className='text-sm bg-secondary rounded-lg w-full px-4 py-2 cursor-pointer' onClick={() => { navigate('#add-transaction') }}>Add transaction</button>
                             </div>
                         }
                     </div>
@@ -104,7 +105,7 @@ const Transactions = (props) => {
                             <option value={"excel"}>Excel</option>
 
                         </select>
-                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, props?.userData, docType) }}>Export</button>
+                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType,filteredTransactionsBo()) }}>Export</button>
                     </div>
                 </div>
                 <table border={10} cellSpacing={0} cellPadding={10} className='my-4 lg:text-sm text-xs w-full py-4 text-text_primary text-left px-2 lg:px-4'>

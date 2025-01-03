@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { getMyBudgets, getRequests, newRequest } from '../../redux/Actions/BudgetActions';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Banner from '../../components/Banner';
+import { fetchInst } from '../../redux/Actions/InstitutionActions';
 
 
 const NewRequest = (props) => {
@@ -15,11 +16,17 @@ const NewRequest = (props) => {
     const [reload,setReload]=useState(false)
 
     const myBudgetData=props?.data?.budgets;
+    const institution=props?.data?.inst;
+
+    console.log(institution,"inst");
+    
+
     const navigate=useNavigate();
     
     useEffect(()=>{
         props.getRequests()
         props.getMyBudgets()
+        props.fetchInst()
         if (reload) {
             navigate(`/budget/requests/`)
         }
@@ -39,7 +46,8 @@ const NewRequest = (props) => {
 
     const [formData,setFormData]=useState({
         budget:"",
-        description:""
+        description:"",
+        to:""
     })
 
     
@@ -92,6 +100,17 @@ const NewRequest = (props) => {
                 </select>
             </div>
 
+            <div className='relative mb-4'>
+                <label>Send request to</label>
+                <select onChange={handleChange} name='to' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
+                    <option value={""}>----</option>
+                    {institution?.success && institution?.resp?.data?.getInstitutions?.filter(item=>item?.acronym?.toLowerCase().includes("minecofin"))
+                    .map((item,index)=>(
+                        <option key={index} value={item._id}>{item.institutionName}</option>
+                    ))}
+                </select>
+            </div>
+
             <div className='w-full mb-4'>
                 <label>Request description</label>
                 <textarea onChange={handleChange} value={formData.description} rows={5} name='description' className="text-text_secondary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Budget request description" required></textarea>
@@ -112,4 +131,4 @@ const mapState=(data)=>({
     data:data
 })
 
-export default connect(mapState,{getMyBudgets,newRequest,getRequests})(NewRequest)
+export default connect(mapState,{getMyBudgets,newRequest,getRequests,fetchInst})(NewRequest)

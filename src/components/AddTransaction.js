@@ -11,7 +11,7 @@ const AddTransaction = (props) => {
     transactionDescription: "",
     amount: "",
     type: "",
-    institution: "",
+    institution: props?.userData?.getProfile?.institution?._id || "",
     budget: "",
     category: "",
   });
@@ -35,7 +35,6 @@ const AddTransaction = (props) => {
   };
 
   const navigate = useNavigate()
-  const incomes = ["Government budget allocation", "External Aid and Donor funding", "Taxes and Levies"];
 
   const filterBudget = props?.data?.budgets?.resp?.data?.filter(item => item?.institution?.institutionName?.toLowerCase().includes(props?.userData?.getProfile?.institution?.institutionName?.toLowerCase()))
 
@@ -46,8 +45,11 @@ const AddTransaction = (props) => {
     )
   }
 
-  console.log(myFilteredCategories());
-  
+  useEffect(() => {
+    if (props?.data?.addTransaction?.success) {
+      navigate(-1)
+    }
+  }, [props?.data?.addTransaction?.success])
   return (
     <div className='w-full absolute left-0 inset-y-0 h-full bg-primary bg-opacity-50 flex lg:items-center lg:justify-center items-center'>
       <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-3/4 w-full lg:px-4 px-2 py-4'>
@@ -71,51 +73,15 @@ const AddTransaction = (props) => {
             <label>Transaction category</label>
             <select onChange={(e) => setFormData({ ...formData, category: e.target.value })} name='expense' placeholder='Income Category' className='border w-full px-4 py-2 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
               <option value={""}>--Select Category--</option>
-              {formData.type === 'expense' && (
-                !location.pathname.includes("dashboard") ?
-                  myFilteredCategories()?.map((item, index) => {
-                    return (
-                      <option key={index} value={item.category}>{item.category}</option>
-                    )
-                  })
-                  :
-                  (
-                    [].map((item, index) => {
-                      return (
-                        <option key={index} value={item}>{item}</option>
-                      )
-                    })
-                  )
-              )}
-
-              {formData.type === 'income' &&
-                incomes.map((item, index) => {
+              {
+                myFilteredCategories()?.map((item, index) => {
                   return (
-                    <option key={index} value={item}>{item}</option>
+                    <option key={index} value={item.category}>{item.category}</option>
                   )
                 })
               }
             </select>
           </div>
-
-          {/* File Input */}
-          {/* <div className='w-full mb-1'>
-            <span className="text-text_primary">Supporting documents</span>
-            <input
-              type="file"
-              className="text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary"
-              onChange={(e)=>setFormData({
-                ...formData,
-                selectedFile:e.target.files[0]
-              })}
-              required
-            />
-            
-            {/* Display Selected File
-            {formData.selectedFile && (
-              <p className="text-sm text-gray-600">Selected File: {formData.selectedFile.name}</p>
-            )}
-          </div> */}
 
           <div className='w-full mb-2'>
             <div className='w-full mb-1'>
@@ -124,7 +90,7 @@ const AddTransaction = (props) => {
             </div>
             <div className='w-full mb-1'>
               <label>Institution</label>
-              <input type="text" ref={institutionName} defaultValue={props?.institution?.institutionName} name='institution' className="mb-2 text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled />
+              <input type="text" ref={institutionName} defaultValue={props?.userData?.getProfile?.institution?.institutionName} name='institution' className="mb-2 text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled />
             </div>
             <div className='w-full mb-1'>
               <select name='budget' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
