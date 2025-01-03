@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 import AllInstitutionsModal from './AllInstitutionsModal';
 import { connect } from 'react-redux';
