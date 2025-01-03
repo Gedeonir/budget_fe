@@ -18,7 +18,7 @@ const ForecastData = () => {
                 setForecastData(data.forecast);
                 setLoading(false);
             } catch (err) {
-                setError("Failed to fetch data. Please try again later.");
+                setError(err);
                 setLoading(false);
             }
         };
@@ -27,7 +27,7 @@ const ForecastData = () => {
     }, []);
 
     if (loading) return <Loading />;
-    if (error) return <p className="text-center text-red-500">{error}</p>;
+    // if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
         <div className="bg-primary2 min-h-screen p-2">

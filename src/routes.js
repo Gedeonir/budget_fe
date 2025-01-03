@@ -29,6 +29,8 @@ import PlanBudget from "./pages/Admin/PlanBudget";
 import AdminBudgets from "./pages/Admin/AdminBudgets";
 import UpdateUser from "./pages/Admin/UpdateUser";
 import MyBudget from "./pages/Admin/MyBudget";
+import MyProfile from "./pages/Users/MyProfile";
+import MyProfileAdmin from "./pages/Admin/MyProfile";
 
 
 const AppRoutes = (prop) => {
@@ -100,6 +102,9 @@ const AppRoutes = (prop) => {
 
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
+        <Route path="/profile/:id" element={<MyProfile/>}/>
+        <Route path="/dashboard/profile/:id" element={<MyProfileAdmin/>}/>
+
     </Routes>
     );
   };

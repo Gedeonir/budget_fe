@@ -44,7 +44,6 @@ const UpdateUser = (props) => {
 
 
     const user = props?.data?.getUser?.resp?.data?.oneUser;
-    console.log(props?.data?.getUser);
 
 
     const handleGetUser = () => {

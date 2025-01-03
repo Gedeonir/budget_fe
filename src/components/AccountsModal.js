@@ -27,7 +27,7 @@ const AccountsModal = (props) => {
                 <div className='py-2 text-text_primary'>
                     <h1 className='font-bold text-xs text-ellipsis'>{props?.profile?.fullNames}</h1>
                     <p className='text-xs'>{props?.profile?.email}</p>
-                    <Link to={`/profile/${props?.profile?.fullNames}`} className="text-success text-xs">View profile</Link>
+                    <Link to={location?.pathname?.includes("dashboard") ? `/dashboard/profile/${props?.profile?._id}`:`/profile/${props?.profile?._id}`} className="text-success text-xs">View profile</Link>
 
                 </div>
 
