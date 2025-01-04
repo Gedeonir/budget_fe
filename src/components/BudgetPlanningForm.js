@@ -387,7 +387,6 @@ const BudgetPlanningForm = (props) => {
             </div>
 
             <div className='flex justify-start gap-4 lg:w-2/5 w-full'>
-                <button type='reset' size="sm" className=' my-4 text-xs text-text_primary w-full border-2 border-text_primary border-opacity-40 font-bold p-2'>Save as Draft</button>
                 <button
                     onClick={() => handleAddBudget()}
                     type='submit' size='sm' className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-full ${props?.data?.addBudget?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.addBudget?.loading ? true : false}>
