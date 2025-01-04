@@ -97,7 +97,7 @@ const RequestsList = (props) => {
                             
 
                         <Pagination
-                            length={allRequests?.resp?.data?.length}
+                            length={filteredRequests()?.length}
                             postsperpage={10}
                             handlepagination={handlePagination}
                             currentpage={currentPage}

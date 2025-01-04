@@ -5,11 +5,12 @@ import { MdDomainAdd } from "react-icons/md";
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 import { RiAddCircleFill } from "react-icons/ri";
 import { IoWallet } from "react-icons/io5";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AddExpenses from './AddExpenses';
 import { connect } from 'react-redux';
 import { addBudget, getMyBudgets, viewCategories } from '../redux/Actions/BudgetActions';
 import Loading from './Loading';
+
 
 function getAcademicYears() {
     let year = new Date().getFullYear();
@@ -185,6 +186,7 @@ const BudgetPlanningForm = (props) => {
 
     const filteredFyi = academicYear?.filter(year => !fyiItems?.includes(year));
     const [categoryType, setCategoryType] = useState("");
+    const navigate = useNavigate();
 
       useEffect(() => {
         if (props?.data?.addBudget?.success) {

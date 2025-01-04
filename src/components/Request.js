@@ -369,7 +369,7 @@ const Request = (props) => {
                                                 </div>
 
                                                 <div className='w-full flex justify-start items-center gap-2'>
-                                                    {Request?.resp?.data?.requestedBy?._id === props?.userData?.getProfile?._id && Request?.resp?.data?.status !== 'closed' && (
+                                                    {Request?.resp?.data?.requestedBy?._id === props?.userData?.getProfile?._id && Request?.resp?.data?.status !== 'approved' && (
 
                                                         <button onClick={(e) => handleOpenDelete(e)} type="reset" name='cancel' className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 ${props?.data?.changeStatus?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.changeStatus?.loading ? true : false}>
                                                             {props?.data?.changeStatus?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Cancel Request'}
@@ -401,7 +401,7 @@ const Request = (props) => {
                                                 <div className='flex lg:justify-end justify-between items-center gap-2 lg:w-4/5 relative mb-2'>
                                                     <div className='flex lg:justify-end justify-start gap-2 w-full'>
                                                         <label className='font-bold'>Total Budget:</label>
-                                                        <p>{Request?.resp?.data?.budget.amount} $</p>
+                                                        <p>{Request?.resp?.data?.budget.amount} RF</p>
                                                     </div>
 
                                                     {Request?.resp?.data?.requestedBy?._id !== props?.userData?.getProfile?._id && reviewerIds.includes(props?.userData?.getProfile?._id) &&
@@ -593,24 +593,6 @@ const Request = (props) => {
 
                                         </div>
                                     </div>
-                                    {/* {props?.userData?.getProfile?.role==='admin' && Request?.resp?.data?.status !=='closed' && (
-
-                                    <form className='bg-primary2  w-full py-4 px-2 text-sm text-text_primary col-span-4'>
-                                        <label>Decision</label>
-                                        <select name='decision' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' onChange={handleChange} required>
-                                            <option value={""}>--Select title--</option>
-                                            <option value={"Approve"}>Approve</option>
-                                            <option value={"Reject"}>Reject</option>
-                                        </select>
-                                        
-
-                                        <button onClick={(e)=>handleOpenDelete(e)} type="reset" name='approve' className={`my-4 text-xs  text-center text-primary font-bold p-2 ${props?.data?.approveBudget?.loading || filterReviewers && filterReviewers?.length < 2? 'cursor-not-allowed bg-text_primary bg-opacity-50 ':'cursor-pointer bg-secondary'}`} disabled={props?.data?.approveBudget?.loading || filterReviewers && filterReviewers?.length < 2? true : false}>
-                                            {props?.data?.approveBudget?.loading?<p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5"/></p>:'Submit'}
-                                        </button>
-
-                                    </form>
-                                )} */}
-
                                 </div>
 
                             }

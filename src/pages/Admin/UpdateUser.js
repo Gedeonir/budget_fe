@@ -121,6 +121,13 @@ const UpdateUser = (props) => {
     }, [userData])
 
 
+     useEffect(()=>{
+            if(props?.data?.updateUser?.success){
+                navigate("/dashboard")
+            }
+        },[props?.data?.updateUser?.success])
+
+
     return (
         <AdminDashboard setLoading={setLoading} setUserData={setUserData}>
 

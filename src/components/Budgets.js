@@ -120,7 +120,7 @@ const Budgets = (props) => {
                                         </div>
 
                                         <Pagination
-                                            length={myBudgetData?.resp?.data?.length}
+                                            length={filteredBudget()?.length}
                                             postsperpage={10}
                                             handlepagination={handlePagination}
                                             currentpage={currentPage}

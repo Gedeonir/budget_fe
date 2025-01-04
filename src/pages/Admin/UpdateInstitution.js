@@ -100,6 +100,12 @@ const UpdateInstitution = (props) => {
     props.uploadInstImage({ picture: images[0]?.src, institution: params?.id });
   }
 
+  useEffect(() => {
+    if (props?.data?.updateInst?.success) {
+      navigate("/dashboard")
+    }
+  }, [props?.data?.updateInst?.success])
+
   return (
     <AdminDashboard setLoading={setLoading} setUserData={setUserData}>
 

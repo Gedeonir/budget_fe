@@ -412,7 +412,7 @@ function Dashboard(props) {
                           <option value={"excel"}>Excel</option>
 
                         </select>
-                        <button className='text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8' onClick={() => { handleDownload(dateData.startDate, dateData.endDate, "", docType) }}>Export</button>
+                        <button className={`${filteredTransactions()?.length <= 0 ? 'cursor-not-allowed bg-opacity-20' : 'cursor-pointer'} text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8`} disabled={filteredTransactions()?.length <= 0} onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType,filteredTransactions()) }}>Export</button>
                       </div>
                     </div>
                     <div className='max-h-96 overflow-y-auto'>
@@ -558,7 +558,7 @@ function Dashboard(props) {
                                           </div>
                                           <p className='p-1'>{item?.institution?.institutionName}</p>
                                         </td>
-                                        <td className='text-xs'>{item.amount} $</td>
+                                        <td className='text-xs'>{item.amount} RF</td>
                                         <td className='text-xs'>{new Date(item.createdAt).toLocaleDateString()} at {new Date(item.createdAt).toLocaleTimeString()}</td>
                                         <td className='text-xs'>
                                           <div className={`${item.status.toLowerCase() === "approved" ? "text-success" : item.status.toLowerCase() === "rejected" ? "text-red" : item.status.toLowerCase() === "under review" ? "text-[#FBA801]" : "text-text_primary"} opacity-50} font-bold px-1 text-px py-1 rounded-lg mx-auto`}>
