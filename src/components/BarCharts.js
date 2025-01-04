@@ -90,41 +90,61 @@ const barData = [
 
 function BarCharts(props) {
     const transactions=props.transactions;
-    function getMonthlyIncomeAndExpenses(transactions) {
-        // Initialize the results array with 12 months
-        const monthlyData = Array.from({ length: 12 }, (_, index) => ({
-          month: new Date(0, index).toLocaleString('default', { month: 'short' }), // Short month names (e.g., "Jan")
-          income: 0,
-          expenses: 0,
-          expensesPercentage: "0%", // Default percentage
-          incomePercentage: "0%"    // Default percentage
-        }));
-
-        const filteredTransactions=()=>{
-            return transactions?.filter((item)=>item.budget.fyi.toLowerCase().includes(props.financialYear));
-        }
-
-        let totalExpense=0;
-        let totalIncome=0;
+    function getMonthlyIncomeAndExpenses(transactions, fiscalYear) {
+        // Extract the starting year from the fiscal year string (e.g., "2024-25")
+        const startYear = parseInt(fiscalYear.split('-')[0]);
+        const startMonthIndex = 8; // September (0 = January, 8 = September)
+      
+        // Generate month names for the fiscal year
+        const fiscalYearMonths = Array.from({ length: 12 }, (_, index) => {
+          const monthIndex = (startMonthIndex + index) % 12;
+          const yearOffset = (startMonthIndex + index) >= 12 ? 1 : 0;
+          const year = startYear + yearOffset;
+          return {
+            month: new Date(year, monthIndex).toLocaleString('default', { month: 'short' }) + " " + year,
+            income: 0,
+            expenses: 0,
+            expensesPercentage: "0%",
+            incomePercentage: "0%",
+          };
+        });
+      
+        const filteredTransactions = () => {
+          return transactions?.filter((item) => 
+            item.budget.fyi.toLowerCase().includes(fiscalYear)
+          );
+        };
+      
+        let totalExpense = 0;
+        let totalIncome = 0;
       
         filteredTransactions()?.forEach(transaction => {
-          // Parse the month from the transaction date
+          // Parse the date and determine the fiscal year month index
           const dateObj = new Date(transaction.createdAt);
-          const monthIndex = dateObj.getMonth(); // 0 = January, 11 = December
+          const transactionYear = dateObj.getFullYear();
+          const transactionMonth = dateObj.getMonth();
+          const transactionFiscalIndex =
+            (transactionYear === startYear && transactionMonth >= startMonthIndex) 
+              ? transactionMonth - startMonthIndex
+              : (transactionYear === startYear + 1 && transactionMonth < startMonthIndex)
+                ? transactionMonth + (12 - startMonthIndex)
+                : null;
       
-          // Accumulate amounts based on the transaction type
-          const amount = parseFloat(transaction.amount); // Ensure the amount is a number          
-          if (transaction.type.toLowerCase() === 'income') {
-            monthlyData[monthIndex].income += amount;
-            totalIncome+=amount
-          } else if (transaction.type.toLowerCase() === 'expense') {
-            monthlyData[monthIndex].expenses += amount;
-            totalExpense+=amount
+          if (transactionFiscalIndex !== null && transactionFiscalIndex >= 0 && transactionFiscalIndex < 12) {
+            // Accumulate amounts based on the transaction type
+            const amount = parseFloat(transaction.amount); // Ensure the amount is a number          
+            if (transaction.type.toLowerCase() === 'income') {
+              fiscalYearMonths[transactionFiscalIndex].income += amount;
+              totalIncome += amount;
+            } else if (transaction.type.toLowerCase() === 'expense') {
+              fiscalYearMonths[transactionFiscalIndex].expenses += amount;
+              totalExpense += amount;
+            }
           }
         });
       
         // Calculate percentages for income and expenses
-        monthlyData.forEach(month => {
+        fiscalYearMonths.forEach(month => {
           const total = month.income + month.expenses;
           if (total > 0) {
             month.expensesPercentage = ((month.expenses / totalExpense) * 100).toFixed(2) + "%";
@@ -135,11 +155,12 @@ function BarCharts(props) {
           month.expenses = month.expenses.toFixed(2);
         });
       
-        return monthlyData;
+        return fiscalYearMonths;
       }
+      
 
       
-    const monthlySummary = getMonthlyIncomeAndExpenses(transactions);
+    const monthlySummary = getMonthlyIncomeAndExpenses(transactions, props.financialYear);
      
       
 
@@ -159,11 +180,11 @@ function BarCharts(props) {
                         <p><span className='text-success'>I:</span>{value.income}({value.incomePercentage})</p>
                         <p><span className='text-red'>E:</span>{value.expenses}({value.expensesPercentage})</p>
                     </div>
-                    <div className="flex items-end w-4 h-72 hover:opacity-25 z-10">
+                    <div className="flex items-end w-2 h-72 hover:opacity-25 z-10">
                         <div className={`relative flex justify-center flex-grow bg-success`} style={{ height: value.incomePercentage }}></div>
                         <div className="relative flex justify-center flex-grow bg-red"  style={{ height: value.expensesPercentage}}></div>	
                     </div>
-                    <span className="absolute -bottom-5 text-xs font-bold ">{value.month}</span>
+                    <span className="absolute -bottom-5 text-[10px]">{value.month}</span>
                 </div>
             ))}
         </div>
