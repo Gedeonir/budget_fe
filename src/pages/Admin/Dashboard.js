@@ -29,6 +29,8 @@ import CategoriesModal from '../../components/CategoriesModal';
 import Transactions from '../../components/Transactions';
 import { calculateFYIPercentageChange } from '../Users/Homepage';
 import { handleDownload } from './Reports';
+import getAcademicYears, { getAcademicYears2 } from '../../utils/AcademicYears';
+import AddIncome from '../../components/AddIncome';
 
 
 function Dashboard(props) {
@@ -47,7 +49,7 @@ function Dashboard(props) {
     setCurrentPage(pageNumber);
   };
 
-
+  const [income, setRevenues] = useState([])
 
   function groupTransactionsByDate(transactions) {
     const grouped = {};
@@ -132,10 +134,10 @@ function Dashboard(props) {
       data?.map((item) => {
         const card = {
           "label": item.label,
-          "amount": item.label === 'Budgets' ? myBudgetData?.resp?.data?.length : 
-          item.label === 'Request Received' ? allRequests?.resp?.data?.length : 
-          item.label === 'Request Declined' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'rejected').length : 
-          item.label === 'Request Approved' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'approved').length : 0,
+          "amount": item.label === 'Budgets' ? myBudgetData?.resp?.data?.length :
+            item.label === 'Request Received' ? allRequests?.resp?.data?.length :
+              item.label === 'Request Declined' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'rejected').length :
+                item.label === 'Request Approved' ? allRequests?.resp?.data?.filter(item => item?.status?.toLowerCase() === 'approved').length : 0,
           "icon": item.icon
         }
 
@@ -165,8 +167,8 @@ function Dashboard(props) {
   const groupedTransactions = groupTransactionsByDate(filteredTransactions());
 
   const filterBudget = () => {
-    return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(financialYear)) && item.status.toLowerCase() ==="approved";
-  }  
+    return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(financialYear) && item.status.toLowerCase() === "approved");
+  }
 
   const [total, setTotal] = useState(0)
 
@@ -213,6 +215,39 @@ function Dashboard(props) {
   }
 
   const [docType, setDocType] = useState('pdf')
+
+  const [section, setSection] = useState('category')
+  const [fyi, setFyi] = useState('')
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const [categoryType, setCategoryType] = useState("");
+
+
+  const filterMyBudgets = myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase()))
+  const fyiFilter = filterMyBudgets?.filter((item) => item.fyi === fyi);
+  const getTotalIncomes = () => {
+    setTotalIncome(income.reduce((sum, item) => parseInt(sum + item.amountToCollect, 10), 0))
+  }
+
+
+  function recalculatePercentages(expenses) {
+    const totalAmount = expenses.reduce((total, obj) => total + (obj.amountToSpent || obj.amountToCollect), 0);
+
+    expenses.forEach(obj => {
+      obj.percentage = (((obj.amountToSpent || obj.amountToCollect) / totalAmount) * 100).toFixed(2);
+    });
+  }
+
+  useEffect(() => {
+    if (myBudgetData?.success) {
+      setRevenues(fyiFilter[0]?.revenues)
+    }
+
+  }, [myBudgetData?.success, fyi, income])
+
+  
+  const [success, setSuccess] = useState(false);
+
 
 
 
@@ -329,7 +364,7 @@ function Dashboard(props) {
                 </div>
                 <div className='w-full h-full overflow-x-auto text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
                   <div className='text-sm font-bold text-text_primary mb-4'>
-                   Resource allocated to various instutitions
+                    Resource allocated to various instutitions
                   </div>
                   <table className='w-full'>
                     <thead>
@@ -412,7 +447,7 @@ function Dashboard(props) {
                           <option value={"excel"}>Excel</option>
 
                         </select>
-                        <button className={`${filteredTransactions()?.length <= 0 ? 'cursor-not-allowed bg-opacity-20' : 'cursor-pointer'} text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8`} disabled={filteredTransactions()?.length <= 0} onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType,filteredTransactions()) }}>Export</button>
+                        <button className={`${filteredTransactions()?.length <= 0 ? 'cursor-not-allowed bg-opacity-20' : 'cursor-pointer'} text-sm bg-secondary rounded-lg w-full px-2 py-1 h-8`} disabled={filteredTransactions()?.length <= 0} onClick={() => { handleDownload(dateData.startDate, dateData.endDate, docType, filteredTransactions()) }}>Export</button>
                       </div>
                     </div>
                     <div className='max-h-96 overflow-y-auto'>
@@ -487,10 +522,84 @@ function Dashboard(props) {
                   </div>
 
                   <section className='w-full mb-4 py-4'>
-                    <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
-                      <p>My income/expense categories</p>
+                    <div className='py-4 font-bold text-text_primary text-sm flex justify-start gap-4'>
+                      <button className={`${section === 'category' && 'text-secondary border-b-2'} pb-2`} onClick={() => setSection('category')}>Categories</button>
+                      <button className={`${section === 'incomes' && 'text-secondary border-b-2'} pb-2`} onClick={() => setSection('incomes')}>Projected incomes</button>
                     </div>
-                    <CategoriesModal userData={userData} />
+
+                    {section === 'category' &&
+                      <>
+                        <div className='py-4 font-bold text-text_primary w-full overflow-x-hidden text-sm'>
+                          <p>My income/expense categories</p>
+                        </div>
+                        <CategoriesModal userData={userData} />
+
+                      </>
+                    }
+
+                    {section === 'incomes' &&
+                      <>
+                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg`}>
+
+                          <div className='font-bold text-text_primary py-2 flex gap-4 justify-start items-start'>
+                            <h1>Projected incomes</h1>
+                            <form className='justify-start gap-1 flex'>
+                              <select onChange={(e) => { setFyi(e.target.value) }} className='border w-24 text-text_primary rounded-lg border-text_primary border-opacity-40'>
+                                <option value={''}>-------</option>
+                                {getAcademicYears2(filterMyBudgets)?.map((item) => {
+                                  return (
+                                    <option key={item} value={item} className={``}>{item}</option>
+                                  )
+                                })}
+                              </select>
+                            </form>
+                            {fyi &&
+                              <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={() => { setOpenModal(!openModal); setCategoryType("income") }}>
+                                <p><MdDomainAdd size={10} /></p>
+                              </div>
+                            }
+                          </div>
+
+                          <div className='max-h-72 overflow-y-auto'>
+                            <table border={10} cellSpacing={0} cellPadding={10} className='mb-8 lg:text-lg text-xs w-full py-2 text-text_primary text-left'>
+                              <thead className='font-bold lg:text-sm text-xs'>
+                                <tr>
+                                  <th className='w-2'>#</th>
+                                  <th>Income Category</th>
+                                  <th>Planned Amount</th>
+                                  <th>Percentage (%)</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {fyiFilter.length <= 0 ? <tr><td colSpan={4} className='text-center py-4 text-xs'>No data Found</td></tr>
+                                  :
+                                  fyiFilter[0]?.revenues?.length <= 0 ? <tr><td colSpan={4} className='text-center py-4 text-xs'>No data Found</td></tr>
+                                    :
+                                    (fyiFilter[0]?.revenues?.map((item, index) => (
+                                      <tr key={index} className='relative group cursor-pointer lg:text-lg text-xs'>
+                                        <td className='w-2'>{index + 1}</td>
+                                        <td>{item.income}</td>
+                                        <td>{item.amountToCollect}</td>
+                                        <td>
+                                          {item.percentage}%
+                                          {/* <div className='absolute top-0 right-0 z-10 w-2/5 px-2 py-2 justify-end items-end bg-gradient-to-l from-primary to-transparent text-text_primary hidden group-hover:flex gap-4'>
+                                            <AiFillDelete size={20} className='hover:text-list_hover duration-200 delay-100' aria-placeholder='delete' onClick={() => deleteIncome(index)} />
+                                          </div> */}
+                                        </td>
+
+
+                                      </tr>
+                                    )))}
+
+                              </tbody>
+                            </table>
+                          </div>
+                          {openModal && <AddIncome setSuccess={setSuccess} totalincome={totalIncome} categories={categories} userData={userData} recalculatePercentages={recalculatePercentages} incomes={income} total={total} setOpenModal={setOpenModal} categorytype={categoryType} id={fyiFilter[0]?._id} />}
+                        </section>
+
+
+                      </>
+                    }
 
                   </section>
 
@@ -603,7 +712,7 @@ function Dashboard(props) {
                       )}
                   </div>
 
-                  <Transactions userData={userData} all={true}/>
+                  <Transactions userData={userData} all={true} />
 
                 </>
               )

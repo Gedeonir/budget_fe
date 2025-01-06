@@ -312,53 +312,7 @@ const BudgetPlanningForm = (props) => {
                         </div>
                     </section>
 
-                    {location.pathname.includes('dashboard') &&
-                        <section className={`relative py-4 px-4 mb-4 bg-primary2 shadow-lg rounded-lg ${error.errorType === 'expense' && 'border border-[#FBA801]'}`}>
-
-                            <div className='font-bold text-text_primary py-2 flex justify-between items-start'>
-                                <h1>Projected incomes</h1>
-                                <div className='p-2 bg-secondary rounded-lg text-primary2 text-center cursor-pointer hover:opacity-50 duration-200 delay-100' onClick={() => { setOpenModal(!openModal); setCategoryType("income") }}>
-                                    <p><MdDomainAdd size={10} /></p>
-                                </div>
-                            </div>
-
-                            <div className='max-h-72 overflow-y-auto'>
-                                <table border={10} cellSpacing={0} cellPadding={10} className='mb-8 lg:text-lg text-xs w-full py-2 text-text_primary text-left'>
-                                    <thead className='font-bold lg:text-sm text-xs'>
-                                        <tr>
-                                            <th className='w-2'>#</th>
-                                            <th>Income Category</th>
-                                            <th>Planned Amount</th>
-                                            <th>Percentage (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {income.length === 0 ? <tr><td colSpan={4} className='text-center py-4 text-xs'>No data Found</td></tr>
-                                            :
-                                            (income.map((item, index) => (
-                                                <tr key={index} className='relative group cursor-pointer lg:text-lg text-xs'>
-                                                    <td className='w-2'>{index + 1}</td>
-                                                    <td>{item.income}</td>
-                                                    <td>{item.amountToCollect}</td>
-                                                    <td>
-                                                        {item.percentage}%
-                                                        <div className='absolute top-0 right-0 z-10 w-2/5 px-2 py-2 justify-end items-end bg-gradient-to-l from-primary to-transparent text-text_primary hidden group-hover:flex gap-4'>
-                                                            <AiFillDelete size={20} className='hover:text-list_hover duration-200 delay-100' aria-placeholder='delete' onClick={() => deleteIncome(index)} />
-                                                        </div>
-                                                    </td>
-
-
-                                                </tr>
-                                            )))}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    }
-
-                    {openModal && <AddExpenses totalincome={totalIncome} categories={categories} userData={props?.userData} recalculatePercentages={recalculatePercentages} expenses={expenses} incomes={income} total={total} setOpenModal={setOpenModal} setExpenses={setExpenses} categorytype={categoryType} setRevenues={setRevenues} />}
-                </div>
+                                    </div>
 
                 <section className={`relative py-4 px-4 bg-primary2 shadow-lg rounded-lg`}>
                     <div>
