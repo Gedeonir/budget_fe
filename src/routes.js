@@ -31,7 +31,7 @@ import UpdateUser from "./pages/Admin/UpdateUser";
 import MyBudget from "./pages/Admin/MyBudget";
 import MyProfile from "./pages/Users/MyProfile";
 import MyProfileAdmin from "./pages/Admin/MyProfile";
-
+import  NewRequestAdmin from "./pages/Admin/NewRequest"
 
 const AppRoutes = (prop) => {
 
@@ -97,6 +97,8 @@ const AppRoutes = (prop) => {
 
         <Route path="/dashboard/budget/requests/:id" element={<ViewRequestAdmin/>}/>
         <Route path="/dashboard/plan-budget" element={<PlanBudget/>}/>
+        <Route path="/dashboard/requests/new" element={<NewRequestAdmin/>}/>
+
         <Route path="/dashboard/my-budgets" element={<AdminBudgets/>}/>
         <Route path="forecast" element={<Forecast/>}/>
 

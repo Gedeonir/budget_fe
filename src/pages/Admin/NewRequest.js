@@ -1,0 +1,119 @@
+import React, { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getMyBudgets, getRequests, newRequest } from '../../redux/Actions/BudgetActions';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { fetchInst } from '../../redux/Actions/InstitutionActions';
+import AdminDashboard from '../../components/AdminDashboard';
+import Banner from '../../components/Banner';
+
+const NewRequestAdmin = (props) => {
+    const [userData, setUserData] = useState([]);
+    const location = useLocation();
+    const [searchWord, setSearchWord] = useState("");
+    const [reload, setReload] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const myBudgetData = props?.data?.budgets;
+    const institution = props?.data?.inst;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        props.getRequests()
+        props.getMyBudgets()
+        props.fetchInst()
+        if (reload) {
+           location.pathname.includes('dashboard')?navigate(`/dashboard/requests/`):navigate(`/budget/requests/`)
+        }
+    }, [reload])
+
+    const allRequests = props?.data?.allRequest;
+
+    const budgetIds = allRequests?.resp?.data?.map(budget => { return budget?.status === "open" && budget?.budget?._id });
+
+
+
+    const filteredBudget = () => {
+        return myBudgetData?.resp?.data?.filter((item) => item?.institution?.institutionName?.toLowerCase().includes(userData?.getProfile?.institution?.institutionName?.toLowerCase())
+            && !budgetIds?.includes(item._id)
+        );
+    }
+
+    const [formData, setFormData] = useState({
+        budget: "",
+        description: "",
+        to: ""
+    })
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(formData => ({
+            ...formData,
+            [name]: value
+        }));
+    }
+
+    /**
+     * Handles the request form submission
+     * 
+     * @param {Event} e - The form submission event
+     * 
+     * @returns {void}
+     */
+    const handleRequest = (e) => {
+        e.preventDefault()
+        // call the newRequest action and pass the formData as an argument
+        // if the request is successful, toggle the reload state to force a re-render
+        if (props.newRequest(formData))
+            setReload(!reload)
+
+    }
+    return (
+        <AdminDashboard setUserData={setUserData} setLoading={setLoading}>
+            <Banner institution={userData} />
+
+            <form onSubmit={(e) => handleRequest(e)} method='POST' className='relative w-full gap-2 bg-primary2 text-text_primary shadow-lg rounded-lg lg:px-8 px-2 py-2 max-h-screen h-full'>
+                <div className='relative mb-4'>
+                    <label>Budget</label>
+                    <select onChange={handleChange} name='budget' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
+                        <option value={""}>--Select Budget--</option>
+                        {myBudgetData.success && filteredBudget().map((item, index) => (
+                            <option key={index} value={item._id}>FYI {item.fyi} Budget</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className='relative mb-4'>
+                    <label>Send request to</label>
+                    <select onChange={handleChange} name='to' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
+                        <option value={""}>----</option>
+                        {institution?.success && institution?.resp?.data?.getInstitutions?.filter(item => item?.acronym?.toLowerCase().includes("minecofin"))
+                            .map((item, index) => (
+                                <option key={index} value={item._id}>{item.institutionName}</option>
+                            ))}
+                    </select>
+                </div>
+
+                <div className='w-full mb-4'>
+                    <label>Request description</label>
+                    <textarea onChange={handleChange} value={formData.description} rows={5} name='description' className="text-text_secondary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Budget request description" required></textarea>
+                </div>
+
+                <div className='lg:w-1/5 w-full'>
+                    <button type="submit" className={`my-4 text-xs bg-secondary text-center text-primary font-bold p-2 w-3/5${props?.data?.newRequest?.loading ? 'cursor-not-allowed ' : 'cursor-pointer'}`} disabled={props?.data?.newRequest?.loading ? true : false}>
+                        {props?.data?.newRequest?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : 'Create request'}
+                    </button>
+                </div>
+
+            </form>
+        </AdminDashboard>
+    )
+}
+
+const mapState = (data) => ({
+    data: data
+})
+
+export default connect(mapState, { getMyBudgets, newRequest, getRequests, fetchInst })(NewRequestAdmin)

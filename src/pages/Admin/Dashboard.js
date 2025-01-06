@@ -165,7 +165,7 @@ function Dashboard(props) {
   const groupedTransactions = groupTransactionsByDate(filteredTransactions());
 
   const filterBudget = () => {
-    return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(financialYear));
+    return myBudgetData?.resp?.data?.filter((item) => item.fyi.toLowerCase().includes(financialYear)) && item.status.toLowerCase() ==="approved";
   }  
 
   const [total, setTotal] = useState(0)
@@ -329,14 +329,14 @@ function Dashboard(props) {
                 </div>
                 <div className='w-full h-full overflow-x-auto text-text_primary bg-primary2 mb-8 p-4 rounded-lg shadow-lg drop-shadow-lg'>
                   <div className='text-sm font-bold text-text_primary mb-4'>
-                    Budget allocated to various instutitions
+                   Resource allocated to various instutitions
                   </div>
                   <table className='w-full'>
                     <thead>
                       <tr className="lg:text-sm text-xs font-semibold tracking-wide text-left text-text_primary  capitalize">
                         <th className="lg:px-4 py-2 border w-2/5 " colSpan={2}>institution</th>
-                        <th className="lg:px-4 py-2 border w-1/5">Budget amount allocated</th>
-                        <th className="lg:px-4 py-2 border w-1/5">Budget percentage allocated</th>
+                        <th className="lg:px-4 py-2 border w-1/5">Resource amount allocated</th>
+                        <th className="lg:px-4 py-2 border w-1/5">Resource percentage allocated</th>
                       </tr>
                     </thead>
                     <tbody className="">
@@ -603,7 +603,7 @@ function Dashboard(props) {
                       )}
                   </div>
 
-                  <Transactions userData={userData} />
+                  <Transactions userData={userData} all={true}/>
 
                 </>
               )

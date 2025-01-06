@@ -510,7 +510,7 @@ function Homepage(props) {
                   </div>
 
                 </section>
-                <Transactions userData={userData} financialYear={financialYear} />
+                <Transactions userData={userData} financialYear={financialYear} all={true} />
               </>
             ) : (
               <Error code={myBudgetData?.error?.code} message={myBudgetData?.error?.message} />
@@ -529,7 +529,7 @@ function Homepage(props) {
             </section>
 
 
-            <Transactions userData={userData} />
+            <Transactions userData={userData}  all={true}/>
           </>
         )}
 

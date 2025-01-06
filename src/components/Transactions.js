@@ -31,7 +31,7 @@ const Transactions = (props) => {
 
             return item.transactionDescription.toLowerCase().includes(searchWord.toLowerCase())
                 && (props.userData?.getProfile?.position?.toLowerCase() === "budget monitoring officer" ? item?.budget?.fyi?.toLowerCase().includes(props.financialYear.toLowerCase()):true)
-                && item?.institution?.institutionName?.toLowerCase().includes(props.userData?.getProfile?.institution?.institutionName?.toLowerCase())
+                &&( props.all && item?.institution?.institutionName?.toLowerCase().includes(props.userData?.getProfile?.institution?.institutionName?.toLowerCase()))
                 && ((dateData.endDate !== "" && dateData.startDate !== "") ? itemDate >= new Date(dateData.startDate) && itemDate <= new Date(dateData.endDate) : true)
         });
     }
@@ -46,8 +46,6 @@ const Transactions = (props) => {
     }
 
     const [docType, setDocType] = useState('pdf')
-
-    console.log(filteredTransactionsBo(), "filtered transactions");
     
 
 
