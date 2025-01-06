@@ -312,7 +312,9 @@ const BudgetPlanningForm = (props) => {
                         </div>
                     </section>
 
-                                    </div>
+
+                    {openModal && <AddExpenses totalincome={totalIncome} categories={categories} userData={props?.userData} recalculatePercentages={recalculatePercentages} expenses={expenses} incomes={income} total={total} setOpenModal={setOpenModal} setExpenses={setExpenses} categorytype={categoryType} setRevenues={setRevenues} />}
+                </div>
 
                 <section className={`relative py-4 px-4 bg-primary2 shadow-lg rounded-lg`}>
                     <div>

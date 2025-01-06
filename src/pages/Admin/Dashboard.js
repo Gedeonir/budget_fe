@@ -389,7 +389,7 @@ function Dashboard(props) {
                             filterBudget()?.map((item, index) => (
                               <tr className="text-text_primary" key={index}>
                                 <td className="lg:px-4 py-3 border " colSpan={2}>
-                                  <div className="lg:flex items-center text-sm">
+                                  <Link to={`/dashboard/all-budgets/${item?._id}`} className="lg:flex items-center text-sm">
                                     <div className="relative w-4 h-4 mr-3 rounded-full hidden lg:block">
                                       <img className="object-cover w-full h-full rounded-full" src={GovernmentLogo} alt="" loading="lazy" />
                                       <div className="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
@@ -398,7 +398,7 @@ function Dashboard(props) {
                                       <p className="font-regular text-black text-xs lg:text-sm">{item?.institution?.institutionName}</p>
                                       <p className="text-xs text-gray-600">{item?.institution?.acronym}</p>
                                     </div>
-                                  </div>
+                                  </Link>
                                 </td>
                                 <td className="px-4 py-3 text-xs lg:text-sm border">{item.amount} RF</td>
                                 <td className="px-4 py-3 text-xs lg:text-sm border">
