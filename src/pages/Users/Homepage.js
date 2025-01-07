@@ -209,14 +209,19 @@ function Homepage(props) {
       total += item?.value
     })
 
-    return total.toFixed(5);
+    return total.toFixed(2);
   }
 
 
-  function generateChartDataByMonth(transactions) {
+  function generateChartDataByMonth(transactions, financialYear) {
+    // Parse the financial year
+    const [startYear, endYear] = financialYear.split('-').map(Number);
+    const startDate = new Date(startYear, 8); // September of the start year
+    const endDate = new Date(endYear, 7); // August of the end year
+  
     // Initialize the result object
     const data = {
-      labels: [], // Month labels (e.g., "Jan", "Feb")
+      labels: [], // Month labels (e.g., "Jan 2025", "Feb 2025")
       datasets: [
         {
           label: 'Income',
@@ -244,53 +249,55 @@ function Homepage(props) {
         },
       ],
     };
-
-    // Initialize an object to store monthly data
-    const monthlyData = {};
-
-    // Prepare month names (short format)
-    const monthNames = Array.from({ length: 12 }, (_, index) =>
-      new Date(0, index).toLocaleString('default', { month: 'short' })
-    );
-
-    // Filter transactions by financial year (if required)
-    const filteredTransactions = transactions?.filter(item =>
-      item.budget.fyi.toLowerCase().includes(financialYear)
-    );
-
-    // Process transactions to group data by month
+  
+    // Generate month labels for the financial year
+    const monthsInFYI = [];
+    for (let i = 0; i < 12; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setMonth(startDate.getMonth() + i);
+      const label = `${currentDate.toLocaleString('default', { month: 'short' })} ${currentDate.getFullYear()}`;
+      monthsInFYI.push(label);
+    }
+    data.labels = monthsInFYI;
+  
+    // Initialize monthly data for the financial year
+    const monthlyData = monthsInFYI.map(() => ({
+      income: 0,
+      expenses: 0,
+    }));
+  
+    // Filter transactions within the financial year range
+    const filteredTransactions = transactions?.filter(transaction => {
+      const transactionDate = new Date(transaction.createdAt);
+      return transactionDate >= startDate && transactionDate <= endDate;
+    });
+  
+    // Process transactions to populate monthly data
     filteredTransactions?.forEach(transaction => {
-      const dateObj = new Date(transaction.createdAt);
-      const monthIndex = dateObj.getMonth();
-      const month = monthNames[monthIndex]; // Get short month name
-
-      if (!monthlyData[month]) {
-        monthlyData[month] = { expenses: 0 };
-      }
-
-      const amount = parseFloat(transaction.amount); // Ensure amount is a number
-
-      if (transaction.type.toLowerCase() === 'expense') {
-        monthlyData[month].expenses += amount;
+      const transactionDate = new Date(transaction.createdAt);
+      const monthIndex = (transactionDate.getFullYear() - startYear) * 12 + transactionDate.getMonth() - 8; // Offset by start month
+      if (monthIndex >= 0 && monthIndex < 12) {
+        const amount = parseFloat(transaction.amount); // Ensure amount is a number
+        if (transaction.type.toLowerCase() === 'income') {
+          monthlyData[monthIndex].income += amount;
+        } else if (transaction.type.toLowerCase() === 'expense') {
+          monthlyData[monthIndex].expenses += amount;
+        }
       }
     });
-
-    // Populate the chart data
-    monthNames.forEach(month => {
-      data.labels.push(month);
-
-      if (monthlyData[month]) {
-        data.datasets[1].data.push(Math.floor(monthlyData[month].expenses));
-      } else {
-        data.datasets[1].data.push(0); // Default expenses
-      }
+  
+    // Populate dataset values
+    monthlyData.forEach(month => {
+      data.datasets[0].data.push(month.income.toFixed(2));
+      data.datasets[1].data.push(month.expenses.toFixed(2));
     });
-
+  
     return data;
   }
+  
 
 
-  const data = generateChartDataByMonth(filteredTransactions());
+  const data = generateChartDataByMonth(filteredTransactions(), financialYear);
 
   const calculateExpense = () => {
     let totalExpense = 0;

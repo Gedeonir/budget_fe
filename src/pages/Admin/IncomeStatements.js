@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import AdminDashboard from '../../components/AdminDashboard'
-import OwlCarousel from 'react-owl-carousel';  
-import 'owl.carousel/dist/assets/owl.carousel.css';  
-import 'owl.carousel/dist/assets/owl.theme.default.css';
+// import OwlCarousel from 'react-owl-carousel';  
+// import 'owl.carousel/dist/assets/owl.carousel.css';  
+// import 'owl.carousel/dist/assets/owl.theme.default.css';
 import ProgressBar from '../../components/ProgressBar';
 import { FaCircleDot } from "react-icons/fa6";
 import { MdOutlineLibraryBooks } from "react-icons/md";
@@ -114,7 +114,7 @@ const IncomeStatements = () => {
           </button>
           <div className='lg:w-4/5 w-full'>
             <p className='lg:text-lg text-sm text-secondary font-bold px-2'>Recent Incomes</p>
-            <OwlCarousel className="w-full relative" {...options} >
+            {/* <OwlCarousel className="w-full relative" {...options} >
             {recentIncomes.map((src,index)=>{
             return(
                 <div key={index} className='border border-primary rounded-lg mx-2 py-2 px-2'>
@@ -126,7 +126,7 @@ const IncomeStatements = () => {
                 </div>
                 )
                 })}
-            </OwlCarousel>
+            </OwlCarousel> */}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useParams, Link, useLocation,useNavigate } from 'react-router-dom'
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom'
 import { addComment, addReviewer, approveBudget, changeStatus, getRequest, removeReviewer, sendReview } from '../redux/Actions/BudgetActions';
 import Loading from './Loading';
 import Error from './Error';
@@ -336,6 +336,20 @@ const Request = (props) => {
                                                                     </div>
                                                                 </>
                                                             }
+                                                            {
+                                                                Request?.resp?.data?.requestedBy?.position?.toLowerCase() === 'budget officer' &&
+                                                                props?.userData?.getProfile?.institution?.institutionName?.toLowerCase() === 'ministry of finance and economic planning' &&
+                                                                <>
+                                                                    <button onClick={() => handleApproveBudget(Request?.resp?.data?.budget?._id, Request?.resp?.data?._id)} type="reset" name='approve' className={`w-3/4 border bg-secondary hover:bg-opacity-80 delay-100 duration-500 text-xs  text-center text-primary font-bold p-2 ${props?.data?.approveBudget?.loading ? 'cursor-not-allowed' : 'cursor-pointer'}`} disabled={props?.data?.approveBudget?.loading ? true : false}>
+                                                                        {props?.data?.approveBudget?.loading ? <p className="flex justify-center gap-2"><AiOutlineLoading3Quarters size={20} className="animate-spin h-5 w-5" /></p> : approveModal.status === "approved" ? "Approve budget" : "Reject budget"}
+                                                                    </button>
+                                                                    <div onClick={() => openApproveModal({ ...approveModal, open: !approveModal.open })} className='bg-secondary text-primary2 flex justify-center items-center w-1/4 border hover:bg-opacity-80 cursor-pointer'>
+                                                                        <IoMdArrowDropdown size={15} />
+                                                                    </div>
+                                                                </>
+                                                            }
+
+
 
 
                                                             {approveModal.open &&
