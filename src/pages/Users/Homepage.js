@@ -216,8 +216,15 @@ function Homepage(props) {
   function generateChartDataByMonth(transactions, financialYear) {
     // Parse the financial year
     const [startYear, endYear] = financialYear.split('-').map(Number);
-    const startDate = new Date(startYear, 8); // September of the start year
-    const endDate = new Date(endYear, 7); // August of the end year
+
+    const startDate = new Date(startYear, 8,1); // September of the start year
+    const end = parseInt("20" + endYear); // Correct the end year to the next century if needed
+  
+    // In case the endYear is in the 00s (like '99' becomes '1999' and '00' becomes '2000')
+    const correctedEndYear = endYear === "00" ? startYear + 1 : end;
+    const endDate = new Date(correctedEndYear, 7,31); // August of the end year
+    
+ 
   
     // Initialize the result object
     const data = {
@@ -268,13 +275,15 @@ function Homepage(props) {
   
     // Filter transactions within the financial year range
     const filteredTransactions = transactions?.filter(transaction => {
-      const transactionDate = new Date(transaction.createdAt);
+      const transactionDate = new Date(transaction.dateTransactionsTookPlace);
       return transactionDate >= startDate && transactionDate <= endDate;
     });
+
   
     // Process transactions to populate monthly data
     filteredTransactions?.forEach(transaction => {
-      const transactionDate = new Date(transaction.createdAt);
+      const transactionDate = new Date(transaction?.dateTransactionsTookPlace);
+      
       const monthIndex = (transactionDate.getFullYear() - startYear) * 12 + transactionDate.getMonth() - 8; // Offset by start month
       if (monthIndex >= 0 && monthIndex < 12) {
         const amount = parseFloat(transaction.amount); // Ensure amount is a number
@@ -426,7 +435,7 @@ function Homepage(props) {
                                   </div>
                                   <div className={`${item.type.toLowerCase() == 'expense' ? 'text-red' : 'text-success'} text-xs`}>
                                     <label>
-                                      {item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} $
+                                      {item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} RF
                                     </label>
                                   </div>
 

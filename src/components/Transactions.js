@@ -138,7 +138,7 @@ const Transactions = (props) => {
                                                 <td>FYI {item.budget.fyi}</td>
                                                 <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                                                 <td><span className={`p-1 ${item.type.toLowerCase() == 'expense' ? 'text-red border-red' : ' border-success text-success'} rounded-lg`}>{item.type}</span></td>
-                                                <td className={`${item.type.toLowerCase() == 'expense' ? 'text-red' : 'text-success'}`}>{item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} $</td>
+                                                <td className={`${item.type.toLowerCase() == 'expense' ? 'text-red' : 'text-success'}`}>{item.type.toLowerCase() == 'expense' ? "-" : "+"}{item.amount} RF</td>
                                             </tr>
                                         )
                                     })

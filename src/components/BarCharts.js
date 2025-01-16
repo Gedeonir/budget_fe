@@ -120,7 +120,7 @@ function BarCharts(props) {
       
         filteredTransactions()?.forEach(transaction => {
           // Parse the date and determine the fiscal year month index
-          const dateObj = new Date(transaction.createdAt);
+          const dateObj = new Date(transaction.dateTransactionsTookPlace);
           const transactionYear = dateObj.getFullYear();
           const transactionMonth = dateObj.getMonth();
           const transactionFiscalIndex =

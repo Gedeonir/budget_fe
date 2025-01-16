@@ -5,16 +5,25 @@ import { connect } from 'react-redux';
 import { getMyBudgets, recordTransaction, viewCategories } from '../redux/Actions/BudgetActions';
 import { categories } from './AddExpenses';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
+
+const months = [
+  "Jan", "Feb", "Mar", "Apr",
+  "May", "Jun", "Jul", "Aug",
+  "Sept", "Oct", "Nov", "Dec"
+];
 const AddTransaction = (props) => {
 
   const [formData, setFormData] = useState({
     transactionDescription: "",
     amount: "",
     type: "",
-    institution: props?.userData?.getProfile?.institution?._id || "",
+    institution: props?.userData && props?.userData?.getProfile?.institution?._id || "",
     budget: "",
     category: "",
+    dateTransactionsTookPlace: "",
   });
+  
 
   const institutionName = useRef()
   const budget = useRef()
@@ -50,6 +59,30 @@ const AddTransaction = (props) => {
       navigate(-1)
     }
   }, [props?.data?.addTransaction?.success])
+
+
+  const [fyi, setFyi] = useState(null)
+
+  function getFiscalYearDateRange(fiscalYear) {
+    const [startYear, endYear] = fiscalYear.split('-');
+    const start = parseInt(startYear); // First year (e.g., 2024 or 1999)
+    const end = parseInt("20" + endYear); // Correct the end year to the next century if needed
+  
+    // In case the endYear is in the 00s (like '99' becomes '1999' and '00' becomes '2000')
+    const correctedEndYear = endYear === "00" ? start + 1 : end; 
+  
+    const minDate = new Date(start, 8, 1); // 1st September of the start year
+    const maxDate = new Date(correctedEndYear, 7, 31); // 31st August of the corrected end year
+  
+    return { minDate, maxDate };
+  }
+
+  const { minDate, maxDate } = fyi && getFiscalYearDateRange(fyi) || {};
+
+  console.log(formData);
+  
+  
+
   return (
     <div className='w-full absolute left-0 inset-y-0 h-full bg-primary bg-opacity-50 flex lg:items-center lg:justify-center items-center'>
       <div className='relative bg-primary2 shadow-lg rounded-lg lg:w-3/4 w-full lg:px-4 px-2 py-4'>
@@ -61,7 +94,7 @@ const AddTransaction = (props) => {
         <form onSubmit={handleSubmit} className="p-4 text-sm text-text_primary lg:grid grid-cols-2 gap-4">
           <div className='w-full mb-1'>
             <label>Transaction Type</label>
-            <select name='transactionType' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
+            <select name='transactionType' className='py-1 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}>
               <option value={""}>--Choose transaction type--</option>
               {location.pathname.includes("dashboard") && <option value="income">Income</option>}
@@ -71,7 +104,7 @@ const AddTransaction = (props) => {
 
           <div className='w-full mb-2 text-text_primary'>
             <label>Transaction category</label>
-            <select onChange={(e) => setFormData({ ...formData, category: e.target.value })} name='expense' placeholder='Income Category' className='border w-full px-4 py-2 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
+            <select onChange={(e) => setFormData({ ...formData, category: e.target.value })} name='expense' placeholder='Income Category' className='border w-full px-4 py-1 text-text_primary rounded-lg border-text_primary border-opacity-40' required>
               <option value={""}>--Select Category--</option>
               {
                 myFilteredCategories()?.map((item, index) => {
@@ -93,20 +126,37 @@ const AddTransaction = (props) => {
               <input type="text" ref={institutionName} defaultValue={props?.userData?.getProfile?.institution?.institutionName} name='institution' className="mb-2 text-text_secondary rounded-lg outline-primary block w-full px-4 py-1 border border-text_primary border-opacity-40 placeholder-text_primary" disabled />
             </div>
             <div className='w-full mb-1'>
-              <select name='budget' className='py-2 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
-                onChange={(e) => setFormData({ ...formData, budget: e.target.value })}>
+              <label>Select budget</label>
+
+              <select name='budget' className='py-1 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
+                onChange={(e) => {
+                  const selectedBudgetId = e.target.value;
+                  const selectedBudget = filterBudget.find((item) => item._id === selectedBudgetId);
+                  setFormData({ ...formData, budget: selectedBudgetId }); // Update the budget
+                  setFyi(selectedBudget?.fyi || "");
+                }}>
                 <option value={""}>--Choose budget--</option>
                 {filterBudget?.map((item) => (
-                  <option value={item._id}>{item.fyi + "Budget"}</option>
+                  <option key={item._id} value={item._id}>{item.fyi + " Budget"}</option>
                 ))}
               </select>
 
             </div>
+            {fyi &&
+              <div className='w-full mb-1'>
+                <label>Transaction took place on</label>
+
+                <input type='date' name='budget' className='py-1 border w-full px-4 text-text_primary rounded-lg border-text_primary border-opacity-40' required
+                  min={minDate.toISOString().split('T')[0]} max={maxDate.toISOString().split('T')[0]} onChange={(e) => setFormData({ ...formData, dateTransactionsTookPlace: e.target.value })} />
+
+
+              </div>
+            }
           </div>
 
           <div className='w-full mb-1'>
             <label>Transaction description</label>
-            <textarea rows={6} value={formData.transactionDescription} className="text-text_primary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Transaction description" required
+            <textarea rows={10} value={formData.transactionDescription} className="text-text_primary outline-primary block w-full px-4 py-2 border-2 border-text_primary rounded-lg border-opacity-40 placeholder-text_primary" placeholder="Transaction description" required
               onChange={(e) => setFormData({ ...formData, transactionDescription: e.target.value })}></textarea>
           </div>
 
